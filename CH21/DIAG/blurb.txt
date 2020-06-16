@@ -1,0 +1,1 @@
+Solve the three-dimensional quantum SHO via discretization and diagonalization. Output consists of the eigenvalues of RMS radii of the first ten eigenstates. Required input is the linear size of the enclosing volume, the partial wave number, and the number of desired grid points.

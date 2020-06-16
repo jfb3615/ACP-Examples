@@ -1,0 +1,1 @@
+Solve Burger's equation using upwind differencing and a trick to eliminate nonlinearity (discussed in Exercise 19.18). Output is the field V(x,t) at three time. Required input is the temporal and spatial step sizes, the volume spatial and temporal  extents, and the diffusion coefficient.

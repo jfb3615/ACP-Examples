@@ -1,0 +1,44 @@
+#include <stdexcept>
+inline JonesVector::JonesVector():x0(0.0),x1(0.0) {}
+
+inline JonesVector::JonesVector(JonesVector::Type type) {
+
+  const static Complex I(0,1);
+  const static double s2=sqrt(2.0);
+
+  if (type==Horizontal)        {x0=1.0;  x1=0.0;}
+  else if (type==Vertical)     {x0=0.0;  x1=1.0;}
+  else if (type==Diagonal)     {x0=1/s2; x1=1/s2;}
+  else if (type==Antidiagonal) {x0=1/s2; x1=-1/s2;}
+  else if (type==Right)        {x0=1/s2; x1=I/s2;}
+  else if (type==Left)         {x0=1/s2; x1=-I/s2;}
+  
+}
+
+inline JonesVector::JonesVector(const Complex & x0, const Complex & x1):x0(x0),x1(x1) {}
+
+inline double JonesVector::magsq() const {
+  return norm(x0)+norm(x1);
+}
+
+inline Complex & JonesVector::operator () (unsigned int i) {
+  if (!((i==0) || (i==1))) throw std::range_error("Index out of range");
+  return i==0 ? x0 : x1;
+} 
+
+inline const Complex & JonesVector::operator () (unsigned int i) const {
+  if (!((i==0) || (i==1))) throw std::range_error("Index out of range");
+  return i==0 ? x0 : x1;
+} 
+
+inline std::ostream & operator << (std::ostream & o, const JonesVector & v) {
+  return o << "[" << v(0) << "," << v(1) << "]";
+}
+
+inline JonesVector operator * (const JonesVector & v,  const Complex & c) {
+  return JonesVector(v(0)*c, v(1)*c);
+}
+
+inline JonesVector operator * (const Complex & c, const JonesVector & v) {
+  return JonesVector(v(0)*c, v(1)*c);
+}

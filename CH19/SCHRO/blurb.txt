@@ -1,0 +1,1 @@
+Alternating direction implicit Crank-Nicolson solution to two-dimensional quantum scattering from a cylindrical barrier. Input is the number fo grid sites, the temporal step size, the total time for the process, the initial wavepacket momentum, and the barrier radius and height. Output is the real and imaginary parts of the initial and final wavefunctions.

@@ -1,0 +1,1 @@
+Crank-Nicolson solution to the one-dimensional advection-diffusion equation. Required input is the number of temporal and spatial gris points, the total time for the process T, and an option to  set the intial waveform to a pulse or a square wave. Output is the waveform at time 0, T/2, and T.

@@ -1,0 +1,2 @@
+Fast Fourier transform solution to nabla^2 u = exp(-x^2+y^2) on (0,1)^2 with u=0 on the boundary. Required input is the number of grid points. Output is the field u(x,y).
+

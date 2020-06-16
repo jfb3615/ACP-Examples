@@ -1,0 +1,1 @@
+The Viczek boids model in two dimensions. Required input is the number of boids, the volume size, the number of temporal steps T, the interaction radius, the initial speed, the range of the random component, and a random seed. Output is the boid coordinates at T-dt and T.

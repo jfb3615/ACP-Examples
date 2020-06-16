@@ -1,0 +1,1 @@
+Test of the Barnes-Hut algorithm for a configuration of mass points in two dimensions. Required input is the BH angle theta. Output consists of diagnostic information on the Barnes-Hut tree associated with the collection of mass points.

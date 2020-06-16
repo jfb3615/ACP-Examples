@@ -1,0 +1,1 @@
+Solution to Laplace's equation on (0,1)^2 with V=0 on the bottom and left surfaces, and V=1 on the top and right surfaces. Checkerboard updating and Chebyschef acceleration are used with successive overrelaxation. Required input is the number of grid points and the solution tolerance. Output is V(x,y). 

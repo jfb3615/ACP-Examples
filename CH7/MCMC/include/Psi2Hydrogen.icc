@@ -1,0 +1,89 @@
+#include "QatGenericFunctions/AssociatedLegendre.h"
+#include "QatGenericFunctions/AssociatedLaguerrePolynomial.h"
+#include "QatGenericFunctions/Power.h"
+#include "QatGenericFunctions/Exp.h"
+#include "QatGenericFunctions/FixedConstant.h"
+#include "QatGenericFunctions/Variable.h"
+#include "QatGenericFunctions/Power.h"
+#include <stdexcept>
+#include <cmath>      // for pow()
+
+namespace Genfun {
+FUNCTION_OBJECT_IMP(Psi2Hydrogen)
+
+// This is the product n (n-1) (n-1)... 
+inline double factorial (int n) {
+  if (n<=1) return 1.0;
+  else return n*factorial(n-1);
+}
+
+//
+inline
+Psi2Hydrogen::Psi2Hydrogen(unsigned int n, unsigned int l, unsigned int m):
+AbsFunction(),
+  _n(n),
+  _l(l),
+  _m(m)
+{
+  if (m>l) throw std::runtime_error("Psi2Hydrogen: m exceeds l");
+  create();
+}
+
+inline
+Psi2Hydrogen::~Psi2Hydrogen() {
+  delete _function;
+}
+
+inline
+Psi2Hydrogen::Psi2Hydrogen(const Psi2Hydrogen & right):
+AbsFunction(),
+_n(right._n),
+_l(right._l),
+_m(right._m)
+{
+  create();
+}
+
+inline
+double Psi2Hydrogen::operator() (const Argument & a) const {
+  if (a.dimension()!=3) throw std::runtime_error("Psi2Hydrogen: dimension mismatch");
+  return (*_function)(a);
+}
+
+inline
+double Psi2Hydrogen::operator() (double ) const {
+  throw std::runtime_error("Psi2Hydrogen called with scalar argument");
+  return 0;
+}
+
+inline
+unsigned int Psi2Hydrogen::n() const {
+  return _n;
+} 
+
+inline
+unsigned int Psi2Hydrogen::l() const {
+  return _l;
+}
+
+inline
+unsigned int Psi2Hydrogen::m() const {
+  return _m;
+}
+
+
+inline
+void Psi2Hydrogen::create() {
+  FixedConstant I(1.0);
+  Variable r;
+  double asq = pow(2.0/_n, 3.0)*factorial(_n-_l-1)/(2.0*_n*factorial(_n+_l));
+  GENFUNCTION ar = (2.0/_n)*r;
+  AssociatedLegendre P(_l, _m);
+  AssociatedLaguerrePolynomial L(_n-_l-1, 2*_l+1);
+  Exp exp;
+  Power pow2L(2*_l);
+  
+  _function = (asq*exp(-ar)*pow2L(ar)*L(ar)*L(ar)%(P*P)%(I*I)).clone();
+
+}
+}

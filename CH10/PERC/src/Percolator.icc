@@ -1,0 +1,83 @@
+#include <random>
+#include <vector>
+class Percolator::Clockwork{
+ public:
+  
+  std::random_device dev;
+  std::mt19937 engine=std::mt19937(dev());
+  unsigned int NX;
+  unsigned int NY;
+  unsigned int NZ;
+  int         *array;
+  double       p;
+  int         *clusterArray;
+  std::vector<unsigned int>                        finalClusterSize;
+  std::vector<std::set<unsigned int>>              finalClusterContents;
+  std::vector<unsigned int>                        finalClusterColor;
+inline
+  unsigned int index(unsigned int i, unsigned int j, unsigned int k) {
+    return NZ*NY*k+NY*j+i;
+  }
+};
+
+inline
+double & Percolator::p() {
+  return c->p;
+}
+
+inline
+const double & Percolator::p() const {
+  return c->p;
+}
+
+inline
+bool Percolator::isOccupied(unsigned int i, unsigned int j, unsigned int k) const {
+  return c->array[c->index(i,j,k)]==1;
+}
+
+inline
+const int & Percolator::getClusterId(unsigned int i, unsigned int j, unsigned int k) const {
+  return c->clusterArray[c->index(i,j,k)];
+}
+
+inline
+int & Percolator::getClusterId(unsigned int i, unsigned int j, unsigned int k) {
+  return c->clusterArray[c->index(i,j,k)];
+}
+
+inline 
+unsigned int Percolator::NX() const {
+  return c->NX;
+}
+
+inline 
+unsigned int Percolator::NY() const {
+  return c->NY;
+}
+
+inline 
+unsigned int Percolator::NZ() const {
+  return c->NZ;
+}
+
+inline
+unsigned int Percolator::getNumClusters() const{
+  return c->finalClusterSize.size();
+}
+
+// Turns out:  cout of cluster #n is stored in p
+inline
+unsigned int Percolator::getClusterSize(int i) const {
+  return c->finalClusterSize[i];
+}
+
+inline
+const std::set<unsigned int> & Percolator::getClusterContents(int i)  const{
+  return c->finalClusterContents[i];
+}
+
+inline
+unsigned int Percolator::getColor(int serialNumber) const {
+  if (serialNumber==-1) return 0xFFFFFFFF;
+  return c->finalClusterColor[serialNumber];
+}

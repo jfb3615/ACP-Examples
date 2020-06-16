@@ -1,0 +1,2 @@
+Wolff cluster algorithm solution to the two-dimensional q-state Potts model. Required input is q, the sytem size, update protocol parameters for thermalization, autocorrelation, and measurements, parameters for looping in temperature, and an option for the initial configuration. Output is the average magnetization and the correlation between neighbouring spins.
+

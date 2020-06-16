@@ -1,0 +1,58 @@
+#include <stdexcept>
+inline JonesMatrix::JonesMatrix():a00(1.0),a01(0.0),a10(0.0),a11(1.1) {}
+
+inline JonesMatrix::JonesMatrix(JonesMatrix::Type type) {
+
+  const static Complex I(0,1);
+
+  if (type==Horizontal)          {a00=1.0 ;a01=0.0;  a10=0.0;  a11=0.0;}
+  else if (type==Vertical)       {a00=0.0 ;a01=0.0;  a10=0.0;  a11=1.0;}
+  else if (type==Diagonal)       {a00=0.5 ;a01=0.5;  a10=0.5;  a11=0.5;}
+  else if (type==Antidiagonal)   {a00=0.5 ;a01=-0.5; a10=-0.5; a11=0.5;}
+  else if (type==Right)          {a00=0.5 ;a01=0.5*I; a10=-0.5*I; a11=0.5;}
+  else if (type==Left)           {a00=0.5 ;a01=-0.5*I; a10=0.5*I; a11=0.5;}
+  else if (type==Identity)       {JonesMatrix();}
+  else if (type==FastHorizontal) {a00=1.0 ;a01=0.0; a10=0.0; a11=I;}
+  else if (type==FastVertical)   {a00=1.0 ;a01=0.0; a10=0.0; a11=-I;}
+  
+}
+
+inline JonesMatrix::JonesMatrix(const Complex & a00, 
+			 const Complex & a01,
+			 const Complex & a10,
+			 const Complex & a11):a00(a00),a01(a01),a10(a10),a11(a11) {}
+
+inline Complex & JonesMatrix::operator () (unsigned int i, unsigned int j) {
+  if (!((i==0) || (i==1))) throw std::range_error("Index out of range");
+  if (!((j==0) || (j==1))) throw std::range_error("Index out of range");
+  return i==0 ? 
+    (j==0 ? a00: a01) : ( j==0 ? a10: a11);
+} 
+
+inline const Complex & JonesMatrix::operator () (unsigned int i, unsigned int j) const {
+  if (!((i==0) || (i==1))) throw std::range_error("Index out of range");
+  if (!((j==0) || (j==1))) throw std::range_error("Index out of range");
+  return i==0 ? 
+    (j==0 ? a00: a01) : ( j==0 ? a10: a11);
+} 
+
+inline std::ostream & operator << (std::ostream & o, const JonesMatrix & m) {
+  return o << "[" << m(0,0) << " " << m(0,1)     <<  std::endl
+	   << " " << m(1,0) << " " << m(1,1)     << "]";
+  
+}
+
+inline JonesMatrix operator* (const JonesMatrix & m1, const JonesMatrix & m2) {
+  Complex a00= m1(0,0)*m2(0,0) + m1(0,1)*m2(1,0);
+  Complex a01= m1(0,0)*m2(0,1) + m1(0,1)*m2(1,1);
+  Complex a10= m1(1,0)*m2(0,0) + m1(1,1)*m2(1,0);
+  Complex a11= m1(1,0)*m2(0,1) + m1(1,1)*m2(1,1);
+  return JonesMatrix(a00,a01,a10,a11);
+  
+}
+
+inline JonesVector operator* (const JonesMatrix & m, const JonesVector & v) {
+  Complex v0= m(0,0)*v(0) + m(0,1)*v(1);
+  Complex v1= m(1,0)*v(0) + m(1,1)*v(1);
+  return JonesVector(v0,v1);
+}

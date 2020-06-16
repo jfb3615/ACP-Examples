@@ -1,0 +1,1 @@
+Lanczos algorithm applied to the quantum one-dimensional anisotropic Heisenberg antiferromagnet. Output is the lowest few eigenvalues. Required input is the spin chain length, the total z component of the spin, the anisotropy coupling g, and an option for the initial spin configuration.

@@ -1,0 +1,1 @@
+Stochastic guided random walk solution to the one-dimensional quantum SHO. Required input is the number of random walks, dtau, the guidance parameter g, the number of blocks of runs, and a random seed. Output is the ground state energy and the ground state matrix elements of x^n for n=2..8.

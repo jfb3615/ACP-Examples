@@ -1,0 +1,2 @@
+Wolff cluster algorithm and heat bath Monte Carlo solutions to the two-dimensional Isong model at finite temperature. Output consists of the magnetization, susceptibility, integrated autocorrelation time, and autocorrelation function. Required input is the system temperature, system size, update protocol parameters for thermalization, autocorrelation, and measurements, the number of autocorrelations to compute, an option for the inital configuration, and an option for heat bath or Wolff updating.
+

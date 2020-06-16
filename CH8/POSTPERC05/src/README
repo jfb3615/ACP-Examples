@@ -1,0 +1,3 @@
+This program fits data from a run of perc05, which generates sequences
+sets of trials, each set at a different value of p.  Datafiles from
+large runs of perc05 can be found in EXAMPLES/CH8/PERC05/run.

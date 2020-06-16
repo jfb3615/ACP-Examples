@@ -1,0 +1,74 @@
+#include <random>
+#include <vector>
+class IsingModel::Clockwork{
+ public:
+  
+  std::random_device dev;
+  std::mt19937 engine=std::mt19937(dev());
+
+  unsigned int NX;
+  unsigned int NY;
+  int         *array;
+  double       tau;
+  int          u;
+  int          m;
+
+  int iPrev;   // this is the x-index of the last step
+  int jPrev;   // this is the y-index of the last step
+  int delta;   // (-1,0,1) change in orientation, last step.  
+
+  inline
+  unsigned int index(unsigned int i, unsigned int j) {
+    return NY*j+i;
+  }
+  std::vector<double> cacheDE;
+};
+
+// Access & modification of temperature
+inline
+double & IsingModel::tau() {
+  c->cacheDE.clear();
+  return c->tau;
+}
+
+inline
+const double & IsingModel::tau() const {
+  return c->tau;
+}
+
+// Internal energy
+inline
+int IsingModel::U() const{
+  return c->u;
+}
+
+// Magnetization
+inline
+int IsingModel::M() const {
+  return c->m;
+}
+
+// Get i, j, delta;
+inline
+void IsingModel::lastStep(unsigned int & i, unsigned int &j, int &delta) {
+  i=c->iPrev;
+  j=c->jPrev;
+  delta=c->delta;
+  return;
+}
+
+// Get the state of each dipole:
+inline
+bool IsingModel::isUp(unsigned int i, unsigned int j) {
+  return c->array[c->index(i,j)]==1;
+}
+
+inline 
+unsigned int IsingModel::NX() const {
+  return c->NX;
+}
+
+inline 
+unsigned int IsingModel::NY() const {
+  return c->NY;
+}

@@ -1,0 +1,2 @@
+The Jarvis March algorithm for obtaining the convex hull for a collection of points in two dimensions.
+Required input is the number of points and a random seed. Output is the point coordinates and the coordinates of the convex hull.
