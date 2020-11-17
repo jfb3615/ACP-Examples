@@ -327,7 +327,7 @@ int main(int argc, char ** argv ) {
       {
 	PRectF rect=pHistA.rectHint();
 	rect.setYmin(0.0);
-	view2.setRect(rect);
+	view4.setRect(rect);
       }
 
       // INTERACT
