@@ -98,7 +98,7 @@ int main()
 {
 
   // Make a main window:
-  QWidget * mainwin = SoQt::init("Molecular Collisions");
+  QWidget * mainwin = SoQt::init("Sierpinski Cube");
 
   // The root of a scene graph
   SoSeparator *root = new SoSeparator;
