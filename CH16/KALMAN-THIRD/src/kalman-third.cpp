@@ -183,7 +183,8 @@ int main(int argc, char ** argv ) {
       key.add (&profilePlot2, "Used points");
       key.add (&v,           "Fit");
       view.add(&key);
-      
+      view.show();
+      window.show();
       app.exec();
       view.clear();
 

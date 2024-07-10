@@ -95,7 +95,6 @@ int main (int argc, char * * argv) {
   prop.pen.setColor("red");
   prop.brush.setStyle(Qt::SolidPattern);
   prop.symbolSize=5;
-  statStream << PlotStream::Clear();
   for (int p=0;p<3;p++) {
     prop.symbolStyle=style[p];
     prop.brush.setColor(color[p].c_str());
@@ -112,7 +111,6 @@ int main (int argc, char * * argv) {
       prof[p].addPoint(double(N),fabs(diff));
     }
   }
-  statStream << PlotStream::EndP();
   view.add(&prof[0]);
   view.add(&prof[1]);
   view.add(&prof[2]);

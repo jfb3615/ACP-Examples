@@ -150,6 +150,8 @@ int main(int argc, char ** argv ) {
       view.add(&profilePlot);
       view.add(&profilePlot2);
       view.add(&v);
+      view.show();
+      window.show();
       app.exec();
       view.clear();
       

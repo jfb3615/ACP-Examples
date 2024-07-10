@@ -16,16 +16,41 @@
 #include <cstdlib>
 #include <iostream>
 #include <string>
+#include <thread>
+#include <unistd.h>
 
+Genfun::RKIntegrator  integrator0;
+Genfun::Parameter &E= *integrator0.createControlParameter("E", -4, -5, 5);
+
+
+PlotView *view{nullptr};
 class Catcher : public QObject {
 
   Q_OBJECT
 
 public slots:
   void quit() { exit(0);}
+  void update() {
+
+    E.setValue(E.getValue()+0.01);
+    PlotStream statStream(view->statTextEdit());
+    
+    statStream << PlotStream::Clear()
+	       << PlotStream::Center()
+	       << PlotStream::Family("Sans Serif")
+	       << PlotStream::Size(16)
+    	       << "E=" <<  E.getValue()
+    	       << PlotStream::EndP();
+
+    view->recreate();
+  }
 
 };
 
+
+
+void updateView() {
+}
 
 int main (int argc, char * * argv) {
 
@@ -49,23 +74,14 @@ int main (int argc, char * * argv) {
   nextAction->setShortcut(QKeySequence("n"));
   quitAction->setShortcut(QKeySequence("q"));
   
-  QObject::connect(nextAction, SIGNAL(triggered()), &app, SLOT(quit()));
-  QObject::connect(quitAction, SIGNAL(triggered()), &catcher, SLOT(quit()));
+  QObject::connect(quitAction, SIGNAL(triggered()), &app, SLOT(quit()));
+  QObject::connect(nextAction, SIGNAL(triggered()), &catcher, SLOT(update()));
   
-  PRectF rect;
-  rect.setXmin(0.0);
-  rect.setXmax(20.0);
-  rect.setYmin(-200);
-  rect.setYmax(200);
-  
+  PRectF rect(0,20,-200,200);
+  view = new PlotView(rect);
+  window.setCentralWidget(view);
 
-  PlotView view(rect);
-  window.setCentralWidget(&view);
-  
-  using namespace Genfun;
-  
-
-  PlotStream titleStream(view.titleTextEdit());
+  PlotStream titleStream(view->titleTextEdit());
   titleStream << PlotStream::Clear()
 	      << PlotStream::Center() 
 	      << PlotStream::Family("Sans Serif") 
@@ -74,7 +90,7 @@ int main (int argc, char * * argv) {
 	      << PlotStream::EndP();
   
   
-  PlotStream xLabelStream(view.xLabelTextEdit());
+  PlotStream xLabelStream(view->xLabelTextEdit());
   xLabelStream << PlotStream::Clear()
 	       << PlotStream::Center()
 	       << PlotStream::Family("Symbol")
@@ -82,13 +98,30 @@ int main (int argc, char * * argv) {
 	       << "x"
 	       << PlotStream::EndP();
   
-  PlotStream yLabelStream(view.yLabelTextEdit());
+  PlotStream yLabelStream(view->yLabelTextEdit());
   yLabelStream << PlotStream::Clear()
 	       << PlotStream::Center()
 	       << PlotStream::Family("Symbol")
 	       << PlotStream::Size(16)
 	       << "y(x)"
 	       << PlotStream::EndP();
+  
+  PlotStream statStream(view->statTextEdit());
+  statStream << PlotStream::Clear()
+	     << PlotStream::Center()
+    	     << PlotStream::Family("Sans Serif")
+	     << PlotStream::Size(16)
+	     << "E="
+	     << E.getValue()
+	     << PlotStream::EndP();
+
+ 
+
+  E.setValue(E.getValue()+0.01);
+
+  
+  // Numerical part:
+  using namespace Genfun;
   
   
   static const double hbarc=197.3; // MeV fm
@@ -98,56 +131,43 @@ int main (int argc, char * * argv) {
   Exp exp;
   Variable R;
   GENFUNCTION V=-635*exp(-1.55*R)/(R+0.01) + 1458*exp(-3.11*R)/(R+0.01);
+  
+  
+  
+  Variable u(0,3),v(1,3),x(2,3);
+  GENFUNCTION dudx=v;
+  GENFUNCTION dvdx=2*mu/hbarc/hbarc*(V(x)-E)*u;
+  GENFUNCTION dxdx=FixedConstant(1.0)%FixedConstant(1.0)%FixedConstant(1.0);
+  
+  
+  integrator0.addDiffEquation(&dudx,"U",  1.0);
+  integrator0.addDiffEquation(&dvdx,"V",  0.0);
+  integrator0.addDiffEquation(&dxdx,"X",  0.0);
+  
 
-  for (double E=-4;E<1;E+=0.01) {
-    view.clear();
-    
-    Variable u(0,3),v(1,3),x(2,3);
-    GENFUNCTION dudx=v;
-    GENFUNCTION dvdx=2*mu/hbarc/hbarc*(V(x)-E)*u;
-    GENFUNCTION dxdx=FixedConstant(1.0)%FixedConstant(1.0)%FixedConstant(1.0);
-
-    RKIntegrator  integrator0;
-    integrator0.addDiffEquation(&dudx,"U",  1.0);
-    integrator0.addDiffEquation(&dvdx,"V",  0.0);
-    integrator0.addDiffEquation(&dxdx,"X",  0.0);
-
-    GENFUNCTION sU0=*integrator0.getFunction(u);
-    Variable X;
-    PlotFunction1D pU0=0.25*sU0;
-    PlotFunction1D pV =V;
-    {
-      PlotFunction1D::Properties prop;
-      prop.pen.setWidth(3);
-      prop.pen.setColor("darkRed");
-      pU0.setProperties(prop);
-      prop.pen.setColor("darkBlue");
-      pV.setProperties(prop);
-   }
-
-
-
-
-    PlotStream statStream(view.statTextEdit());
-    statStream << PlotStream::Clear()
-		 << PlotStream::Center()
-		 << PlotStream::Family("Sans Serif")
-		 << PlotStream::Size(16)
-	         << "E=";
-    statStream.stream << E;
-    statStream   << PlotStream::EndP();
-
-     
-    PlotFunction1D pE=FixedConstant(E);
-    view.add(&pU0);
-    view.add(&pV);
-    view.add(&pE);
-
-    view.show();
-    window.show();
-    app.exec();
+  GENFUNCTION sU0=*integrator0.getFunction(u);
+  Variable X;
+  PlotFunction1D pU0=0.25*sU0;
+  PlotFunction1D pV =V;
+  {
+    PlotFunction1D::Properties prop;
+    prop.pen.setWidth(3);
+    prop.pen.setColor("darkRed");
+    pU0.setProperties(prop);
+    prop.pen.setColor("darkBlue");
+    pV.setProperties(prop);
   }
-  return 1;
+
+  PlotFunction1D pE=FixedConstant(E.getValue());
+  view->add(&pU0);
+  view->add(&pV);
+  view->add(&pE);
+  
+
+  view->show();
+  window.show();
+  app.exec();
+  return 0;
 }
 
 #include "theDeuteron.moc"

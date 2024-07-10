@@ -127,7 +127,7 @@ int main(int argc, char ** argv ) {
       view.clear();
     }
     
-    std::random_shuffle(Points.begin(),Points.end());
+    std::shuffle(Points.begin(),Points.end(),engine);
     for (unsigned int i=0;i<Points.size();i++) {
       
       profilePlot2.addPoint(QPointF(Points[i].x(),Points[i].y()),error);;
@@ -156,6 +156,7 @@ int main(int argc, char ** argv ) {
       view.add(&profilePlot);
       view.add(&profilePlot2);
       view.add(&v);
+      window.show();
       app.exec();
       view.clear();
     }
