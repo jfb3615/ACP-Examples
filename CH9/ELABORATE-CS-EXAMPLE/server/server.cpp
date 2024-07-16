@@ -19,6 +19,8 @@
 #include "QatGenericFunctions/Variable.h"
 #include "Eigen/Dense"
 #include <cmath>
+#include <QToolBar>
+#include <QAction>
 #include <QMainWindow>
 #include <QTextEdit>
 #include <QApplication>
@@ -134,8 +136,11 @@ public:
 	    
 	    
 	  }
-	  else  {
-	    return;
+	  else if (command==1)  {
+	    break;
+	  }
+	  else {
+	    std::cout << "Unknown command" << std::endl;
 	  }
 	}
       }
@@ -165,6 +170,11 @@ int main(int argc, char ** argv ) {
   QApplication     app(argc,argv);
 
   QMainWindow window;
+  QToolBar *toolBar=window.addToolBar("Tools");
+  QAction  *quitAction=toolBar->addAction("Quit");
+  quitAction->setShortcut(QKeySequence("q"));
+  QObject::connect(quitAction, SIGNAL(triggered()), &app, SLOT(quit()));
+
   PRectF   rect;
   rect.setXmin(-3);
   rect.setXmax(3);
