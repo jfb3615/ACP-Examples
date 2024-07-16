@@ -47,7 +47,9 @@ public:
   SignalCatcher(PlotView *pV):pV(pV){}
   PlotView *pV;
 public slots:
-  void next() {
+
+  
+  void deflate() {
     static int i=0;
     pV->clear();
 
@@ -120,7 +122,7 @@ int main (int argc, char * * argv) {
   window.setCentralWidget(&view);
 
   SignalCatcher signalCatcher(&view);
-  QObject::connect(nextAction, SIGNAL(triggered()), &signalCatcher, SLOT(next()));
+  QObject::connect(nextAction, SIGNAL(triggered()), &signalCatcher, SLOT(deflate()));
 
   using namespace Genfun;
   Variable X;
