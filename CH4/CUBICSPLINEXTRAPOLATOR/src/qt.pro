@@ -12,7 +12,7 @@ QT += widgets
 CONFIG += qt debug c++17
 
 # Input
-SOURCES += *.cpp
+SOURCES += CubicSplineXtrapolatorWidget.cpp	cubicSplineXTrapolator.cpp
 HEADERS += *.h
 FORMS   += *.ui
 LIBS    += -ldl

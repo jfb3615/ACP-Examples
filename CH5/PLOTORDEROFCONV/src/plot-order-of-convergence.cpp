@@ -105,7 +105,7 @@ int main (int argc, char * * argv) {
       SimpleIntegrator        integrator(0,1,rule,N);
       double numAnswer =      integrator(*f[p]);
       double diff      =      numAnswer-anaAnswer[p];
-      if (!finite(diff)) {
+      if (!std::isfinite(diff)) {
 	break;
       }
       prof[p].addPoint(double(N),fabs(diff));

@@ -12,7 +12,7 @@ mac {
 CONFIG += qt debug c++17
 
 # Input
-SOURCES += *.cpp
+SOURCES += vanderpol.cpp
 HEADERS += *.h
 
 QMAKE_DEL_FILE=rm -rf

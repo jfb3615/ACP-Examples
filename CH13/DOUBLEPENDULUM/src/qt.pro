@@ -12,7 +12,7 @@ QT += widgets
 CONFIG += qt debug c++17
 
 # Input
-SOURCES += *.cpp
+SOURCES += DoublePendulumWidget.cpp doublePendulum.cpp
 HEADERS += *.h
 FORMS   += *.ui
 

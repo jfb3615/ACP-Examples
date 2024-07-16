@@ -35,8 +35,6 @@ public:
   
   HydrogenAtomMarkovChain(int n, int l, int m, double sigma=1.0):
     psi(n,l,m),
-    seed1(999),
-    seed2(345),
     gauss(0,sigma)
 
   {
@@ -76,8 +74,6 @@ public:
 private:
   
   Genfun::Psi2Hydrogen psi;   // the Hydrogen PDF
-  unsigned int seed1;
-  unsigned int seed2;
   mt19937  engine;
   uniform_real_distribution<double> flat;
   normal_distribution<double>       gauss;
