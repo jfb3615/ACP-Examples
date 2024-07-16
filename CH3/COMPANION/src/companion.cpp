@@ -19,6 +19,7 @@
 // companion matrix. Any real roots are co-displayed with the function.
 // Then all of the roots--including the complex ones-- are printed out.
 
+PlotProfile prf;
 
 int main (int argc, char * * argv) {
 
@@ -59,6 +60,42 @@ int main (int argc, char * * argv) {
     for (size_t j=0;j<i;j++) mono.accumulate(X);
     poly.accumulate(mono);
   }
+
+ //
+  // Construct the companion matrix:
+  //
+  MatrixXd comp=MatrixXd::Zero(C.size()-1,C.size()-1);
+  for (int i=0;i<comp.rows();i++) {
+    size_t lastCol=comp.cols()-1;
+    comp(i,lastCol)=-C[i];
+    if (i>0) comp(i,i-1)=1;
+  }
+  //
+  // Print it out:
+  //
+  cout << endl;
+  cout << "Companion matrix:\n" << comp << endl;
+  cout << endl;
+  //
+  // Diagonalize it:
+  //
+  EigenSolver<MatrixXd> solver(comp);
+  cout << "Roots of the equation:\n" << solver.eigenvalues() << endl;
+  //
+  // Now put the solution onto the graph:
+  //
+  for (int i=0;i<solver.eigenvalues().rows();i++) {
+    if (solver.eigenvalues()(i).imag()==0) prf.addPoint(solver.eigenvalues()(i).real(),0);
+  }
+
+  {
+    PlotProfile::Properties prop;
+    prop.brush.setStyle(Qt::SolidPattern);
+    prop.brush.setColor("darkBlue");
+    prop.symbolSize=10;
+    prf.setProperties(prop);
+  }
+
   //----------------------------------------------------------------------------------
 		    
   //================  We plot the polynomial         ==//
@@ -123,54 +160,13 @@ int main (int argc, char * * argv) {
   yLabelStream<< PlotStream::EndP();
 
   // Show the plot:
+  view.add(&P);
+  view.add(&prf);
+
   view.show();
   window.show();
   app.exec();
-  //
-  // The plot will show once and after the user clicks "next" we will
-  // construct the companion matrix and use it to find the roots.
-  //
-  PlotProfile prf;
-  {
-    PlotProfile::Properties prop;
-    prop.brush.setStyle(Qt::SolidPattern);
-    prop.brush.setColor("darkBlue");
-    prop.symbolSize=10;
-    prf.setProperties(prop);
-  }
-  //
-  // Construct the companion matrix:
-  //
-  MatrixXd comp=MatrixXd::Zero(C.size()-1,C.size()-1);
-  for (int i=0;i<comp.rows();i++) {
-    size_t lastCol=comp.cols()-1;
-    comp(i,lastCol)=-C[i];
-    if (i>0) comp(i,i-1)=1;
-  }
-  //
-  // Print it out:
-  //
-  cout << endl;
-  cout << "Companion matrix:\n" << comp << endl;
-  cout << endl;
-  //
-  // Diagonalize it:
-  //
-  EigenSolver<MatrixXd> solver(comp);
-  cout << "Roots of the equation:\n" << solver.eigenvalues() << endl;
-  //
-  // Now put the solution onto the graph:
-  //
-  for (int i=0;i<solver.eigenvalues().rows();i++) {
-    if (solver.eigenvalues()(i).imag()==0) prf.addPoint(solver.eigenvalues()(i).real(),0);
-  }
-  //
-  // And pop the view one more time:
-  //
-  view.add(&P);
-  view.add(&prf);
-  app.exec();
-  view.clear();
+
 
   
   return 1;
