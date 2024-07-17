@@ -98,7 +98,7 @@ int main (int argc, char * * argv) {
   PlotStream titleStream(view.titleTextEdit());
   titleStream << PlotStream::Clear()
 	      << PlotStream::Center() 
-	      << PlotStream::Family("Sans Serif") 
+	      << PlotStream::Family("Arial") 
 	      << PlotStream::Size(16)
 	      << "Barrier Potential (zero, up, more, less, zero)"
 	      << PlotStream::EndP();
@@ -107,7 +107,7 @@ int main (int argc, char * * argv) {
   PlotStream xLabelStream(view.xLabelTextEdit());
   xLabelStream << PlotStream::Clear()
 	       << PlotStream::Center()
-	       << PlotStream::Family("Sans Serif")
+	       << PlotStream::Family("Arial")
 	       << PlotStream::Size(16)
 	       << "x [units of reduced wavelength]"
 	       << PlotStream::EndP();
@@ -116,12 +116,8 @@ int main (int argc, char * * argv) {
   yLabelStream << PlotStream::Clear()
 	       << PlotStream::Center()
 	       << PlotStream::Size(16)
-	       << PlotStream::Family("Sans Serif")
-	       << "|"
-	       << PlotStream::Family("Symbol")
-	       << "y"
-	       << PlotStream::Family("Sans Serif")
-	       << "|"
+	       << PlotStream::Family("Arial")
+	       << "|ψ|"
 	       << PlotStream::Super()
 	       << "2"
 	       << PlotStream::Normal()
