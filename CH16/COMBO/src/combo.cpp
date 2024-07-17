@@ -118,21 +118,21 @@ int main(int argc, char ** argv ) {
     PlotStream titleStream(view->titleTextEdit());
     titleStream << PlotStream::Clear()
 		<< PlotStream::Center()
-		<< PlotStream::Family("Sans Serif")
+		<< PlotStream::Family("Arial")
 		<< PlotStream::Size(16)
 		<< tmap[view]
 		<< PlotStream::EndP();
     PlotStream xLabelStream(view->xLabelTextEdit());
     xLabelStream << PlotStream::Clear()
 		 << PlotStream::Center()
-		 << PlotStream::Family("Sans Serif")
+		 << PlotStream::Family("Arial")
 		 << PlotStream::Size(16)
 		 << xmap[view]
 		 << PlotStream::EndP();
     PlotStream yLabelStream(view->yLabelTextEdit());
     yLabelStream << PlotStream::Clear()
 		 << PlotStream::Center()
-		 << PlotStream::Family("Sans Serif")
+		 << PlotStream::Family("Arial")
 		 << PlotStream::Size(16)
 		 << ymap[view]
 		 << PlotStream::EndP();

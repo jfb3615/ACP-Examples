@@ -147,7 +147,7 @@ int main(int argc, char ** argv ) {
 	<< PlotStream::Clear() 
 	<< PlotStream::Family("Standard Symbols L")  
 	<< "    G " 
-	<< PlotStream::Family("Sans Serif")  
+	<< PlotStream::Family("Arial")  
 	<< PlotStream::Size(18)
 	<< "Distribution (Monte Carlo)" 
 	<< PlotStream::EndP();
@@ -158,14 +158,14 @@ int main(int argc, char ** argv ) {
 	<< PlotStream::Family("Standard Symbols L")
 	<< PlotStream::Size(16)
 	<< "\t\tr" 
-	<< PlotStream::Family("Sans Serif") 
+	<< PlotStream::Family("Arial") 
 	<< "(x)" 
 	<< PlotStream::EndP();
       
       // LABEL THE Y-AXIS
       xLabelStream 
 	<< PlotStream::Clear() 
-	<< PlotStream::Family("Sans Serif")  
+	<< PlotStream::Family("Arial")  
 	<< "\t\t\t x" 
 	<< PlotStream::EndP();
 

@@ -127,7 +127,7 @@ int main(int argc, char ** argv ) {
 	<< PlotStream::Clear() 
 	<< PlotStream::Center() 
 	<< "    Exp " 
-	<< PlotStream::Family("Sans Serif")  
+	<< PlotStream::Family("Arial")  
 	<< PlotStream::Size(18)  
 	<< "Distribution (Monte Carlo)" 
 	<< PlotStream::EndP();
@@ -137,14 +137,14 @@ int main(int argc, char ** argv ) {
 	<< PlotStream::Clear() 
 	<< PlotStream::Family("Symbol")  
 	<< "\t\tr" 
-	<< PlotStream::Family("Sans Serif") 
+	<< PlotStream::Family("Arial") 
 	<< "(x)" 
 	<< PlotStream::EndP();
       
       // LABEL THE Y-AXIS
       xLabelStream 
 	<< PlotStream::Clear() 
-	<< PlotStream::Family("Sans Serif")  
+	<< PlotStream::Family("Arial")  
 	<< "\t\t\t x" 
 	<< PlotStream::EndP();
 

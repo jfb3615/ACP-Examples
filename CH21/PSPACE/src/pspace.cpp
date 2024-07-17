@@ -156,7 +156,7 @@ int main (int argc, char * * argv) {
     PlotStream titleStream(viewEnergy.titleTextEdit());
     titleStream << PlotStream::Clear()
 		<< PlotStream::Center() 
-		<< PlotStream::Family("Sans Serif") 
+		<< PlotStream::Family("Arial") 
 		<< PlotStream::Size(14)
 		<< "Hydrogen S=0 Energy levels, N"
 		<< PlotStream::Sub()
@@ -170,7 +170,7 @@ int main (int argc, char * * argv) {
     PlotStream yLabelStream(viewEnergy.yLabelTextEdit());
     yLabelStream << PlotStream::Clear()
 		 << PlotStream::Center()
-		 << PlotStream::Family("Sans Serif")
+		 << PlotStream::Family("Arial")
 		 << PlotStream::Size(16)
 		 << "Energy [Hartrees]"
 		 << PlotStream::EndP();

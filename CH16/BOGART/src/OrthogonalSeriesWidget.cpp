@@ -22,7 +22,7 @@ OrthogonalSeriesWidget::OrthogonalSeriesWidget(QWidget *parent):
     PlotStream titleStream(ui.xView->titleTextEdit());
     titleStream << PlotStream::Clear()
 		<< PlotStream::Center() 
-		<< PlotStream::Family("Sans Serif") 
+		<< PlotStream::Family("Arial") 
 		<< PlotStream::Size(16)
 		<< "Projection into X"
 		<< PlotStream::EndP();
@@ -31,7 +31,7 @@ OrthogonalSeriesWidget::OrthogonalSeriesWidget(QWidget *parent):
     PlotStream xLabelStream(ui.xView->xLabelTextEdit());
     xLabelStream << PlotStream::Clear()
 		 << PlotStream::Center()
-		 << PlotStream::Family("Sans Serif")
+		 << PlotStream::Family("Arial")
 		 << PlotStream::Size(16)
 		 << "x"
 		 << PlotStream::EndP();
@@ -42,7 +42,7 @@ OrthogonalSeriesWidget::OrthogonalSeriesWidget(QWidget *parent):
 		 << PlotStream::Family("Symbol")
 		 << PlotStream::Size(16)
 		 << "r"
-		 << PlotStream::Family("Sans Serif")
+		 << PlotStream::Family("Arial")
 		 << "(x)"
 		 << PlotStream::EndP();
   }
@@ -50,7 +50,7 @@ OrthogonalSeriesWidget::OrthogonalSeriesWidget(QWidget *parent):
     PlotStream titleStream(ui.yView->titleTextEdit());
     titleStream << PlotStream::Clear()
 		<< PlotStream::Center() 
-		<< PlotStream::Family("Sans Serif") 
+		<< PlotStream::Family("Arial") 
 		<< PlotStream::Size(16)
 		<< "Projection into Y"
 		<< PlotStream::EndP();
@@ -59,7 +59,7 @@ OrthogonalSeriesWidget::OrthogonalSeriesWidget(QWidget *parent):
     PlotStream xLabelStream(ui.yView->xLabelTextEdit());
     xLabelStream << PlotStream::Clear()
 		 << PlotStream::Center()
-		 << PlotStream::Family("Sans Serif")
+		 << PlotStream::Family("Arial")
 		 << PlotStream::Size(16)
 		 << "y"
 		 << PlotStream::EndP();
@@ -70,7 +70,7 @@ OrthogonalSeriesWidget::OrthogonalSeriesWidget(QWidget *parent):
 		 << PlotStream::Family("Symbol")
 		 << PlotStream::Size(16)
 		 << "r"
-		 << PlotStream::Family("Sans Serif")
+		 << PlotStream::Family("Arial")
 		 << "(y)"
 		 << PlotStream::EndP();
     

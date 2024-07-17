@@ -20,18 +20,66 @@
 #include <thread>
 #include <random>
 
-
 using namespace Genfun;
 using namespace std;
 
+unsigned int        NFRAMES=1000;
+vector<Hist1D *>    histVector(NFRAMES);
+Variable            X;
+GENFUNCTION         psi0=(1/sqrt(2*M_PI))*Exp()(-X*X/2.0);
+std::vector<double> sumV;
+PlotProfile         timeDevProf;
 
+
+class SignalCatcher: public QObject {
+
+  Q_OBJECT
+
+private:
+  PlotView *view{nullptr};
+  PlotView *timeDevView{nullptr};
+  
+public:
+  SignalCatcher(PlotView *view,
+		PlotView *timeDevView):view(view), timeDevView(timeDevView){}
+
+public slots:
+  
+  void next() {
+   
+    static PlotFunction1D *pPsi0{nullptr};
+    static PlotHist1D     *p{nullptr};
+    delete pPsi0;
+    delete p;
+    static unsigned int t{0};
+    if (t==NFRAMES) exit(0);
+    
+    view->clear();
+    timeDevView->clear();
+
+    pPsi0=new PlotFunction1D(histVector[t]->sum()*histVector[t]->binWidth()*psi0);
+    PlotFunction1D::Properties prop;
+    prop.pen.setWidth(3);
+    prop.pen.setColor("darkRed");
+    pPsi0->setProperties(prop);
+    p=new PlotHist1D(*histVector[t]);
+    view->setRect(p->rectHint());
+    view->add(pPsi0);
+    view->add(p);
+    timeDevView->add(&timeDevProf);
+    
+    sumV.push_back(histVector[t]->sum());
+    timeDevProf.addPoint(t,sumV.back());
+    timeDevProf.addPoint(-t,sumV.back());
+    t++;
+  }
+};
 
 int main (int argc, char * * argv) {
   random_device dev;
   mt19937 engine(dev());
   normal_distribution<double> gauss(0,2.0);
   
-  unsigned int NFRAMES=1000;
   unsigned int NPARTICLES=1000;
   string usage= string("usage: ") + argv[0] + " [NFRAMES=val/1000] [NPARTICLES=val/1000]"; 
 
@@ -63,18 +111,16 @@ int main (int argc, char * * argv) {
   
   nextAction->setShortcut(QKeySequence("n"));
   
-  QObject::connect(nextAction, SIGNAL(triggered()), &app, SLOT(quit()));
   
   PRectF rect;
   rect.setXmin(-20);
   rect.setXmax(20);
   rect.setYmin(0.0);
   rect.setYmax(NPARTICLES*1.1);
-  
-
-  PlotView view(rect);
+  PlotView view (rect);
   window.add(&view, "Wavefunction");
 
+  
   PlotView timeDevView;
 
   rect.setXmin(0);
@@ -85,12 +131,14 @@ int main (int argc, char * * argv) {
 
   window.add(&timeDevView, "TimeDev");
   
-  PlotProfile timeDevProf;
+  SignalCatcher signalCatcher(&view,&timeDevView);
+  QObject::connect(nextAction, SIGNAL(triggered()), &signalCatcher, SLOT(next()));
+
   
   PlotStream titleStream(view.titleTextEdit());
   titleStream << PlotStream::Clear()
 	      << PlotStream::Center() 
-	      << PlotStream::Family("Sans Serif") 
+	      << PlotStream::Family("Arial") 
 	      << PlotStream::Size(16)
 	      << PlotStream::EndP();
   
@@ -98,14 +146,14 @@ int main (int argc, char * * argv) {
   PlotStream xLabelStream(view.xLabelTextEdit());
   xLabelStream << PlotStream::Clear()
 	       << PlotStream::Center()
-	       << PlotStream::Family("Sans Serif")
+	       << PlotStream::Family("Arial")
 	       << PlotStream::Size(16)
 	       << PlotStream::EndP();
   
   PlotStream yLabelStream(view.yLabelTextEdit());
   yLabelStream << PlotStream::Clear()
 	       << PlotStream::Center()
-	       << PlotStream::Family("Sans Serif")
+	       << PlotStream::Family("Arial")
 	       << PlotStream::Size(16)
 	       << PlotStream::EndP();
 
@@ -126,7 +174,6 @@ int main (int argc, char * * argv) {
       delete threadVector[i];
     }  
   }
-  vector<Hist1D *> histVector(NFRAMES);
   for (size_t t=0;t<NFRAMES;t++) {
     histVector[t]=new Hist1D(200, -20, 20);
     for (size_t i=0;i<NPARTICLES;i++) {
@@ -134,39 +181,12 @@ int main (int argc, char * * argv) {
     }
   }
   window.show();
-  GENFUNCTION psi0=(1/sqrt(2*M_PI))*Exp()(-X*X/2.0);
-  PlotFunction1D::Properties prop;
-  prop.pen.setWidth(3.0);
-  prop.pen.setColor("darkRed");
 
-  std::vector<double> sumV;
-
-
-  
-  for (int t=0;t<int(NFRAMES);t++) {
-    PlotFunction1D pPsi0=histVector[t]->sum()*histVector[t]->binWidth()*psi0;
-    pPsi0.setProperties(prop);
-    PlotHist1D p=*histVector[t];
-    view.setRect(p.rectHint());
-    view.add(&pPsi0);
-    view.add(&p);
-    timeDevView.add(&timeDevProf);
-
-    sumV.push_back(histVector[t]->sum());
-    timeDevProf.addPoint(t,sumV.back());
-    timeDevProf.addPoint(-t,sumV.back());
-    
-    
-    
-    app.exec();
-    view.clear();
-    timeDevView.clear();
-  }
-
-  PlotHist1D p=*histVector.back();
+  app.exec();
   
 
   return 1;
 }
 
  
+#include "QMC.moc"
