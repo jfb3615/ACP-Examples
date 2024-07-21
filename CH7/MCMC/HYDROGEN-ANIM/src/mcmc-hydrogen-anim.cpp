@@ -27,7 +27,7 @@ using namespace std;
 #define RBD_EPSILON 1E-4
 
 SoVertexProperty *property = NULL;
-SoPointSet       *set=NULL;
+SoPointSet       *pset=NULL;
 unsigned int N=1,L=0,M=0;
 unsigned int NPOINTS=10000;
 double fSigma=1.0;
@@ -96,15 +96,15 @@ timeSensorCallback(void * , SoSensor * )
   static unsigned int count=0;
   if (count>=NPOINTS) return;
 
-  set->vertexProperty.enableNotify(false);
+  pset->vertexProperty.enableNotify(false);
   for(unsigned int i=0;i<NTOT;i++) 
   {
   
     vProb=chain.move(vState,vProb);
     property->vertex.set1Value(count++,vState[0],vState[2],vState[1]);
   }
-  set->vertexProperty.enableNotify(true);
-  set->vertexProperty.touch();
+  pset->vertexProperty.enableNotify(true);
+  pset->vertexProperty.touch();
 }
 
 
@@ -177,9 +177,9 @@ int main (int argc, char ** argv) {
   timeSensor->setInterval(1.0f);
   timeSensor->schedule();
 
-  set = new SoPointSet;
-  set->vertexProperty=property;
-  root->addChild(set);
+  pset = new SoPointSet;
+  pset->vertexProperty=property;
+  root->addChild(pset);
     
   // Use one of the convenient SoQt viewer classes.
   SoQtExaminerViewer * eviewer = new SoQtExaminerViewer(mainwin);

@@ -42,7 +42,7 @@ double logLikelihood(const std::vector<DataPoint> & sequence, double pc, double 
     double M=sequence[i].total;
     double N=sequence[i].success;
     double logProb= lgamma(M+1) - lgamma(N+1) -lgamma(M-N+1)+sequence[i].success*log(p) + (sequence[i].total-sequence[i].success)*log(1-p);
-    if (!finite(logProb)) {
+    if (!std::isfinite(logProb)) {
     }
     else {
       lL+=logProb;

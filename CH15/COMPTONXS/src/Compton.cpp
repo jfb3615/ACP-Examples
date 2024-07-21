@@ -35,7 +35,6 @@ const Eigen::Matrix4cd Compton::M=Compton::m*Eigen::Matrix4cd::Identity();
 double Compton::sigma(double cosThetaLab, double phiLab) {
 
   //-------------------------------------------Define some constants-----------------------------------------------------
-  static const Complex I(0,1);
   static const double e=sqrt(4*M_PI*alpha);
 
   //--------------------------------------------------------------------------------------------------------------------------------

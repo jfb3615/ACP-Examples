@@ -132,7 +132,7 @@ int main (int argc, char * * argv) {
     PlotStream xLabelStream(view1.xLabelTextEdit());
     xLabelStream << PlotStream::Clear()
 		 << PlotStream::Center()
-		 << PlotStream::Family("Sans Serif")
+		 << PlotStream::Family("Arial")
 		 << PlotStream::Size(16)
 		 << "t"
 		 << PlotStream::EndP();
@@ -140,7 +140,7 @@ int main (int argc, char * * argv) {
     PlotStream yLabelStream(view1.yLabelTextEdit());
     yLabelStream << PlotStream::Clear()
 		 << PlotStream::Center()
-		 << PlotStream::Family("Sans Serif")
+		 << PlotStream::Family("Arial")
 		 << PlotStream::Size(16)
 		 << "v(t)"
 		 << PlotStream::EndP();
@@ -177,7 +177,7 @@ int main (int argc, char * * argv) {
     PlotStream xLabelStream(view2.xLabelTextEdit());
     xLabelStream << PlotStream::Clear()
 		 << PlotStream::Center()
-		 << PlotStream::Family("Sans Serif")
+		 << PlotStream::Family("Arial")
 		 << PlotStream::Size(16)
 		 << "v"
 		 << PlotStream::Sub()
@@ -189,7 +189,7 @@ int main (int argc, char * * argv) {
     PlotStream yLabelStream(view2.yLabelTextEdit());
     yLabelStream << PlotStream::Clear()
 		 << PlotStream::Center()
-		 << PlotStream::Family("Sans Serif")
+		 << PlotStream::Family("Arial")
 		 << PlotStream::Size(16)
 		 << "g"
 		 << PlotStream::EndP();

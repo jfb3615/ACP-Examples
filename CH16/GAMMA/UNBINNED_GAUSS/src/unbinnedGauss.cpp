@@ -186,7 +186,7 @@ int main(int argc, char ** argv ) {
       yLabelStream 
 	<< PlotStream::Clear() 
 	<< PlotStream::Center() 
-	<< PlotStream::Family("Sans Serif") 
+	<< PlotStream::Family("Arial") 
 	<< PlotStream::Size(16) 
 	<< "ρ(x)" 
 	<< PlotStream::EndP();
@@ -195,7 +195,7 @@ int main(int argc, char ** argv ) {
       xLabelStream 
 	<< PlotStream::Clear() 
 	<< PlotStream::Center() 
-	<< PlotStream::Family("Sans Serif")  
+	<< PlotStream::Family("Arial")  
 	<< PlotStream::Size(16) 
 	<< "x" 
 	<< PlotStream::EndP();

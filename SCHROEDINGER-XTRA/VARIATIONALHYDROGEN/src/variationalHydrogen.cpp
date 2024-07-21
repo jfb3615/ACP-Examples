@@ -190,7 +190,7 @@ int main (int argc, char * * argv) {
   PlotStream titleStream(view.titleTextEdit());
   titleStream << PlotStream::Clear()
 	      << PlotStream::Center() 
-	      << PlotStream::Family("Sans Serif") 
+	      << PlotStream::Family("Arial") 
 	      << PlotStream::Size(12)
 	      << "Hydrogen wavefunction, variational principle"
 	      << PlotStream::EndP();
@@ -199,18 +199,18 @@ int main (int argc, char * * argv) {
   PlotStream yLabelStream(view.yLabelTextEdit());
   yLabelStream << PlotStream::Clear()
 	       << PlotStream::Center()
-	       << PlotStream::Family("Sans Serif")
+	       << PlotStream::Family("Arial")
 	       << PlotStream::Size(16)
 	       << PlotStream::Family("Symbol")
 	       << "Y"
-	       << PlotStream::Family("Sans Serif")
+	       << PlotStream::Family("Arial")
 	       << "(x)"
 	       << PlotStream::EndP();
   
   PlotStream xLabelStream(view.xLabelTextEdit());
   xLabelStream << PlotStream::Clear()
 	       << PlotStream::Center()
-	       << PlotStream::Family("Sans Serif")
+	       << PlotStream::Family("Arial")
 	       << PlotStream::Size(16)
 	       << "x"
 	       << PlotStream::EndP();

@@ -48,21 +48,21 @@ IsingModelWidget::IsingModelWidget(IsingModel *model,QWidget *parent):
     PlotStream titleStream(view[i].view->titleTextEdit());
     titleStream << PlotStream::Clear()
 		<< PlotStream::Center() 
-		<< PlotStream::Family("Sans Serif") 
+		<< PlotStream::Family("Arial") 
 		<< PlotStream::Size(16)
 		<< view[i].title
 		<< PlotStream::EndP();
     PlotStream xLabelStream(view[i].view->xLabelTextEdit());
     xLabelStream << PlotStream::Clear()
 		<< PlotStream::Center() 
-		<< PlotStream::Family("Sans Serif") 
+		<< PlotStream::Family("Arial") 
 		<< PlotStream::Size(16)
 		<< view[i].xLabel
 		<< PlotStream::EndP();
     PlotStream yLabelStream(view[i].view->yLabelTextEdit());
     yLabelStream << PlotStream::Clear()
 		<< PlotStream::Center() 
-		<< PlotStream::Family("Sans Serif") 
+		<< PlotStream::Family("Arial") 
 		<< PlotStream::Size(16)
 		<< "fundamental units"
 		<< PlotStream::EndP();

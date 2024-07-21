@@ -121,9 +121,9 @@ int main (int argc, char * * argv) {
   yLabelStream<< PlotStream::EndP();
 
   // Show the plot:
-  view.show();
-  window.show();
-  app.exec();
+  //  view.show();
+  //window.show();
+  //app.exec();
   //
   // The plot will show once and after the user clicks "next" we will
   // construct the companion matrix and use it to find the roots.
@@ -162,6 +162,8 @@ int main (int argc, char * * argv) {
   //
   view.add(&prf);
   view.add(&prq);
+  window.show();
+  view.show();
   app.exec();
   view.clear();
 

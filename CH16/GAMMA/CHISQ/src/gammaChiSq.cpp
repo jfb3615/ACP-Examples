@@ -102,7 +102,7 @@ int main(int argc, char ** argv ) {
     xLabelStream 
 	  << PlotStream::Clear()
 	  << PlotStream::Center() 
-	  << PlotStream::Family("Sans Serif")  
+	  << PlotStream::Family("Arial")  
 	  << PlotStream::Size(16)
 	  << xLabelMap[view]
 	  << PlotStream::EndP();
@@ -110,7 +110,7 @@ int main(int argc, char ** argv ) {
     yLabelStream 
 	  << PlotStream::Clear()
 	  << PlotStream::Center() 
-	  << PlotStream::Family("Sans Serif")  
+	  << PlotStream::Family("Arial")  
 	  << PlotStream::Size(16)
 	  << yLabelMap[view]
 	  << PlotStream::EndP();
@@ -118,7 +118,7 @@ int main(int argc, char ** argv ) {
     titleStream 
 	  << PlotStream::Clear()
 	  << PlotStream::Center() 
-	  << PlotStream::Family("Sans Serif")  
+	  << PlotStream::Family("Arial")  
 	  << PlotStream::Size(16)
 	  << titleMap[view]
 	  << PlotStream::EndP();

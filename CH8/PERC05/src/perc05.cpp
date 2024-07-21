@@ -83,13 +83,8 @@ int main (int argc, char **argv) {
   //
   // Determine the number of CPUS on this machine:
   //
-  unsigned int NPROCESSORS=4;
-  FILE *cpu=popen("cat /proc/cpuinfo | grep processor | wc -l","r");
-  if (!fscanf(cpu,"%u",&NPROCESSORS)) {
-    std::cerr << "Warning, cannnot detect number of processors, using just 1" << std::endl;
-  }
-  pclose(cpu);
-
+  unsigned int NPROCESSORS=std::thread::hardware_concurrency();
+  
   // Start the threads
   double dp=(PMAX-PMIN)/NP;
   for (unsigned int i=0; i<NP; i++) {

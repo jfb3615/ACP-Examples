@@ -99,11 +99,7 @@ int main (int argc, char * * argv) {
 	       << PlotStream::Center()
 	       << PlotStream::Family("Sans Serif")
 	       << PlotStream::Size(16)
-	       << "t [Units of "
-	       << PlotStream::Family("Symbol")
-	       << "t"
-	       << PlotStream::Family("Sans Serif")
-	       << "]"
+	       << "t [Units of τ]"
 	       << PlotStream::EndP();
   
   PlotStream yLabelStream(view.yLabelTextEdit());

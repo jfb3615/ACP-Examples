@@ -57,10 +57,8 @@ int main (int argc, char * * argv) {
 
   Hist1D histogram(100, 0.0, 1.0);
   
-  double sum=0.0;
   for (int i=0;i<NPOINTS;i++) {
     double x = S(u(engine));
-    sum += 1.0/(N+1)*std::pow(x,5.0-N);
     histogram.accumulate(x);
   }   
 

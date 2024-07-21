@@ -1,6 +1,6 @@
 LDLIBS=-lgsl -lgslcblas
-CXXFLAGS=-I/usr/local/include
-LDFLAGS=-L/usr/local/lib -lgsl
+CXXFLAGS=-I/usr/local/include -I/opt/homebrew/include
+LDFLAGS=-L/opt/homebrew/lib -L/usr/local/lib 
 target=float
 
 $(target):

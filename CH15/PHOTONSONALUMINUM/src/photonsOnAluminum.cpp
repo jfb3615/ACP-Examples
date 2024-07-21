@@ -128,7 +128,7 @@ int main (int argc, char * * argv) {
     PlotStream statStream(viewSet[v]->statTextEdit());
     statStream << PlotStream::Clear()
 	       << PlotStream::Left() 
-	       << PlotStream::Family("Sans Serif") 
+	       << PlotStream::Family("Arial") 
 	       << PlotStream::Size(12)
 	       << PlotStream::Color(colors[0])
 	       << "― Rayleigh Scattering\n"
@@ -148,7 +148,7 @@ int main (int argc, char * * argv) {
     PlotStream titleStream(viewSet[v]->titleTextEdit());
     titleStream << PlotStream::Clear()
 		<< PlotStream::Center() 
-		<< PlotStream::Family("Sans Serif") 
+		<< PlotStream::Family("Arial") 
 		<< PlotStream::Size(16)
 		<< "Photons on Aluminium"
 		<< PlotStream::EndP();
@@ -157,7 +157,7 @@ int main (int argc, char * * argv) {
     PlotStream xLabelStream(viewSet[v]->xLabelTextEdit());
     xLabelStream << PlotStream::Clear()
 		 << PlotStream::Center()
-		 << PlotStream::Family("Sans Serif")
+		 << PlotStream::Family("Arial")
 		 << PlotStream::Size(16)
 		 << "E"
 		 << PlotStream::Sub()
@@ -169,7 +169,7 @@ int main (int argc, char * * argv) {
     PlotStream yLabelStream(viewSet[v]->yLabelTextEdit());
     yLabelStream << PlotStream::Clear()
 	       << PlotStream::Center()
-		 << PlotStream::Family("Sans Serif")
+		 << PlotStream::Family("Arial")
 		 << PlotStream::Size(16)
 		 << "μ [cm²/g]"
 		 << PlotStream::EndP();
