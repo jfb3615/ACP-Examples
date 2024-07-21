@@ -1,4 +1,3 @@
-#include "Eigen/Dense"
 #include "QatPlotWidgets/PlotView.h"
 #include "QatPlotWidgets/MultipleViewWindow.h"
 #include "QatPlotWidgets/MultipleViewWidget.h"
@@ -22,6 +21,11 @@
 #include <string>
 #include <sstream>
 #include <thread>
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#include "Eigen/Dense"
+#pragma GCC diagnostic pop
 
 using namespace Eigen;
 using namespace Genfun;
