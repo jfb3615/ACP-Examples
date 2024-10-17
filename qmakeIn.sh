@@ -2,5 +2,5 @@
 ThisDir=`pwd`
 ThatDir=`dirname $1`
 cd $ThatDir
-qmake
+qmake6
 cd $ThisDir
