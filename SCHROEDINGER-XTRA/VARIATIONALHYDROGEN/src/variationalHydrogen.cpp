@@ -145,10 +145,10 @@ int main (int argc, char * * argv) {
   //
   Variable    R;
   Sigma       F;
-  vector<FunctionNoop> FSet;
+  vector<ConstTimesFunction> FSet; // Inelegance introduced for bkwds compat. 
   for (unsigned int i=0;i<objective.getNumComponents();i++) {
-    GENFUNCTION F0=objective.getC(i)->getValue()*Exp()(-objective.getAlpha(i)->getValue()*R*R);
-    FSet.push_back(FunctionNoop(&F0));
+    ConstTimesFunction F0=objective.getC(i)->getValue()*Exp()(-objective.getAlpha(i)->getValue()*R*R);
+    FSet.push_back(F0);
     F.accumulate(F0);
   }
 
