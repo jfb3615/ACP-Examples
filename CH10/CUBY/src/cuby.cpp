@@ -113,6 +113,7 @@ int main()
   
   
   SoQtExaminerViewer * eviewer = new SoQtExaminerViewer(mainwin);
+  eviewer->setDoubleBuffer(false);
   eviewer->setSceneGraph(root);
   eviewer->show();
   

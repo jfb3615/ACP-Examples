@@ -153,6 +153,7 @@ int main (int argc, char * * argv) {
   // Make an examiner viewer:
   //
   SoQtExaminerViewer * eviewer = new SoQtExaminerViewer();
+  eviewer->setDoubleBuffer(false);
   //  
   // Make a tool bar with a quit button, and set the 
   // Keyboard accelerator:
