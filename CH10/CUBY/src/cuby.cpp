@@ -96,7 +96,9 @@ void replicate (SoSeparator *sep, int depth) {
 
 int main()
 {
-
+  // To run on Wayland sessions:
+  setenv("QT_QPA_PLATFORM","xcb",0);
+  
   // Make a main window:
   QWidget * mainwin = SoQt::init("Sierpinski Cube");
 
