@@ -59,6 +59,10 @@ void sampleDistribution (Genfun::GENFUNCTION function,
 
 int main (int argc, char * * argv) {
 
+  // To run on Wayland sessions:
+  setenv("QT_QPA_PLATFORM","xcb",0);
+
+  
   // Automatically generated:-------------------------:
 
   std::string usage= std::string("usage: ") + argv[0] + " [NPOINTS=val] [NMAX=val] [-f filename]"; 

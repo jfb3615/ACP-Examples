@@ -9,7 +9,7 @@ mac {
 }
 
 
-CONFIG += qt release c++17
+CONFIG += qt release c++20
 
 QT += widgets
 
