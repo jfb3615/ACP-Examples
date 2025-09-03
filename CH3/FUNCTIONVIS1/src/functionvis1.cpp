@@ -29,7 +29,7 @@ int main (int argc, char * * argv) {
   QToolBar *toolBar=window.addToolBar("Tools");
   QAction  *quitAction=toolBar->addAction("Quit");
   quitAction->setShortcut(QKeySequence("q"));
-  QObject::connect(quitAction, SIGNAL(triggered()), &app, SLOT(quit()));
+  QObject::connect(quitAction, &QAction::triggered, &app, &QApplication::quit);
 
   // The following code sets the scale for a linear plot:
   PRectF rect;
