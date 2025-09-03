@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <numbers> //for std::numbers::pi; requires C++20
 //----------------------------------------------------------------
 // 
 // Obtain the value of PI from the series expansion of arcsin
@@ -30,9 +31,9 @@ double arcsin(double x, int trunc) {
 //
 int main () {
 
-  
+  //std::numbers::pi requires C++20; else use M_PI
   for (unsigned int i=0; i<=1000;i++) {
-    double result= 6.0*arcsin(0.5,i)-M_PI;
+    double result= 6.0*arcsin(0.5,i)-std::numbers::pi;
     std::cout << i << " " << result << std::endl;
     if (!std::isfinite(result)) break;
   }
