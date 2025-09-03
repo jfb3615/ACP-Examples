@@ -51,6 +51,7 @@ public slots:
   
   void deflate() {
     static int i=0;
+    if (i==5) exit(0);
     pV->clear();
 
 
@@ -62,7 +63,7 @@ public slots:
 		<< title[i+1]
 		<< PlotStream::EndP();
     i++;
-    if (i>5) exit(0);
+
 
     double x = newtonRaphson(-1.0, *f);
     prf.addPoint(x,0);
@@ -122,7 +123,7 @@ int main (int argc, char * * argv) {
   window.setCentralWidget(&view);
 
   SignalCatcher signalCatcher(&view);
-  QObject::connect(nextAction, SIGNAL(triggered()), &signalCatcher, SLOT(deflate()));
+  QObject::connect(nextAction, &QAction::triggered, &signalCatcher, &SignalCatcher::deflate);
 
   using namespace Genfun;
   Variable X;
