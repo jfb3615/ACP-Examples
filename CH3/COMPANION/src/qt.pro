@@ -9,7 +9,7 @@ mac {
 }
 
 
-CONFIG += qt debug c++17
+CONFIG += qt debug c++20
 
 # Input
 SOURCES += *.cpp

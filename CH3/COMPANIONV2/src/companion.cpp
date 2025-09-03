@@ -28,7 +28,7 @@ int main (int argc, char * * argv) {
   
   nextAction->setShortcut(QKeySequence("n"));
   
-  QObject::connect(nextAction, SIGNAL(triggered()), &app, SLOT(quit()));
+  QObject::connect(nextAction, &QAction::triggered, &app, &QApplication::quit);
   
   PRectF rect;
   rect.setXmin(-5.0);
@@ -45,7 +45,7 @@ int main (int argc, char * * argv) {
   using namespace std;
   
   // Here we define a polynomial through its coefficients C which
-  const vector<double> C  ={1,0,-4, -0.5, -1}; // x⁴-4x²-½x-1
+  const vector C{1.0,0.0,-4.0, -0.5, -1.0}; // x⁴-4x²-½x-1
   Polynomial pPolynomial(C.begin(),C.end());
   std::vector<double> cDeriv=pPolynomial.coefficientsOfDerivative();
   Polynomial pPrime        (cDeriv.begin(), cDeriv.end());

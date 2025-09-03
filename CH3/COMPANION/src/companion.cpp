@@ -27,11 +27,11 @@ int main (int argc, char * * argv) {
   
   QMainWindow window;
   QToolBar *toolBar=window.addToolBar("Tools");
-  QAction  *nextAction=toolBar->addAction("Next");
+  QAction  *quitAction=toolBar->addAction("Quit");
   
-  nextAction->setShortcut(QKeySequence("n"));
+  quitAction->setShortcut(QKeySequence("q"));
   
-  QObject::connect(nextAction, SIGNAL(triggered()), &app, SLOT(quit()));
+  QObject::connect(quitAction, &QAction::triggered, &app, &QApplication::quit);
   
   PRectF rect;
   rect.setXmin(-5.0);
@@ -50,8 +50,8 @@ int main (int argc, char * * argv) {
   // Here we define a polynomial through its coefficients C which
   // are held in a vector. This is done by writing p(x)=Σ cᵢ (Π₀ⁱ x)
   Variable X;
-  const vector<double> C={-1,-0.5,-4,0, 1};
-  // it must be monic============ ^
+  const vector C{-1.,-0.5,-4.0, 0.0, 1.0};
+  // it must be monic================ ^
   
   Sigma poly;
   for (size_t i=0;i<C.size();i++) {

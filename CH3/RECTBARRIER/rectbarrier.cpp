@@ -3,7 +3,6 @@
 #include <complex>
 #include <string>
 #include <sstream>
-typedef std::complex<double> Complex;
 int main(int argc, char **argv) {
   using namespace std;
   string usage = string("Usage: ") 
@@ -32,8 +31,8 @@ int main(int argc, char **argv) {
     exit (0);
   }
 
-  Complex I(0,1.0);
-  Complex nk=k*sqrt(Complex(1-v));
+  complex I(0.0,1.0);
+  complex nk=k*sqrt(complex(1.0-v));
   
   Eigen::VectorXcd Y(4);
   Y(0)= -exp(-I*k);
@@ -68,7 +67,7 @@ int main(int argc, char **argv) {
 
   Eigen::MatrixXcd AInv= A.inverse();
   Eigen::VectorXcd BCDF=AInv*Y;
-  Complex B=BCDF(0), F=BCDF(3);
+  complex B=BCDF(0), F=BCDF(3);
   cout << "Complex coefficients" << endl;
   cout << BCDF << endl;
   cout << endl;
