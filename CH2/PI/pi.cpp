@@ -13,7 +13,7 @@
 //
 //----------------------------------------------------------------
 double F (unsigned int n) {
-  return exp(lgamma(2*n+1)-2*lgamma(n+1))/pow(4.0,n)/(2*n+1.0);
+  return std::exp(std::lgamma(2*n+1)-2*std::lgamma(n+1))/std::pow(4.0,n)/(2*n+1.0);
 }
 
 //
@@ -22,7 +22,7 @@ double F (unsigned int n) {
 double arcsin(double x, int trunc) {
   double result=0.0;
   for (int i=0;i<trunc;i++) {
-    result += F(i)*pow(x,2*i+1);
+    result += F(i)*std::pow(x,2*i+1);
   }
   return result;
 }

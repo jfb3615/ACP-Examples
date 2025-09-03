@@ -27,11 +27,11 @@ int main () {
     double approx= nsides*lside/2.0;
     std::cout << "Sides " << nsides << "; approx=" << std::setprecision(16) << approx << std::endl;
 
-    x1=(x1+x0)/abs(x1+x0);
+    x1=(x1+x0)/std::abs(x1+x0);
     nsides *=2; 
   }
   
   // 3. Take the logarithm of the imaginary number -1:
-  std::cout << std::setprecision(16) << imag(log(std::complex(-1.0))) << std::endl;
+  std::cout << std::setprecision(16) << imag(std::log(std::complex(-1.0))) << std::endl;
   return 0;
 }
