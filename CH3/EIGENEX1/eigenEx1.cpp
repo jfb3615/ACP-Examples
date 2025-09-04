@@ -4,13 +4,7 @@
 
 int main(int argc, char **argv) {
 
-  Eigen::VectorXd Y(2);
-  Y(0)= 1.0;
-  Y(1)= 3.0;
-
-  Eigen::MatrixXd A(2,2);
-  A(0,0)= 1.0; A(0,1)=2.0;
-  A(1,0)= 2.0; A(1,1)=9.0;
+  Eigen::MatrixXd A{{1.,2.},{2.,9.}};
 
   Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> s(A);
   Eigen::VectorXd  val=s.eigenvalues();

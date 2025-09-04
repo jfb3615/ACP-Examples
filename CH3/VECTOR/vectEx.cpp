@@ -25,7 +25,7 @@ double trajSeparation(const Eigen::Vector3d & P1,
 
 int main(int argc, char ** argv) {
   using namespace std;
-  Eigen::Vector3d r1(1,3,4), r2(-2,0,6), p1(3,4,9), p2(3,6,-4);
+  Eigen::Vector3d r1{1.,3.,4.}, r2{-2.,0.,6.}, p1{3.,4.,9.}, p2{3.,6.,-4.};
   cout << "Trajectory 1 position: \n" << r1 << endl;
   cout << "Trajectory 1 velocity: \n" << p1 << endl;
   cout << "Trajectory 2 position: \n" << r2 << endl;
