@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
    
   if (argc>1 && argv[1]==string("-?")) {
     cout << usage << endl;
-    exit (0);
+    return 1;
   }
 
   // default values
@@ -28,42 +28,21 @@ int main(int argc, char **argv) {
   }
   catch (exception &) {
     cout << usage << endl;
-    exit (0);
+    return 1;
   }
 
   complex I(0.0,1.0);
-  complex nk=k*sqrt(complex(1.0-v));
-  
-  Eigen::VectorXcd Y(4);
-  Y(0)= -exp(-I*k);
-  Y(1)= 0;
-  Y(2)= -I*k*exp(-I*k);
-  Y(3)= 0;
+  complex nk=k*sqrt(complex(1.0-v)),Ik=I*k,Ink=I*nk;
 
-  Eigen::MatrixXcd A(4,4);
-  // First row:
-  A(0,0)= exp(I*k)      ;
-  A(0,1)=-exp(-I*nk)    ; 
-  A(0,2)= -exp(I*nk)    ; 
-  A(0,3)=0              ;
+  Eigen::VectorXcd Y{{-exp(-Ik)    },
+		     {0.0           },
+		     {-Ik*exp(-Ik)},
+		     {0.0}          };
 
-  // Second row:
-  A(1,0)= 0             ;
-  A(1,1)= exp(I*nk)     ; 
-  A(1,2)= exp(-I*nk)    ; 
-  A(1,3)=-exp(I*k)      ;
-  
-  // Third row:
-  A(2,0)= -I*k*exp(I*k)  ;
-  A(2,1)=-I*nk*exp(-I*nk); 
-  A(2,2)= I*nk*exp(I*nk) ; 
-  A(2,3)=0                 ;
-
-  // Fourth row:
-  A(3,0)= 0                ;
-  A(3,1)=I*nk*exp(I*nk)  ; 
-  A(3,2)=-I*nk*exp(-I*nk); 
-  A(3,3)=-I*k*exp(I*k)   ;
+  Eigen::MatrixXcd A{{exp(Ik),     -exp(-Ink),   -exp(Ink),       0.0        },
+		     {0       ,    exp(Ink),      exp(-Ink),     -exp(Ik)    },
+		     {-Ik*exp(Ik),-Ink*exp(-Ink), Ink*exp(Ink),   0          },
+		     {0          , Ink*exp(Ink), -Ink*exp(-Ink), -Ik*exp(Ik)}};
 
   Eigen::MatrixXcd AInv= A.inverse();
   Eigen::VectorXcd BCDF=AInv*Y;
@@ -74,5 +53,5 @@ int main(int argc, char **argv) {
   cout << "Reflection coefficient  : " << norm(B)         << endl;
   cout << "Transmission coefficient: " << norm(F)         << endl;
   cout << "Sum:                      " << norm(B)+norm(F) << endl;
-
+  return 0;
 }

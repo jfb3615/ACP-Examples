@@ -19,7 +19,7 @@ double trajSeparation(const Eigen::Vector3d & P1,
                       const Eigen::Vector3d & v1,
                       const Eigen::Vector3d & v2) {
   
-    return fabs((P2-P1).dot(v2.cross(v1).normalized()));	
+  return std::fabs((P2-P1).dot(v2.cross(v1).normalized()));	
 
 }
 

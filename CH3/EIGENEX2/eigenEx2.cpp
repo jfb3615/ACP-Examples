@@ -9,5 +9,5 @@ int main(int argc, char **argv) {
   Eigen::VectorXd X=AInv*Y;
 
   std::cout << X << std::endl;
-
+  return 0;
 }

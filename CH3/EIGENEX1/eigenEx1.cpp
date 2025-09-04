@@ -21,7 +21,7 @@ int main(int argc, char **argv) {
 
   std::cout << "Reconstituted original matrix:\n" <<  vec*val.asDiagonal()*vec.transpose() << std::endl;
   std::cout << std::endl;
-
+  return 0;
 
 
 }
