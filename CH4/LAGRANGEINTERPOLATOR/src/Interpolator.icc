@@ -1,0 +1,235 @@
+#include <cmath>
+#include <cfloat>
+#include <stdexcept>
+
+template<typename T>
+inline TFInterface<T>::~TFInterface(){
+}
+
+template <typename T>
+inline Interpolator<T>::Interpolator() {}
+
+
+template <typename T>
+inline Interpolator<T>::Interpolator(const Interpolator & right)
+  :xPoints(right.xPoints)
+{}
+
+
+template <typename T>
+inline Interpolator<T>::~Interpolator() {
+}
+
+template <typename T>
+inline void Interpolator<T>::addPoint( double x, const T& y) {
+  xPoints.emplace_back(x,y);
+}
+
+template <typename T>
+inline unsigned int Interpolator<T>::getNumPoints() const {
+  return xPoints.size();
+}
+
+template <typename T>
+inline bool Interpolator<T>::empty() const {
+  return xPoints.empty();
+}
+
+
+
+template <typename T>
+inline void Interpolator<T>::getRange( double & min, double & max) const {
+  min=DBL_MAX, max=-DBL_MAX;
+  for (unsigned int i=0;i<xPoints.size();i++) {
+    min = std::min(min,xPoints[i].first);
+    max = std::max(max,xPoints[i].first);
+  }
+}
+
+
+template<typename T>
+inline Interpolator<T> * Interpolator<T>::clone() const {
+  return new Interpolator<T>(*this);
+}
+
+
+
+//==================
+template <typename T>
+inline Times<T>::Times(double constant, std::shared_ptr<const TFInterface<T>> arg):
+  _constant(constant),
+  _arg(arg)
+{
+}
+
+template <typename T>
+inline Times<T>::Times(const Times & right) :
+TFInterface<T> (right),
+_constant(right._constant),
+_arg(right._arg)
+{}
+
+
+template <typename T>
+inline Times<T>::~Times()
+{
+}
+
+
+template <typename T>
+inline T Times<T>::operator ()(double x) const
+{
+  return _constant * (*_arg)(x);
+}
+
+template<typename T>
+inline Times<T> * Times<T>::clone() const {
+  return new Times<T>(*this);
+}
+
+template <typename T>
+inline Times<T> operator * (double c, const TFInterface<T> &op2) {
+  std::shared_ptr<const TFInterface<T>> o2{op2.clone()};
+  return Times<T>(c, o2);
+}
+
+
+//===============================
+
+//==================
+template <typename T>
+inline Plus<T>::Plus(std::shared_ptr<const TFInterface<T>> arg1, std::shared_ptr<const TFInterface<T>> arg2):
+  _arg1(arg1),
+  _arg2(arg2)
+{
+}
+
+template <typename T>
+inline Plus<T>::Plus(const Plus & right) :
+TFInterface<T> (right),
+_arg1(right._arg1),
+_arg2(right._arg2)
+{}
+
+
+template <typename T>
+inline Plus<T>::~Plus()
+{
+}
+
+
+template <typename T>
+inline T Plus<T>::operator ()(double x) const
+{
+  return (*_arg1)(x)+(*_arg2)(x);
+}
+
+template<typename T>
+inline Plus<T> * Plus<T>::clone() const {
+  return new Plus<T>(*this);
+}
+
+template <typename T>
+inline Plus<T> operator + (const TFInterface<T> &op1, const TFInterface<T> &op2) {
+  std::shared_ptr<TFInterface<T>> o1{op1.clone()},o2{op2.clone()};
+  return Plus<T>(o1, o2);
+}
+
+
+//===============================
+//==================
+template <typename T>
+inline Minus<T>::Minus(std::shared_ptr<TFInterface<T>>arg1, std::shared_ptr<const TFInterface<T>> arg2):
+  _arg1(arg1),
+  _arg2(arg2)
+{
+}
+
+template <typename T>
+inline Minus<T>::Minus(const Minus & right) :
+TFInterface<T> (right),
+_arg1(right._arg1),
+_arg2(right._arg2)
+{}
+
+
+template <typename T>
+inline Minus<T>::~Minus()
+{
+}
+
+
+template <typename T>
+inline T Minus<T>::operator ()(double x) const
+{
+  return (*_arg1)(x)-(*_arg2)(x);
+}
+
+template<typename T>
+inline Minus<T> * Minus<T>::clone() const {
+  return new Minus<T>(*this);
+}
+
+template <typename T>
+inline Minus<T> operator - (const TFInterface<T> & op1, const TFInterface<T> &op2) {
+
+  std::shared_ptr<TFInterface<T>> o1{op1.clone()},o2{op2.clone()};
+  return Minus<T>(o1,o2);
+}
+
+
+//===============================
+template<typename T>
+inline GenInterpolator<T>::GenInterpolator():_op(nullptr){
+}
+
+template<typename T>
+inline GenInterpolator<T>::GenInterpolator(const Interpolator<T> &right):_op(right.clone()){
+}
+
+template<typename T>
+inline GenInterpolator<T>::GenInterpolator(const TFInterface<T> & op):_op(op.clone()){
+}
+
+template<typename T>
+inline GenInterpolator<T>::GenInterpolator(const GenInterpolator<T> &right):_op(right._op? right._op->clone() : nullptr){
+}
+
+template<typename T>
+inline T GenInterpolator<T>::operator ()(double argument) const {
+  return ((*_op)(argument));
+}
+
+template<typename T>
+inline GenInterpolator<T> * GenInterpolator<T>::clone() const {
+  return new GenInterpolator(*this);
+}
+
+template<typename T>
+inline GenInterpolator<T>::~GenInterpolator(){
+}
+
+template <typename T>
+inline GenInterpolator<T> & GenInterpolator<T>::operator=(const GenInterpolator<T> & right) {
+  if (this != &right)  _op=right._op;
+  return *this;
+}
+
+
+template<typename T> 
+inline T Interpolator<T>::operator() (double x) const {
+  
+  if (xPoints.size()==0) throw std::runtime_error("Interpolator: no interpolation points");
+  std::vector<T> q;
+  for (unsigned int i=0;i<xPoints.size();i++) q.emplace_back(xPoints[i].second);
+  for (unsigned int i=1;i<xPoints.size();i++) {
+    for (unsigned j=xPoints.size()-1;j>=i;j--) {
+      double c0=(1.0/(xPoints[j-i].first -xPoints[j].first));
+      double c1=c0*(x-xPoints[j].first);
+      double c2=c0*(x-xPoints[j-i].first);
+      q[j]=c1*q[j-1]-c2*q[j];
+    }
+  }
+  return q.back();
+  
+}
