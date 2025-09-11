@@ -65,7 +65,7 @@ CubicSplineXtrapolatorWidget::CubicSplineXtrapolatorWidget(QWidget *parent, cons
   ui.plotView->setYZero(false);
   
   
-  connect(ui.actionQuit,SIGNAL(triggered()), this, SLOT(quit()));
+  connect(ui.actionQuit,SIGNAL(triggered()), qApp, SLOT(quit()));
   connect(ui.actionNewInterpolation,SIGNAL(triggered()), this, SLOT(add()));
   connect(ui.actionDeleteInterpolation,SIGNAL(triggered()), this, SLOT(del()));
   connect(ui.listWidget,SIGNAL(itemSelectionChanged()), this, SLOT(functionSelect()));
