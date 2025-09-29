@@ -10,16 +10,20 @@ class Rational {
   //
  
  public:
+
+  // Default.
+  Rational(){};
+  
   // Construct from numerator and denominator;
- Rational(int num, int den):_num(num),_den(den){}
+  Rational(int num, int den):_num(num),_den(den){}
   
   // Construct from a double:
- Rational(double d):_num(1),_den(1){
+  Rational(double d):_num(1),_den(1){
     static int digits=std::numeric_limits<double>::digits;
     _num=(d*=(1<<(digits-1)));
     _den*=(1<<(digits-1));
   }
-
+  
   Rational (const Rational & source) {
     _num=source._num;
     _den =source._den;
@@ -27,18 +31,18 @@ class Rational {
   // accessors:
   long int num() const { return _num;}
   long int den() const { return _den;}
-
+  
   // compute the value as a double precision number:
   double value() const { return double(_num)/double(_den);}
-
+  
   // cast to double 
   operator double() const { return value();}
   
- private:
+private:
 
-  long int _num;  // store the numerator
-  long int _den;  // store the denominator
-
+  long int _num{0l};  // store the numerator
+  long int _den{1l};  // store the denominator
+  
 };
 
 #endif
