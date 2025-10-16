@@ -96,8 +96,11 @@ void replicate (SoSeparator *sep, int depth) {
 
 int main()
 {
+
+#ifndef __APPLE__
   // To run on Wayland sessions:
   setenv("QT_QPA_PLATFORM","xcb",0);
+#endif
   
   // Make a main window:
   QWidget * mainwin = SoQt::init("Sierpinski Cube");
@@ -127,4 +130,5 @@ int main()
   // Clean up resources.
   delete eviewer;
   root->unref();
+  return 0;
 }
