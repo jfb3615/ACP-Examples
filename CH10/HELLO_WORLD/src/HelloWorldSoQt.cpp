@@ -11,6 +11,11 @@
 #include <QWidget>
 int main(int argc, char ** argv)
 {
+  
+#ifndef __APPLE__
+  setenv ("QT_QPA_PLATFORM","xcb",0);
+#endif
+  
   QApplication app(argc, argv);
 
   QWidget mainwindow;
@@ -36,7 +41,8 @@ int main(int argc, char ** argv)
   
   // Init the viewer and get a pointer to it
   SoQtExaminerViewer *ev = new SoQtExaminerViewer(&mainwindow);
-
+  ev->setDoubleBuffer(false);
+  
   // Set the main node as content of the window and show it
   ev->setSceneGraph(root);
   ev->show();

@@ -78,6 +78,11 @@ linear_congruential_engine<uint_fast32_t,     65539,    0,0X80000000> randu(1);
  */
 int main(int argc, char * * argv) 
 {
+
+#ifndef __APPLE__
+  setenv ("QT_QPA_PLATFORM","xcb",0);
+#endif
+  
   const std::string usage=std::string(argv[0]) + " [-n N] [-f]";
   
 
@@ -170,7 +175,8 @@ int main(int argc, char * * argv)
   // Make an examiner viewer:
   //
   SoQtExaminerViewer * b = new SoQtExaminerViewer();
-
+  b->setDoubleBuffer(false);
+  
   //
   // Make a tool bar with a quit button, and set the
   // Keyboard accelerator:

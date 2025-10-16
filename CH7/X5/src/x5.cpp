@@ -56,12 +56,15 @@ int main (int argc, char * * argv) {
   std::uniform_real_distribution<double> u;
 
   Hist1D histogram(100, 0.0, 1.0);
-  
+  double sum{0};
   for (int i=0;i<NPOINTS;i++) {
     double x = S(u(engine));
+    sum+=pow(x,5-N);
     histogram.accumulate(x);
   }   
-
+  double integralX5=sum/NPOINTS/(N+1);
+  std::cout << integralX5 << std::endl;
+    
   histogram *= (1.0/histogram.sum());
 
   PlotHist1D plot(histogram);

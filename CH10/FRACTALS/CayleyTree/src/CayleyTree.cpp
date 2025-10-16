@@ -151,7 +151,11 @@ void drawLatticeOrigin(float x, float y, float len, int coordNumber, int nGenMax
 //______________________________
 int main(int argc, char ** argv)
 {
-    
+  
+#ifndef __APPLE__
+  setenv ("QT_QPA_PLATFORM","xcb",0);
+#endif
+
    /* -----------------------------
     * k-Caley Tree default settings
     * -----------------------------
@@ -261,7 +265,8 @@ int main(int argc, char ** argv)
   
   // Init the viewer and get a pointer to it
   SoQtExaminerViewer *b = new SoQtExaminerViewer(&window);
-
+  b->setDoubleBuffer(false);
+  
   // set background color to white (default is black)
   b->setBackgroundColor( SbColor(1, 1, 1) );
   

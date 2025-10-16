@@ -48,6 +48,11 @@ struct LatticeVector {
 
 int main(int argc, char ** argv)
 {
+
+#ifndef __APPLE__
+  setenv ("QT_QPA_PLATFORM","xcb",0);
+#endif
+  
   std::string usage= "usage " + std::string(argv[0]) + " [L=val/def=20] [p=val/def=0.31] -handlebox ";
   bool handleBox=false;
   unsigned int L=20;
@@ -135,6 +140,7 @@ int main(int argc, char ** argv)
 
   
   SoQtExaminerViewer * eviewer = new SoQtExaminerViewer(mainwin);
+  eviewer->setDoubleBuffer(false);
   eviewer->setSceneGraph(root);
   eviewer->show();
   

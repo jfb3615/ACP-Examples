@@ -22,7 +22,11 @@
   
 int main(int argc, char ** argv)
 {
-	bool wireframe = false;
+
+#ifndef __APPLE__
+  setenv ("QT_QPA_PLATFORM", "xcb",0);
+#endif
+  bool wireframe = false;
 
 	// Get the command-line options
 	for (int i=1; i<argc;i++) {
@@ -131,6 +135,7 @@ style2->style =  SoDrawStyle::LINES;
   
   // set the view with the root node and show it
   SoQtExaminerViewer *b = new SoQtExaminerViewer(window);
+  b->setDoubleBuffer(false);
   b->setTitle("Textured Earths");
   b->setSceneGraph(root);
   b->show();

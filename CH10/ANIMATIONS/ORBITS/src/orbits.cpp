@@ -59,7 +59,10 @@ SoSeparator *makeOrbit(double a) {
 
 int main(int argc, char ** argv)
 {
-
+#ifndef __APPLE__
+  setenv ("QT_QPA_PLATFORM","xcb",0);
+#endif
+  
   QApplication app(argc, argv);
   QWidget mainwin;
   SoQt::init(&mainwin);
@@ -69,6 +72,7 @@ int main(int argc, char ** argv)
   root->ref();
   
   SoQtExaminerViewer * eviewer = new SoQtExaminerViewer(&mainwin);
+  eviewer->setDoubleBuffer(false);
   eviewer->setSceneGraph(root);
   eviewer->show();
 

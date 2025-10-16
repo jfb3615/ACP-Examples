@@ -202,6 +202,10 @@ void makeRandomForest (int n_trees, SoGroup* group)
 int main(int argc, char **argv)
 {
 
+#ifndef __APPLE__
+  setenv ("QT_QPA_PLATFORM","xcb",0);
+#endif
+
   // Start the application:
   QApplication app(argc, argv);
 
@@ -230,6 +234,7 @@ int main(int argc, char **argv)
   
   // Init the viewer and get a pointer to it
   SoQtExaminerViewer *b = new SoQtExaminerViewer(&window);
+  b->setDoubleBuffer(false);
   //SoQtFlyViewer *b = new SoQtFlyViewer(window);
   //SoQtPlaneViewer *b = new SoQtPlaneViewer(window);
 

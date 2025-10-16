@@ -174,7 +174,7 @@ int main (int argc, char * * argv) {
   prop.brush.setStyle(Qt::SolidPattern);
  
   Hist1D pcHist("", NBINS, 0.58, .61);
-  Hist1D sgHist("", NBINS, 0.0, .10);
+  Hist1D sgHist("", 2.0*NBINS, 0.0, .20);
   if (0) prop.brush.setColor("darkRed");
   prof.setProperties(prop);
   for (unsigned int j=0;j<sequence.size();j++) {
@@ -222,9 +222,11 @@ int main (int argc, char * * argv) {
   }
   std::cout << " Mean: "<< std::endl << a << std::endl;
   std::cout << " Cov:  " << std::endl << C << std::endl;
+  std::cout << std::endl;
   std::cout << "p= " << a[0] << "+-" << sqrt(C(0,0)) << std::endl;
   std::cout << "s= " << a[1] << "+-" << sqrt(C(1,1)) << std::endl;
-  std::cout << double(accept)/double(tot) << std::endl;
+  std::cout << std::endl;
+  std::cout << "Acceptance rate: " << double(accept)/double(tot) << std::endl;
   resultP=a[0];
   resultS=a[1];
   

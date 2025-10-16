@@ -20,7 +20,9 @@
   
 int main(int argc, char ** argv)
 {
-
+#ifndef __APPLE__
+  setenv ("QT_QPA_PLATFORM","xcb",0);
+#endif
   QApplication app(argc, argv);
   
   
@@ -57,6 +59,7 @@ int main(int argc, char ** argv)
   
   // set the view with the root node and show it
   SoQtExaminerViewer *b = new SoQtExaminerViewer(&window);
+  b->setDoubleBuffer(false);
   b->setTitle("Textured Earth");
   b->setSceneGraph(root);
   b->show();

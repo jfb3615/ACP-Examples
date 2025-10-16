@@ -38,10 +38,10 @@ int main (int argc, char * * argv) {
   
   QMainWindow window;
   QToolBar *toolBar=window.addToolBar("Tools");
-  QAction  *nextAction=toolBar->addAction("Next");
-  nextAction->setShortcut(QKeySequence("n"));
+  QAction  *quitAction=toolBar->addAction("Quit");
+  quitAction->setShortcut(QKeySequence("q"));
   
-  QObject::connect(nextAction, SIGNAL(triggered()), &app, SLOT(quit()));
+  QObject::connect(quitAction, &QAction::triggered, &app, &QApplication::quit);
   
   PRectF rect;
   rect.setXmin(-1.0);
@@ -76,7 +76,7 @@ int main (int argc, char * * argv) {
   yLabelStream << PlotStream::Clear()
 	       << PlotStream::Center()
 	       << PlotStream::Size(16)
- 	       << PlotStream::Family("Sans Serif") << "f(x)" 
+ 	       << PlotStream::Family("Sans Serif") << "f(x)=2/(3+x)²" 
 	       << PlotStream::EndP();
 
 
@@ -104,13 +104,17 @@ int main (int argc, char * * argv) {
 		<< "Trap    : "; statBoxStream <<  fabs(2*tr7(f)-1) << ' ' << fabs(2*tr9(f)-1) << ' ' << fabs(2*tr11(f)-1) << "\n";  
   statBoxStream << "Simpson : "; statBoxStream <<  fabs(2*si7(f)-1) << ' ' << fabs(2*si9(f)-1) << ' ' << fabs(2*si11(f)-1) << "\n";  
   statBoxStream << "Gauss   : "; statBoxStream <<  fabs(2*gl7(f)-1) << ' ' << fabs(2*gl9(f)-1) << ' ' << fabs(2*gl11(f)-1) << "\n";    
-  statBoxStream << "\nRomberg : "; statBoxStream <<  fabs(2*romberg(f)-1) << "\n"; 
-  statBoxStream <<  PlotStream::EndP();
 
-  std::cout << romberg.numFunctionCalls() << std::endl;
+  statBoxStream << "\nRomberg : " << fabs(2*romberg(f)-1) 
+		<< "    (" << (int) romberg.numFunctionCalls() << " function calls.)\n" 
+		<<  PlotStream::EndP();
+
 
   PlotFunction1D plot(f);
-
+  PlotFunction1D::Properties prop;
+  prop.pen.setWidth(3);
+  prop.pen.setColor("blue");
+  plot.setProperties(prop);
 
 
   view.add(&plot);

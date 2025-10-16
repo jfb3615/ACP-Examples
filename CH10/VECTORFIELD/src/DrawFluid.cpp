@@ -27,8 +27,6 @@
 #include <Inventor/nodes/SoTranslation.h>
 #include <Inventor/nodes/SoTransform.h>
 
-#include <QDebug>
-
 #include <iostream>
   
 #include <random> // C++11
@@ -347,8 +345,6 @@ private:
 
 void DrawField::drawLine(float x1, float y1, float x2, float y2, SoSeparator* group)
 {
-    //std::cout << "\n - drawLine - x1,y1: " << x1 << "," << y1 << " - x2,y2: " << x2 << "," << y2 << std::endl;
-    
     SoSeparator *sep = new SoSeparator;
     
     // Declaring a set of 3D coordinates.
@@ -377,8 +373,6 @@ void DrawField::drawLine(float x1, float y1, float x2, float y2, SoSeparator* gr
 
 void DrawField::drawArrow(float x0, float y0, float theta, double len, SoSeparator* group)
 {
-    std::cout << "\n - drawArrow - x0,y0: " << x0 << "," << y0 << " - theta,mag: " << theta << "," << len << std::endl;            
-    
     /* Arrow parameters:
      *   - the total length of the arrow is 'arrowLength'
      *   - the line of the arrow is 2/3 of teh total length
@@ -390,8 +384,6 @@ void DrawField::drawArrow(float x0, float y0, float theta, double len, SoSeparat
     float coneHeight = arrowLength - cylinderHeight; // length of the arrow head
     float coneRadius = 0.1 ;//* arrowLength; // 'thickness' of the arrow head
     
-    qDebug() << x0 << y0+(cylinderHeight/2.0);
-    qDebug() << x0 << y0+(cylinderHeight/2.0)+(coneHeight/2.0);
     
     
     // Map the vector magnitude to a color
@@ -510,12 +502,12 @@ void DrawField::drawFieldLines(SoSeparator* group, int objectDraw, bool unitVect
                 //getValueBetweenTwoFixedColors(normField, red, green, blue);
                 //getValueDivergentMap05(normField, red, green, blue);
                 getValueColorMap(normField, red, green, blue);
-                std::cout << "max: " << _max << ", len: " << vecLen << ", norm: " << normField << ", r: " << red << ", b: " << blue << std::endl;
+
                 // Map color values from [0, 255] to [0.0, 1.0]
                 float redF = mapValueRange255ToOne(red);
                 float greenF = mapValueRange255ToOne(green);
                 float blueF = mapValueRange255ToOne(blue);
-                std::cout << "redF: " << redF << ", greenF: " << greenF << ", blueF: " << blueF << std::endl;
+
                 // Define a material for the grid
                 SoMaterial *heatMaterial = new SoMaterial;                
                 heatMaterial->diffuseColor.setValue(redF, greenF, blueF); // set material color
@@ -605,20 +597,6 @@ SoSeparator *makeGrid(int cellsX, int cellsY, float offsetX, float offsetY)
         ++n;
     }  
     
-    // Print the vertices' coordinates on screen  
-    /*
-    for (int i=0; i<n_vertices; ++i)
-        {       
-                if ( i%2 == 0 && i != 0 ) std::cout << std::endl;
-                
-                std::cout << "{ ";
-                for (int j=0; j<3; ++j) 
-                     std::cout << verticesGrid[i][j] << ", "; 
-                std::cout << " }";
-        } 
-        std::cout << std::endl;
-    */
-    
     
     
     // Create a SoCoordinate3 object to store the grid vertices' coordinates in the scene graph
@@ -642,7 +620,7 @@ SoSeparator *makeGrid(int cellsX, int cellsY, float offsetX, float offsetY)
      */
     for (int i=0; i<n_lines; ++i) {
         numVerticesGridLines[i] = 2; // this sets: {2, 2, 2, ...}
-        //std::cout << "numVerticesGridLines[" << i << "]: " << numVerticesGridLines[i] << std::endl;
+
     }
     
     
@@ -663,6 +641,11 @@ SoSeparator *makeGrid(int cellsX, int cellsY, float offsetX, float offsetY)
 
 int main()
 {
+  
+#ifndef __APPLE__
+  setenv ("QT_QPA_PLATFORM","xcb",0);
+#endif
+
   // Init the Qt windowing system
   // and get a pointer to the window 
   QWidget *window = SoQt::init("test");
@@ -691,7 +674,8 @@ int main()
   
   // Init the viewer and get a pointer to it
   SoQtExaminerViewer *b = new SoQtExaminerViewer(window);
-
+  b->setDoubleBuffer(false);
+  
   // Set the main node as content of the window and show it
   b->setSceneGraph(root);
   b->show();

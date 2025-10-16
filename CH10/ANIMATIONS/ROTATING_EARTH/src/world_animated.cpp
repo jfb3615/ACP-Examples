@@ -48,6 +48,10 @@ SoSeparator* drawEarth()
 int main(int argc, char ** argv)
 {
 
+#ifndef __APPLE__
+  setenv ("QT_QPA_PLATFORM","xcb",0);
+#endif
+  
   // Initialize the application:
   QApplication app(argc, argv);
 
@@ -102,6 +106,7 @@ int main(int argc, char ** argv)
   
   // set the view with the root node and show it
   SoQtExaminerViewer *b = new SoQtExaminerViewer(&window);
+  b->setDoubleBuffer(false);
   b->setTitle("Rotating Earth");
   b->setSceneGraph(root);
   b->show();

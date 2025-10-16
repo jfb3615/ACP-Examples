@@ -101,6 +101,11 @@ void drawTree(float x, float y, float len, float angle, float stroke, SoGroup* g
 int main(int argc, char **argv)
 {
 
+#ifndef __APPLE__
+  setenv ("QT_QPA_PLATFORM","xcb",0);
+#endif
+
+
   QApplication app(argc, argv);
   // Init the Qt windowing system
   // and get a pointer to the window 
@@ -123,7 +128,8 @@ int main(int argc, char **argv)
   
   // Init the viewer and get a pointer to it
   SoQtExaminerViewer *b = new SoQtExaminerViewer(&window);
-
+  b->setDoubleBuffer(false);
+  
   // Set the main node as content of the window and show it
   b->setSceneGraph(root);
   b->show();
