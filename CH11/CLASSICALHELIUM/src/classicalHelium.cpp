@@ -71,6 +71,11 @@ static void timeSensorCallback(void * , SoSensor * )
 
 int main (int argc, char * * argv) {
 
+#ifndef __APPLE__
+  setenv("QT_QPA_PLATFORM","xcb",0);
+#endif
+  
+  
   const std::string usage=std::string(argv[0]) + " [E=val] [Theta=val] [Phi=val] [TimeUnit=Val] ";
   //
   // Parse the input ------------------------------------------------------
@@ -211,6 +216,7 @@ int main (int argc, char * * argv) {
   // Make an examiner viewer:
   //
   SoQtExaminerViewer * eviewer = new SoQtExaminerViewer();
+  eviewer->setDoubleBuffer(false);
   //  
   // Make a tool bar with a quit button, and set the 
   // Keyboard accelerator:

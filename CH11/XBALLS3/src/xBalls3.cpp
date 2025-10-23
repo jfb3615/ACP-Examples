@@ -40,8 +40,15 @@ static void timeSensorCallback(void * , SoSensor * )
   }
 }
 
+
+
 int main (int argc, char * * argv) {
 
+#ifndef __APPLE__
+  setenv("QT_QPA_PLATFORM","xcb",0);
+#endif
+  
+  
   // Automatically generated:-------------------------:
 
   std::string usage= std::string("usage: ") + argv[0]; 
@@ -147,6 +154,7 @@ int main (int argc, char * * argv) {
     
   // Use one of the convenient SoQt viewer classes.
   SoQtExaminerViewer * eviewer = new SoQtExaminerViewer();
+  eviewer->setDoubleBuffer(false);
   eviewer->setDecoration(false);
   PRectF rect;
   rect.setXmin(0.0);

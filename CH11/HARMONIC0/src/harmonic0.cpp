@@ -37,12 +37,6 @@ int main (int argc, char * * argv) {
   
   QObject::connect(quitAction, SIGNAL(triggered()), &app, SLOT(quit()));
   
-  PRectF rect;
-  rect.setXmin(0.0);
-  rect.setXmax(10.0);
-  rect.setYmin(-2.0);
-  rect.setYmax(2.0);
-  
   //
   // Harmonic oscillator:
   //
@@ -61,7 +55,7 @@ int main (int argc, char * * argv) {
   GENFUNCTION   p = *integrator.getFunction(P);
   
 
-  PlotView view(rect);
+  PlotView view({0.0,10.0,-2.0,2.0});
   window.setCentralWidget(&view);
 
   PlotFunction1D pX=x,pP=p;

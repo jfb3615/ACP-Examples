@@ -23,6 +23,9 @@ using namespace Genfun;
 using namespace std;
 
 int main (int argc, char **argv) {
+  #ifndef __APPLE__
+  setenv("QT_QPA_PLATFORM","xcb",0);
+#endif
   
   double s=10;
   double b=8.0/3.0;
@@ -105,6 +108,7 @@ int main (int argc, char **argv) {
 
   // Use one of the convenient SoQt viewer classes.
   SoQtExaminerViewer * eviewer = new SoQtExaminerViewer(&mainwin);
+  eviewer->setDoubleBuffer(false);
   eviewer->setTransparencyType(SoGLRenderAction::SCREEN_DOOR);
   eviewer->setSceneGraph(root);
   eviewer->setBackgroundColor(SbColor(0.6,0.6, 1));
