@@ -1,14 +1,16 @@
 // SoQt includes
 #include <Inventor/Qt/SoQt.h>
 #include <Inventor/Qt/viewers/SoQtExaminerViewer.h>
-// Coin includes
 #include <Inventor/nodes/SoSeparator.h>
-// Inventor includes:
 #include <QApplication>
 #include <QWidget>
 int main(int argc, char **argv)
 {
+#ifndef __APPLE__
+  setenv("QT_QPA_PLATFORM","xcb",0);
+#endif
 
+  
   // Initialize the Qt system:
   QApplication app(argc, argv);
   
@@ -22,9 +24,12 @@ int main(int argc, char **argv)
   // The root of a scene graph
   SoSeparator *root = new SoSeparator;
   root->ref();
-  
+
+
   // Initialize an examiner viewer:
   SoQtExaminerViewer * eviewer = new SoQtExaminerViewer(&mainwin);
+  eviewer->setDoubleBuffer(false); // Needed for Wayland window manager.
+  
   eviewer->setSceneGraph(root);
   eviewer->show();
   

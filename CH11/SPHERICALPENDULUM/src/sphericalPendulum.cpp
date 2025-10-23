@@ -51,6 +51,10 @@ static void timeSensorCallback(void * , SoSensor * )
 
 int main (int argc, char * * argv) {
 
+#ifndef __APPLE__
+  setenv("QT_QPA_PLATFORM","xcb",0);
+#endif
+  
   // Automatically generated:-------------------------:
 
 
@@ -157,7 +161,7 @@ int main (int argc, char * * argv) {
 
     // Use one of the convenient SoQt viewer classes.
   SoQtExaminerViewer * eviewer = new SoQtExaminerViewer();
-  
+  eviewer->setDoubleBuffer(false);
 
   QToolBar *toolBar=mainwin.addToolBar("Tools");
   QAction  *quitAction=toolBar->addAction("Quit");
