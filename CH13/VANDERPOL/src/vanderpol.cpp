@@ -60,6 +60,11 @@ static void timeSensorCallback(void * , SoSensor * )
 
 int main (int argc, char * * argv) {
 
+#ifndef __APPLE__
+    // To run on Wayland sessions:
+    setenv("QT_QPA_PLATFORM","xcb",0);
+#endif
+    
   const std::string usage=std::string(argv[0]) + " [E=val] [Theta=val] [Phi=val] [TimeUnit=Val] ";
   //
   // Parse the input ------------------------------------------------------
