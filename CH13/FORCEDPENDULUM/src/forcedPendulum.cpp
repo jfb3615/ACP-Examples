@@ -64,6 +64,10 @@ static void timeSensorCallbackII(void * , SoSensor * )
 
 int main (int argc, char * * argv) {
 
+#ifndef __APPLE__
+  setenv ("QT_QPA_PLATFORM","xcb",0);
+#endif  
+
   const std::string usage=std::string(argv[0]) + " [F=val] [b=val] [Omega=val] [TimeUnit=val] [O=val] [pS=val]";
   //
   // Parse the input ------------------------------------------------------
@@ -116,7 +120,7 @@ int main (int argc, char * * argv) {
   SoTimerSensor * timeSensor = new SoTimerSensor;
   timeSensor->setFunction(O==0.0 ? timeSensorCallbackI : timeSensorCallbackII);
   timeSensor->setBaseTime(SbTime::getTimeOfDay());
-  timeSensor->setInterval(0.002f);
+  timeSensor->setInterval(0.0001f);
   timeSensor->schedule();
   //
   // Make a blue nucleus:
@@ -171,6 +175,7 @@ int main (int argc, char * * argv) {
   SoQtFullViewer * eviewer = O==0.0 ? 
     (SoQtFullViewer *) new SoQtExaminerViewer():
     (SoQtFullViewer *) new SoQtPlaneViewer();
+  eviewer->setDoubleBuffer(false);
   //  
   // Make a tool bar with a quit button, and set the 
   // Keyboard accelerator:

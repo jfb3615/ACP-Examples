@@ -14,6 +14,10 @@
 #include <Inventor/nodes/SoVertexProperty.h>
 #include <QApplication>
 #include <QWidget>
+#include <QDial>
+#include <QMainWindow>
+#include <QToolBar>
+#include <QLayout> 
 #include "QatGenericFunctions/Variable.h"
 #include "QatGenericFunctions/RKIntegrator.h"
 #include <iostream>
@@ -21,6 +25,53 @@
 
 using namespace Genfun;
 using namespace std;
+
+QDial *xDial{nullptr};
+QDial *yDial{nullptr};
+QDial *zDial{nullptr};
+
+Parameter *X0{nullptr};
+Parameter *Y0{nullptr};
+Parameter *Z0{nullptr};
+
+const AbsFunction *xt{nullptr};
+const AbsFunction *yt{nullptr};
+const AbsFunction *zt{nullptr};
+SoVertexProperty *pro{nullptr};
+
+class SignalCatcher: public QObject {
+
+  Q_OBJECT
+
+  public:
+  SignalCatcher (QDial *xd,QDial *yd,QDial *zd) :xd(xd),yd(yd),zd(zd){};
+
+private:
+  
+  QDial *xd{nullptr};
+  QDial *yd{nullptr};
+  QDial *zd{nullptr};
+
+public slots:
+
+  void update(int) {
+    X0->setValue(xd->value()/1000.0);
+    Y0->setValue(yd->value()/1000.0);
+    Z0->setValue(zd->value()/1000.0);
+
+    const unsigned int NTIMESLICES=5000;
+    const double tMax=50.0;
+
+    for (unsigned int i=0;i<NTIMESLICES;i++) {
+      double t = (tMax*i)/NTIMESLICES;
+      pro->vertex.set1Value(i,(*xt)(t),(*yt)(t),(*zt)(t));
+    }
+
+
+  }
+
+  
+};
 
 int main (int argc, char **argv) {
   #ifndef __APPLE__
@@ -39,24 +90,46 @@ int main (int argc, char **argv) {
   
   RKIntegrator integrator;
   
-  Parameter *x0=integrator.addDiffEquation(&DXDT, "X0", 2, -10, 10);
-  integrator.addDiffEquation(&DYDT, "Y0", 5, -10, 10);
-  integrator.addDiffEquation(&DZDT, "Z0", 5, -10, 10);
+  X0=integrator.addDiffEquation(&DXDT, "X0", 2, -10, 10);
+  Y0=integrator.addDiffEquation(&DYDT, "Y0", 5, -10, 10);
+  Z0=integrator.addDiffEquation(&DZDT, "Z0", 5, -10, 10);
   
-  const AbsFunction   *xt = integrator.getFunction(X);
-  const AbsFunction   *yt = integrator.getFunction(Y);
-  const AbsFunction   *zt = integrator.getFunction(Z);
+  xt = integrator.getFunction(X);
+  yt = integrator.getFunction(Y);
+  zt = integrator.getFunction(Z);
   
-  x0->setValue(30);
-  //---------------------------------------------------------
+   //---------------------------------------------------------
   // Now that we have reboundCollection, start visualizing!
 
   QApplication app(argc, argv);
-  QWidget mainwin;
+  QMainWindow mainwin;
+  
   mainwin.setMinimumWidth(800);
   mainwin.setMinimumHeight(800);
   SoQt::init(&mainwin);
+
+
+  xDial = new QDial;
+  yDial = new QDial;
+  zDial = new QDial;
+
+  QToolBar *toolBar=mainwin.addToolBar("Tools");
+  QAction  *quitAction=toolBar->addAction("Quit");
+   
+  quitAction->setShortcut(QKeySequence("q"));
   
+  QObject::connect(quitAction, SIGNAL(triggered()), &app, SLOT(quit()));
+  
+  
+  for (QDial * dial : {xDial,yDial,zDial}) {
+    toolBar->addWidget(dial);
+  }
+  
+  SignalCatcher signalCatcher(xDial,yDial,zDial);
+  QObject::connect(xDial,&QDial::valueChanged,&signalCatcher,&SignalCatcher::update);
+  QObject::connect(yDial,&QDial::valueChanged,&signalCatcher,&SignalCatcher::update);
+  QObject::connect(zDial,&QDial::valueChanged,&signalCatcher,&SignalCatcher::update);
+
   SoSeparator *root = new SoSeparator;
   root->ref();
 
@@ -89,30 +162,40 @@ int main (int argc, char **argv) {
   root->addChild(red);
 
 
-  SoVertexProperty *property= new SoVertexProperty();
+  pro= new SoVertexProperty;
   
   const unsigned int NTIMESLICES=5000;
   const double tMax=50.0;
 
   for (unsigned int i=0;i<NTIMESLICES;i++) {
     double t = (tMax*i)/NTIMESLICES;
-    property->vertex.set1Value(i,(*xt)(t),(*yt)(t),(*zt)(t));
+    pro->vertex.set1Value(i,(*xt)(t),(*yt)(t),(*zt)(t));
   }
 
   SoLineSet *lines = new SoLineSet;
-  lines->vertexProperty=property;
+  lines->vertexProperty=pro;
   root->addChild(lines);
 
 
   
 
   // Use one of the convenient SoQt viewer classes.
-  SoQtExaminerViewer * eviewer = new SoQtExaminerViewer(&mainwin);
+
+
+  SoQtExaminerViewer * eviewer = new SoQtExaminerViewer(mainwin.centralWidget());
   eviewer->setDoubleBuffer(false);
   eviewer->setTransparencyType(SoGLRenderAction::SCREEN_DOOR);
   eviewer->setSceneGraph(root);
   eviewer->setBackgroundColor(SbColor(0.6,0.6, 1));
-  eviewer->show();
+ 
+  {
+    QWidget *wTmp=new QWidget;
+    wTmp->setLayout(new QVBoxLayout);
+    wTmp->layout()->addWidget(eviewer->getWidget());
+    mainwin.setCentralWidget(wTmp);
+  }
+
+  
   
   // Pop up the main window.
   SoQt::show(&mainwin);
@@ -130,6 +213,7 @@ int main (int argc, char **argv) {
 }
 
 
+#include "lorenz.moc"
 
 
 
