@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>eulerForm</class>
+ <widget class="QWidget" name="eulerForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>139</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>100</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="1" column="2">
+    <widget class="QDial" name="psiDial"/>
+   </item>
+   <item row="1" column="0">
+    <widget class="QDial" name="phiDial"/>
+   </item>
+   <item row="1" column="1">
+    <widget class="QDial" name="thetaDial"/>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLabel" name="thetaLabel">
+     <property name="text">
+      <string>θ</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QLabel" name="psiLabel">
+     <property name="text">
+      <string>ψ</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="phiLabel">
+     <property name="text">
+      <string>φ</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="3">
+    <widget class="QPushButton" name="resetButton">
+     <property name="text">
+      <string>reset</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>phiDial</tabstop>
+  <tabstop>thetaDial</tabstop>
+  <tabstop>psiDial</tabstop>
+  <tabstop>resetButton</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

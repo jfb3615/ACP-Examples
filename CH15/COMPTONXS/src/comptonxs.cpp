@@ -11,6 +11,7 @@
 #include "QatGenericFunctions/CutBase.h"
 #include "QatGenericFunctions/GaussIntegrator.h"
 #include "QatGenericFunctions/GaussQuadratureRule.h"
+#include "Inventor/Qt/viewers/SoQtExaminerViewer.h"
 #include <Inventor/Qt/SoQt.h>
 #include <QApplication>
 #include <QMainWindow>
@@ -79,6 +80,9 @@ double totalCrossSection(double k) {
 
 int main (int argc, char * * argv) {
 
+#ifndef __APPLE__
+  setenv("QT_QPA_PLATFORM","xcb",0);
+#endif  
   // Automatically generated:-------------------------:
 
   {
@@ -290,6 +294,20 @@ int main (int argc, char * * argv) {
     polarFunctionViewUnit.setFunction(&polarkEqM);
     polarFunctionViewTwice.setFunction(&polarkEq2M);
     polarFunctionViewTenTimes.setFunction(&polarkEq10M);
+
+    for (PolarFunctionView *p : 
+      {
+	&polarFunctionViewHundredth,
+	&polarFunctionViewTenth,
+	&polarFunctionViewHalf,
+	&polarFunctionViewUnit,
+	&polarFunctionViewTwice,
+	&polarFunctionViewTenTimes
+      }) {
+      p->getViewer()->setDoubleBuffer(false);
+    }
+      
+
     
     
     window.show();
