@@ -70,7 +70,7 @@ timeSensorCallback(void * , SoSensor * )
   // Call time evolution to update position array x[]:
   //
   static unsigned int k{0};
-  model->takeStep(0.01);
+  model->takeStep(0.0001);
   double t=model->getTime();
   if (!(k++ % 10)) {
     workDoneProf.addPoint(t,model->getWorkOnEnvironment());
