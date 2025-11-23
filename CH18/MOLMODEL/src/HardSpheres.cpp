@@ -116,7 +116,7 @@ void HardSpheres::takeStep(double deltaT) {
   if (c!=upcomingCollision.end()) {
     const Collision & collision=*c;
     if (collision.cTime<deltaT) {
-      std::cout << "Collide \a" << std::endl;
+      std::cout << "\a" << std::flush;
       unsigned int i=collision.i, j=collision.j; 
       x[i]+=(v[i]*collision.cTime);
       while (x[i].x()<-L/2.0) x[i].x()+=L;

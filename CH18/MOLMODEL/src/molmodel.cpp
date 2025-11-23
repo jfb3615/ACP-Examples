@@ -116,13 +116,35 @@ int main(int argc, char **argv)
   setenv("QT_QPA_PLATFORM","xcb",0);
 #endif  
 
-  double E{1000.0};
+  std::string program=argv[0];
+  std::string usage =
+    program +
+    " system=value: \n    1=piston\n    2=periodic\n    3=hardspheres\n    4=lennard-jones\n" +
+    "T=value/def=2.0\n" +
+    "N=value/def=2000\n" +
+    "a=value/def=0.01\n" +
+    "EPS=value/def=1.0\n";
+
+  std::string examples =
+    "Examples\n" + 
+    program + " T=10000 \n" +
+    program + " system=2 T=10000 \n" +
+    program + " system=3 a=0.2 N=3 T=100 \n" +
+    program + " system=4 a=0.02 N=200 T=100 T=100 \n";
+    if (argc==2 && std::string(argv[1])=="-h") {
+    std::cout << "\n" << usage << std::endl;
+    std::cout << "\n";
+    std::cout << examples << std::endl;
+    return 0;
+  }
+  
+  double T{0.5};
   double N{2000.0};
   double a{0.01};
   double ePs{1.0}; // Interaction strength ("Leonard-Jones");
   double system=1;
   NumericInput input;
-  input.declare("E",   "Energy of system",    E);
+  input.declare("T",   "Temperature",         T);
   input.declare("N",   "Number of Particles", N);
   input.declare("a",   "radius of sphere",    a);
   input.declare("EPS", "interaction strength",ePs);
@@ -136,12 +158,12 @@ int main(int argc, char **argv)
     return 1;
   }
 
-  E=input.getByName<double> ("E");
+  T=input.getByName<double> ("T");
   N=input.getByName<unsigned int> ("N");
   a=input.getByName<double> ("a");
   ePs=input.getByName<double> ("EPS");
   system=input.getByName<unsigned int> ("system");
-
+  double E=T*N;
   if (system==1) {
     idealGasModel=new IdealGasModel(N,1.0,100.0,E);
     model=idealGasModel;
@@ -150,13 +172,18 @@ int main(int argc, char **argv)
     model=new PeriodicIdeal(N,1.0,E);
   }
   else if (system==3) {
-    hardSpheresModel=new HardSpheres(N,1.0,a,2.0);
+    hardSpheresModel=new HardSpheres(N,1.0,a,E);
     model=hardSpheresModel;
   }
   else if (system==4) {
     lennardJonesModel =new ArgonLennardJones(N,1.0,a, ePs, E);
     model=lennardJonesModel;
   }
+  else {
+    std::cerr << usage << std::endl;
+    return 1;
+  }
+
   //---------------------------------------------------------
   // Now that we have reboundCollection, start visualizing!
   QApplication app(argc, argv);
@@ -262,7 +289,7 @@ int main(int argc, char **argv)
   eviewer->setDoubleBuffer(false);
   eviewer->setSceneGraph(root);
 
-  PlotView energyView({0.0,20.0,0.0, 1200.0});
+  PlotView energyView({0.0,2.0,0.0, 1.5*E});
   energyView.add(&workDoneProf);
   energyView.add(&moleculeEnergyProf);
   energyView.add(&potentialEnergyProf);
@@ -283,13 +310,18 @@ int main(int argc, char **argv)
     prop.brush.setColor("black");
     totalEnergyProf.setProperties(prop);
   }
-
+  std::vector<std::string> titles={
+    "Ideal gas in a cylinder",
+    "Periodic Boundary Conditions",
+    "Hard Spheres",
+    "Interacting Lennard-Jones Gas"};
+    
   PlotStream titleStream(energyView.titleTextEdit());
   titleStream << PlotStream::Clear()
 	      << PlotStream::Center() 
 	      << PlotStream::Family("Arial") 
 	      << PlotStream::Size(16)
-	      << "Adiabatic expansion of a gas"
+	      << titles[system] 
 	      << PlotStream::EndP();
   
   
@@ -327,9 +359,6 @@ int main(int argc, char **argv)
 
   
 
-  std::cout << "Kinetic"   << model->getKineticEnergy() << std::endl;
-  std::cout << "Potential" <<  model->getPotentialEnergy() << std::endl;
-  
   // Pop up the main window.
   SoQt::show(&mainwin);
   // Loop until exit.

@@ -9,6 +9,17 @@ DESTDIR = ../local/bin
 CONFIG += qt release c++20
 QT+= widgets
 # Input
+
+
+
+contains(CONFIG, molmodel) | contains(CONFIG,noblegas)  {
+
+}
+else {
+  error( usage:  \"qmake -config molmodel\" or \"qmake -config noblegas\")   
+}
+  
+
 SOURCES += MolecularModel.cpp AbsModel.cpp IdealGasModel.cpp PeriodicIdeal.cpp HardSpheres.cpp ArgonLennardJones.cpp
 
 # qmake[6] -config molmodel
