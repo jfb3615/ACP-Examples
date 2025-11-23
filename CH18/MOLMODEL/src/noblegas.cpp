@@ -29,15 +29,15 @@ int main(int argc, char **argv)
   static constexpr double L=1.0;
   PlotProfile totalEnergyProf,moleculeEnergyProf,workDoneProf, potentialEnergyProf;
   PlotProfile xyProf,yzProf,zxProf;
-  
-  double       E{200.0};
-  unsigned int N{100};
+
+  double       T{1.0};
+  unsigned int N{200};
   unsigned int NSTEPS{40000};
   double a{0.025};
   double ePs{1.0}; // Interaction strength ("Leonard-Jones");
   bool Lattice{false};
   NumericInput input;
-  input.declare("E",   "Energy of system",    E);
+  input.declare("T",   "Temperature of system",   T);
   input.declare("N",   "Number of Particles", N);
   input.declare("a",   "radius of sphere",    a);
   input.declare("EPS", "interaction strength",ePs);
@@ -52,12 +52,13 @@ int main(int argc, char **argv)
     return 1;
   }
   
-  E=input.getByName<double> ("E");
+  T=input.getByName<double> ("T");
   N=input.getByName<unsigned int> ("N");
   NSTEPS=input.getByName<unsigned int> ("NSTEPS");
   a=input.getByName<double> ("a");
   ePs=input.getByName<double> ("EPS");
   Lattice=input.getByName<bool> ("lattice");
+  double E=N*T;
   
   model =new ArgonLennardJones(N,1.0,a, ePs, E, Lattice);
 
