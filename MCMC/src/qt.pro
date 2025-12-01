@@ -6,7 +6,7 @@ TEMPLATE = app
 TARGET = runmcmc
 DEPENDPATH += .
 DESTDIR = ../local/bin
-CONFIG += qt debug c++20
+CONFIG += qt release c++20
 QT+= widgets
 # Input
 
@@ -18,7 +18,8 @@ contains(CONFIG, runmcmc) | contains(CONFIG,runnoble)  {
 else {
   error( usage:  \"qmake -config runmcmc\" or \"qmake -config runnoble\")   
 }
-  
+
+
 
 SOURCES +=  AbsModel.cpp  HardSpheres.cpp ArgonLennardJones.cpp Autocorr.cpp
 
@@ -31,7 +32,8 @@ runmcmc {
 # qmake[6] -config runnoble
 runnoble {
   TARGET=runnoble
-  SOURCES += runnoble.cpp
+  SOURCES += runnoble.cpp Simulator.cpp DisplayCase.cpp
+  HEADERS += Simulator.h DisplayCase.h 
 }
 
 mac {

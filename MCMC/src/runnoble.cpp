@@ -20,170 +20,10 @@
 #include "Eigen/Dense"
 #include "ArgonLennardJones.h"
 #include "HardSpheres.h"
+#include "Simulator.h"
+#include "DisplayCase.h"
 using namespace Eigen;
 
-
-
-
-
-class Simulator: public QObject {
-
-  Q_OBJECT
-
-public:
-
-  Simulator(AbsModel *model,double stepSize, unsigned int duration):model(model),stepSize(stepSize),duration(duration),
-					     autocorrProf(std::make_unique<PlotProfile>()) {
-    PlotProfile::Properties prop;
-    prop.pen.setStyle(Qt::NoPen);
-    prop.brush.setStyle(Qt::SolidPattern);
-    prop.brush.setColor("blue");
-    autocorrProf->setProperties(prop);
-    acceptanceRateProf.setProperties(prop);
-    
-    for (int i=0;i<100;i++) {
-      autocorrs.emplace_back(duration/100*(i+1));
-      for (unsigned int p=0;p<model->getNumParticles();p++) {
-	const double *x=&model->getPosition(p).x();
-	const double *y=&model->getPosition(p).y();
-	const double *z=&model->getPosition(p).z();
-	autocorrs.back().followVariable(x);
-	autocorrs.back().followVariable(y);
-	autocorrs.back().followVariable(z);
-      }
-    }
-  }
-
-  PlotProfile &getAcceptanceRateProf()  { return acceptanceRateProf;}
-  PlotProfile &getAutocorrProf()  const {return *autocorrProf;};
-  double       getStepSize()      const {return stepSize;}
-  
-private:
-  
-  AbsModel *model{nullptr};
-  double                       stepSize{1.0};
-  unsigned int                 duration{1000};
-  std::vector<Autocorr>        autocorrs;
-  std::unique_ptr<PlotProfile> autocorrProf{nullptr};
-  PlotProfile                  acceptanceRateProf{};
-  
-public slots:
-  
-  void simulate();
-
-
-};
-
-class DisplayCase: public QObject {
-  Q_OBJECT
-
-public:
-
-  DisplayCase(unsigned int duration);
-  PlotView *getAcceptanceRateView()  {return &acceptanceRateView;}
-  PlotView *getAutocorrView()        {return &autocorrView;}
-
-public slots:
-  void update();
-
-private:
-
-  unsigned int duration{1000};
-  PlotView acceptanceRateView{PRectF{0.0,1000,0.0, 1.2}};
-  PlotView autocorrView;
-
-
-  
-};
-
-void DisplayCase::update() {
-  acceptanceRateView.recreate();
-  autocorrView.recreate();
-}
-
-DisplayCase::DisplayCase(unsigned int duration):
-  duration(duration),
-  autocorrView({0.0,(double) duration,-1.2, 1.2}){
-  
-  std::map<PlotView *, std::string> yLabel={{&acceptanceRateView, "Acceptance Rate"}, {&autocorrView, "Autocorrelation"}};
-  for (PlotView * v: {&acceptanceRateView,&autocorrView} ) {
-    PlotStream xLabelStream(v->xLabelTextEdit());
-    xLabelStream << PlotStream::Clear()
-		 << PlotStream::Center()
-		 << PlotStream::Family("Arial")
-		 << PlotStream::Size(16)
-		 << "step/1000"
-		 << PlotStream::EndP();
-    
-    PlotStream yLabelStream(v->yLabelTextEdit());
-    yLabelStream << PlotStream::Clear()
-		 << PlotStream::Center()
-		 << PlotStream::Family("Arial")
-		 << PlotStream::Size(16)
-		 << yLabel[v]
-		 << PlotStream::EndP();
-  }
-}
-
-
-void Simulator::simulate()
-{
-  std::cout << "HELLO from Simulator: starting simulation" << std::endl;
-  //
-  // Call time evolution to update position array x[]:
-  //
-  unsigned int k{0};
-  unsigned int successes{0},totals{0};
-  while (!thread()->isInterruptionRequested()) {
-    bool accept=model->takeStep(stepSize);
-    if (accept) successes++;
-    totals++;
-    
-    for (Autocorr & a: autocorrs) a.addDataPoint(k);
-    if (!(k++ % 1000)) {
-      double acceptRate=double(successes)/double(totals);
-      acceptanceRateProf.addPoint(k/1000,acceptRate);
-      successes=totals=0;
-      
-    }
-  }
-  return;
-    
-    
-     
-    // pv_a->clear();
-    // delete autocorrProf;
-    // autocorrProf = new PlotProfile();
-    
-    // for (Autocorr & a: autocorrs) {
-    //   a.compute();
-  // }
-    
-      // for (Autocorr & a: autocorrs) {
-    //   double result=a.harvest();
-    //   if (std::isfinite(result)) autocorrProf->addPoint(a.getT(),result);
-    // }
-    // pv_a->add(autocorrProf);
-    
-  //   std::map<PlotView *, std::string> tLabel={{pv_a,  std::to_string(k)+" steps taken"},
-  // 					      {pv_g,  "Acceptance Rate now="+std::to_string(acceptRate)}};
-  //   if (0) for (PlotView *v : {pv_a, pv_g})  {
-  //     PlotStream titleStream(v->titleTextEdit());
-  //     titleStream << PlotStream::Clear()
-  // 		  << PlotStream::Center() 
-  // 		  << PlotStream::Family("Arial") 
-  // 		  << PlotStream::Size(16)
-  // 		  << tLabel[v] 
-  // 		  << PlotStream::EndP();
-  //   }
-    
- 
-  //   pv_g->recreate(); // refresh the view. 
-  //   pv_a->recreate();
-  
-  // }
-
-}
 
 
 int main(int argc, char **argv)
@@ -280,22 +120,32 @@ int main(int argc, char **argv)
   QAction  *quitAction=toolBar->addAction("Quit");
   quitAction->setShortcut(QKeySequence("q"));
   QObject::connect(quitAction,&QAction::triggered,&app,&QApplication::quit);
-  Simulator *simulator=new Simulator(model,stepSize,duration);
+
+  size_t NPROCESSORS=std::thread::hardware_concurrency();
+  size_t NTHREADS=NPROCESSORS-2;//std::max<unsigned int> (2U,NPROCESSORS)-1;
+  std::vector<Simulator *> simulator;
+  for (size_t i=0;i<NTHREADS;i++) simulator.emplace_back(new Simulator(model,stepSize,duration));
+
   DisplayCase displayCase(duration);
+
+  std::vector<QThread> thread{NTHREADS};
+  for (size_t i=0;i<NTHREADS;i++) {
+    simulator[i]->moveToThread(&thread[i]);
+    QTimer *timer = new QTimer;
+    timer->setSingleShot(true);
+    QObject::connect(timer,&QTimer::timeout,simulator[i], &Simulator::simulate);
+    thread[i].start();
+    timer->start();
+    displayCase.add(simulator[i]);
+  }
+
+
   
-  displayCase.getAcceptanceRateView()->add(&simulator->getAcceptanceRateProf());
+  
   mainwin.add(displayCase.getAcceptanceRateView(),"AcceptanceRate");
   mainwin.add(displayCase.getAutocorrView(),"Autocorrelation");
 
-  size_t NPROCESSORS=std::thread::hardware_concurrency();
-  QThread thread;
-  simulator->moveToThread(&thread);
-  QTimer *timer = new QTimer;
-  timer->setSingleShot(true);
-  QObject::connect(timer,&QTimer::timeout,simulator, &Simulator::simulate);
-  thread.start();
-  timer->start();
-
+ 
   QTimer *twoTimer=new QTimer;
   twoTimer->setInterval(1000);
   QObject::connect(twoTimer,&QTimer::timeout,&displayCase, &DisplayCase::update);
@@ -304,9 +154,10 @@ int main(int argc, char **argv)
   mainwin.show();
   app.exec();
 
-  
-  thread.requestInterruption();
-  thread.quit();
-  thread.wait();
+  for (QThread & t: thread) {  
+    t.requestInterruption();
+    t.quit();
+    t.wait();
+  }
+  for (Simulator *s : simulator) delete s;
 }
-#include "runnoble.moc"
