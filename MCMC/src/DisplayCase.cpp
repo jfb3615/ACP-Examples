@@ -22,7 +22,10 @@ void DisplayCase::update() {
     std::unique_lock lk(*mtx[i]);
     cv[i]->wait(lk, [this,i]{return *processed[i]; });
   }
-  // Update the autocorr plots:
+
+
+  //
+  // Update the autocorr plots in this section:
 
   autocorrView.clear();
   delete autocorrProf;
@@ -49,12 +52,26 @@ void DisplayCase::update() {
   autocorrView.add(autocorrProf);
   autocorrView.recreate();
 
+  // Update the acceptance rate histogram in this section:
+  
 
   double aveAccRate{0};
   for (unsigned int i=0;i<aRate.size();i++) aveAccRate+=aRate[i]->back();
   aveAccRate/=aRate.size();
   aRateProf.addPoint(aRate[0]->size(),aveAccRate);
   acceptanceRateView.recreate();
+
+  // Update the pair correlation histogram in this section:
+
+  for (unsigned int i=0;i<histogram.size();i++) {
+    sumHistogram += *histogram[i];
+  }
+
+  if (!pairCorrPlot) {
+    pairCorrPlot=std::make_unique<PlotHist1D>(sumHistogram);
+    pairCorrView.add(pairCorrPlot.get());
+  }
+  pairCorrView.setRect(pairCorrPlot->rectHint());
 }
 
 DisplayCase::DisplayCase(unsigned int duration):
@@ -68,8 +85,9 @@ DisplayCase::DisplayCase(unsigned int duration):
 		 << PlotStream::Center()
 		 << PlotStream::Family("Arial")
 		 << PlotStream::Size(16)
-		 << "step/" << (int) Simulator::getSAMPLEFREQ()
-		 << PlotStream::EndP();
+		 << "step";
+    if (v==&acceptanceRateView) xLabelStream << "/" << (int) Simulator::getSAMPLEFREQ();
+    xLabelStream << PlotStream::EndP();
     
     PlotStream yLabelStream(v->yLabelTextEdit());
     yLabelStream << PlotStream::Clear()

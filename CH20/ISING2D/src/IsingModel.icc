@@ -1,5 +1,7 @@
 #include <random>
 #include <vector>
+#include <mutex>
+
 class IsingModel::Clockwork{
  public:
   
@@ -22,11 +24,13 @@ class IsingModel::Clockwork{
     return NY*j+i;
   }
   std::vector<double> cacheDE;
+  std::mutex  parameterChangeMutex;
 };
 
 // Access & modification of temperature
 inline
 double & IsingModel::tau() {
+  std::unique_lock lock(c->parameterChangeMutex);
   c->cacheDE.clear();
   return c->tau;
 }

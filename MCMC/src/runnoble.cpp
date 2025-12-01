@@ -61,6 +61,8 @@ int main(int argc, char **argv)
   double system{1};
   double stepSize{1.0};
   unsigned int duration{1000};
+  unsigned int burninTime{400};
+  
   NumericInput input;
   input.declare("T",   "Temperature",         T);
   input.declare("N",   "Number of Particles", N);
@@ -68,6 +70,7 @@ int main(int argc, char **argv)
   input.declare("EPS", "interaction strength",ePs);
   input.declare("stepsize", "interaction strength",stepSize);
   input.declare("system", "1=hardspheres,2=lennardjones", system); 
+  input.declare("burnin", "burnin time ", burninTime); 
   input.declare("duration", "duration for autocorr", duration); 
   try {
     input.optParse(argc,argv);
@@ -85,6 +88,7 @@ int main(int argc, char **argv)
   system=input.getByName<unsigned int> ("system");
   stepSize=input.getByName<double> ("stepsize");
   duration=input.getByName<unsigned int> ("duration");
+  burninTime=input.getByName<unsigned int> ("burnin");
   if (system==1) {
     HardSpheres *hardSpheresModel=new HardSpheres(N*N*N,1.0,a,T);
     model=hardSpheresModel;
@@ -124,7 +128,7 @@ int main(int argc, char **argv)
   size_t NPROCESSORS=std::thread::hardware_concurrency();
   size_t NTHREADS=NPROCESSORS-2;//std::max<unsigned int> (2U,NPROCESSORS)-1;
   std::vector<Simulator *> simulator;
-  for (size_t i=0;i<NTHREADS;i++) simulator.emplace_back(new Simulator(model,stepSize,duration));
+  for (size_t i=0;i<NTHREADS;i++) simulator.emplace_back(new Simulator(model,stepSize,duration,burninTime));
 
   DisplayCase displayCase(duration);
 
@@ -144,6 +148,7 @@ int main(int argc, char **argv)
   
   mainwin.add(displayCase.getAcceptanceRateView(),"AcceptanceRate");
   mainwin.add(displayCase.getAutocorrView(),"Autocorrelation");
+ mainwin.add(displayCase.getPairCorrView(),"Pair Correlation");
 
  
   QTimer *twoTimer=new QTimer;

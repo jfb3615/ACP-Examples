@@ -1,7 +1,7 @@
 #ifndef _SIMULATOR_H_
 #define _SIMULATOR_H_
-#include "QatPlotting/PlotProfile.h"
 #include "Autocorr.h"
+#include "QatDataAnalysis/Hist1D.h"
 #include <vector>
 #include <QObject>
 #include <memory>
@@ -14,11 +14,12 @@ class Simulator: public QObject {
 
 public:
   
-  Simulator(AbsModel *model,double stepSize, unsigned int duration);
+  Simulator(AbsModel *model,double stepSize, unsigned int duration, unsigned int burnin);
   
-  PlotProfile &getAcceptanceRateProf()  { return acceptanceRateProf;}
+
   const std::vector<Autocorr> &  getAutocorrs()  const {return autocorrs;};
   const std::vector<double>   &  getAcceptanceRate() const {return aRate;}
+  const Hist1D                &  getPairCorrelationHistogram() const {return pairCorrHist;}
   double       getStepSize()      const {return stepSize;}
   std::condition_variable &   getConditionVariable() {return cv;}
   std::mutex              &   getMutex()             {return mtx;}
@@ -29,17 +30,18 @@ public:
   static constexpr unsigned int         getSAMPLEFREQ()  {return SAMPLEFREQ;}
   
 private:
-  
+  constexpr static double          L{1.0};
   constexpr static unsigned int    NAUTO{100};
   constexpr static unsigned int    SAMPLEFREQ{1000};
   
   unsigned int                     k{0};
   AbsModel                        *model{nullptr};
-  double                           stepSize{1.0};
-  unsigned int                     duration{1000};
+  const double                     stepSize{1.0};
+  const unsigned int               duration{1000};
+  const unsigned int               burnin;
   std::vector<Autocorr>            autocorrs;
   std::vector<double>              aRate;          
-  PlotProfile                      acceptanceRateProf{};
+  Hist1D                           pairCorrHist;
 
   // The following variables are for communication synchronization
   std::condition_variable          cv{};

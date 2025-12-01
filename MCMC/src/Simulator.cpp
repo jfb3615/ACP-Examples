@@ -2,12 +2,8 @@
 #include "AbsModel.h"
 #include <QThread>
 #include <iostream>
-Simulator::Simulator(AbsModel *model,double stepSize, unsigned int duration):model(model),stepSize(stepSize),duration(duration) {
-  PlotProfile::Properties prop;
-  prop.pen.setStyle(Qt::NoPen);
-  prop.brush.setStyle(Qt::SolidPattern);
-  prop.brush.setColor("blue");
-  acceptanceRateProf.setProperties(prop);
+Simulator::Simulator(AbsModel *model,double stepSize, unsigned int duration, unsigned int burnin):
+  model(model),stepSize(stepSize),duration(duration),burnin(burnin), pairCorrHist("PairCorr", 200, 0.0, 0.5) {
   for (unsigned int i=0;i<NAUTO;i++) {
     autocorrs.emplace_back(duration/NAUTO*(i+1));
     for (unsigned int p=0;p<model->getNumParticles();p++) {
@@ -23,6 +19,7 @@ Simulator::Simulator(AbsModel *model,double stepSize, unsigned int duration):mod
 
 void Simulator::simulate()
 {
+  using namespace Eigen;
   //
   // Call time evolution to update position array x[]:
   //
@@ -31,8 +28,30 @@ void Simulator::simulate()
     bool accept=model->takeStep(stepSize);
     if (accept) successes++;
     totals++;
-    
+
+    // Autocorrelation:
     for (Autocorr & a: autocorrs) a.addDataPoint(k);
+
+    // Pair correlation function
+    // This time consuming calculation is performed only after burnin. 
+    if (k>burnin) {
+      for (unsigned int i=0;i<model->getNumParticles();i++) {
+	for (unsigned int j=i+1;j<model->getNumParticles();j++) {
+	  const VectorXd & x1=model->getPosition(i);
+	  const VectorXd & x2=model->getPosition(j);
+	  Vector3d x=x1-x2;
+	  // Apply the minimum image condition:
+	  for (unsigned int d=0;d<3;d++) {
+	    while (x[d] > L/2.0)  x[d]-=L;
+	    while (x[d] < -L/2.0) x[d]+=L;
+	  }
+	  double   r=x.norm();
+	  pairCorrHist.accumulate(r,1/r/r);
+	}
+      }
+    }
+
+    
     if (!(k++ % SAMPLEFREQ)) { // 1000, unless I changed it. 
 
 
@@ -50,7 +69,9 @@ void Simulator::simulate()
 
       for (Autocorr & a: autocorrs) a.compute();
     
-    
+
+   
+      
       // send data back to main()
       processed = true;
  

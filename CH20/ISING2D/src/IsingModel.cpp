@@ -51,7 +51,7 @@ IsingModel::~IsingModel() {
 }
 // Goto next state
 void IsingModel::next() {
-
+  std::unique_lock lock(c->parameterChangeMutex);
   if (c->tau==0.0) return;
 
   // 
@@ -95,6 +95,7 @@ void IsingModel::next() {
   //
   // Hastings-Metropolis in one line:
   //
+ 
   double uniform=flat(c->engine);
   bool accept =dE<=0 ? true: c->cacheDE[dE] > uniform ? true: false; 
   if (accept) {
