@@ -67,7 +67,10 @@ IsingModelWidget::IsingModelWidget(IsingModel *model,QWidget *parent):
 		<< "fundamental units"
 		<< PlotStream::EndP();
   }
-
+  ui.uSeriesView->setRect(PRectF{0.0,1000.0,-4.0,4.0});
+  ui.uVsTView->setRect(PRectF{0.0,4.0,-4.0,0.0});
+  ui.mSeriesView->setRect(PRectF{0.0,1000.0,-4.0,4.0});
+  ui.mVsTView->setRect(PRectF{0.0,4.0,-4.0,0.0});
 }
 IsingModelWidget::~IsingModelWidget() {
   delete c;

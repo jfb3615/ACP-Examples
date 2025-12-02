@@ -15,46 +15,89 @@
 #include <iostream>
 #include <string>
 #include <thread>
-struct Threader {
-  IsingModel       *model;
-  IsingModelWidget *window;
-  PlotProfile      *uProf;
-  PlotProfile      *tProf;
-  PlotProfile      *uVsTProf;
+#include <memory>
 
-  PlotProfile      *mProf;
-  PlotProfile      *mVsTProf;
+class Threader {
 
+public:
+
+  Threader(IsingModel *model,IsingModelWidget *window);
+  
+  PlotProfile      uProf;
+  PlotProfile      tProf;
+  PlotProfile      uVsTProf;
+
+  PlotProfile      mProf;
+  PlotProfile      mVsTProf;
+  
+  void evolve();
+  void terminate() {finish=true;};
+private:
+  
+  IsingModel       *model{nullptr};
+  IsingModelWidget *window{nullptr};
+  bool              finish{false};
 };
-bool finish=false;
-void evolve(Threader *threader) {
+
+Threader::Threader(IsingModel *model,IsingModelWidget *window):model(model),window(window)
+{
+  // Set some plot properties:
+  {
+    PlotProfile::Properties prop;
+    prop.brush.setStyle(Qt::SolidPattern);
+    prop.brush.setColor("darkRed");
+    prop.pen.setColor("darkRed");
+    tProf.setProperties(prop);
+    prop.brush.setColor("darkBlue");
+    prop.pen.setColor("darkBlue");
+
+    uProf.setProperties(prop);
+    uVsTProf.setProperties(prop);
+
+    mProf.setProperties(prop);
+    mVsTProf.setProperties(prop);
+
+  }
+  window->getUSeriesView()->add(&uProf);
+  window->getUSeriesView()->add(&tProf);
+  window->getUVsTView()->add(&uVsTProf);
+  window->getMSeriesView()->add(&mProf);
+  window->getMVsTView()->add(&mVsTProf);
+ 
+
+
+  
+}
+
+
+void Threader::evolve() {
 	       
-  const double norm=threader->model->NX()*threader->model->NY();
+  const double norm=model->NX()*model->NY();
   unsigned long int nIter=0;
   while (!finish) {
-    threader->model->next();
+    model->next();
     unsigned int i=0, j=0;
     int delta=0;
     
-    threader->model->lastStep(i,j,delta);
-    bool on=threader->model->isUp(i,j);
-    threader->window->updateImage(i,j,on);
+    model->lastStep(i,j,delta);
+    bool on=model->isUp(i,j);
+    window->updateImage(i,j,on);
     nIter++;
 
-    double E=threader->model->U()/norm;
-    double T=threader->model->tau();
-    double M=threader->model->M()/norm;
+    double E=model->U()/norm;
+    double T=model->tau();
+    double M=model->M()/norm;
     const unsigned int NSAMPLE=1000000;
-    if (threader->window->getAcquire() && !(nIter%NSAMPLE)) {
+    if (window->getAcquire() && !(nIter%NSAMPLE)) {
       double normIter=nIter/NSAMPLE;
-      threader->window->setIterations(nIter/NSAMPLE);
+      window->setIterations(nIter/NSAMPLE);
 
-      threader->uProf->addPoint(normIter, E);
-      threader->tProf->addPoint(normIter, T);
-      threader->uVsTProf->addPoint(T, E); 
+      uProf.addPoint(normIter, E);
+      tProf.addPoint(normIter, T);
+      uVsTProf.addPoint(T, E); 
 
-      threader->mProf->addPoint(normIter,M);
-      threader->mVsTProf->addPoint(T, M); 
+      mProf.addPoint(normIter,M);
+      mVsTProf.addPoint(T, M); 
       
     }
  }
@@ -85,85 +128,12 @@ int main (int argc, char * * argv) {
   IsingModel       model(N,N,1.0);
   IsingModelWidget window(&model);
 
-  PlotProfile uProf,tProf,uVsTProf, mProf, mVsTProf;
-
-  {
-    PlotProfile::Properties prop;
-    prop.brush.setStyle(Qt::SolidPattern);
-    prop.brush.setColor("darkRed");
-    prop.pen.setColor("darkRed");
-    tProf.setProperties(prop);
-    prop.brush.setColor("darkBlue");
-    prop.pen.setColor("darkBlue");
-
-    uProf.setProperties(prop);
-    uVsTProf.setProperties(prop);
-
-    mProf.setProperties(prop);
-    mVsTProf.setProperties(prop);
+  Threader threader(&model,&window);
+  
 
 
-  }
 
-  // U and T time series
-  {
-    PRectF rect;
-    rect.setXmin(0);
-    rect.setXmax(1000);
-    rect.setYmin(-4.0);
-    rect.setYmax(+4.0);
-    PlotView *view = window.getUSeriesView();
-    view->add(&uProf);
-    view->add(&tProf);
-    view->setRect(rect);
-  }
-
-  // U vs T series
-  {
-    PRectF rect;
-    rect.setXmin(0);
-    rect.setXmax(4);
-    rect.setYmin(-4.0);
-    rect.setYmax(0.0);
-    PlotView *view = window.getUVsTView();
-    view->add(&uVsTProf);
-    view->setRect(rect);
-  }
-
-  // M time series
-  {
-    PRectF rect;
-    rect.setXmin(0);
-    rect.setXmax(1000);
-    rect.setYmin(-4.0);
-    rect.setYmax(+4.0);
-    PlotView *view = window.getMSeriesView();
-    view->add(&mProf);
-    view->setRect(rect);
-  }
-
-  // M vs T series
-  {
-    PRectF rect;
-    rect.setXmin(0);
-    rect.setXmax(4);
-    rect.setYmin(-4.0);
-    rect.setYmax(4.0);
-    PlotView *view = window.getMVsTView();
-    view->add(&mVsTProf);
-    view->setRect(rect);
-  }
-
-  Threader threader;
-  threader.window=&window;
-  threader.model= &model;
-  threader.uProf = &uProf;
-  threader.tProf = &tProf;
-  threader.uVsTProf=&uVsTProf;
-  threader.mProf = &mProf;
-  threader.mVsTProf=&mVsTProf;
-
-  std::thread evolveThread (evolve,&threader); 
+  std::thread evolveThread (&Threader::evolve,&threader); 
 
  
 
@@ -176,8 +146,9 @@ int main (int argc, char * * argv) {
 
   window.show();
   app.exec();
-  finish=true;
+  
+  threader.terminate();
   evolveThread.join();
-  return 1;
+  return 0;
 }
 
