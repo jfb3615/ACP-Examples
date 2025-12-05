@@ -8,6 +8,7 @@
 #include "QatDataAnalysis/OptParse.h"
 #include <QApplication>
 #include <QMainWindow>
+#include <QThread>
 #include <QToolBar>
 #include <QTimer>
 #include <QAction>
@@ -16,92 +17,51 @@
 #include <string>
 #include <thread>
 #include <memory>
+#include "Threader.h"
 
-class Threader {
+class SignalCatcher:public QObject {
+
+  Q_OBJECT
 
 public:
 
-  Threader(IsingModel *model,IsingModelWidget *window);
-  
-  PlotProfile      uProf;
-  PlotProfile      tProf;
-  PlotProfile      uVsTProf;
+  SignalCatcher(Threader * t):t(t){}
 
-  PlotProfile      mProf;
-  PlotProfile      mVsTProf;
+public slots:
+
+  void acquire() {
+    t->acquire();
+  }
   
-  void evolve();
-  void terminate() {finish=true;};
+  void reset() {
+    t->reset();
+  }
+
+  void updateHistogramPlots(){
+    IsingModelWidget *window=t->getWindow();
+    PlotView *u=window->getUHistView();
+    PlotView *m=window->getMHistView();
+    PlotStream uStream(u->titleTextEdit());
+    PlotStream mStream(m->titleTextEdit());
+    uStream << PlotStream::Clear() << "Mean " << t->getMeanHistE() << " variance " << t->getVarianceHistE() << PlotStream::EndP();
+    mStream << PlotStream::Clear() << "Mean " << t->getMeanHistM() << " variance " << t->getVarianceHistM() << PlotStream::EndP();
+    u->recreate();
+    m->recreate();
+  }
+
+  void record() {
+    t->record();
+  }
+
+  void mkCorr() {
+    t->mkCorr();
+  }
+  
 private:
-  
-  IsingModel       *model{nullptr};
-  IsingModelWidget *window{nullptr};
-  bool              finish{false};
+
+  Threader *t;
 };
 
-Threader::Threader(IsingModel *model,IsingModelWidget *window):model(model),window(window)
-{
-  // Set some plot properties:
-  {
-    PlotProfile::Properties prop;
-    prop.brush.setStyle(Qt::SolidPattern);
-    prop.brush.setColor("darkRed");
-    prop.pen.setColor("darkRed");
-    tProf.setProperties(prop);
-    prop.brush.setColor("darkBlue");
-    prop.pen.setColor("darkBlue");
-
-    uProf.setProperties(prop);
-    uVsTProf.setProperties(prop);
-
-    mProf.setProperties(prop);
-    mVsTProf.setProperties(prop);
-
-  }
-  window->getUSeriesView()->add(&uProf);
-  window->getUSeriesView()->add(&tProf);
-  window->getUVsTView()->add(&uVsTProf);
-  window->getMSeriesView()->add(&mProf);
-  window->getMVsTView()->add(&mVsTProf);
- 
-
-
-  
-}
-
-
-void Threader::evolve() {
-	       
-  const double norm=model->NX()*model->NY();
-  unsigned long int nIter=0;
-  while (!finish) {
-    model->next();
-    unsigned int i=0, j=0;
-    int delta=0;
-    
-    model->lastStep(i,j,delta);
-    bool on=model->isUp(i,j);
-    window->updateImage(i,j,on);
-    nIter++;
-
-    double E=model->U()/norm;
-    double T=model->tau();
-    double M=model->M()/norm;
-    const unsigned int NSAMPLE=1000000;
-    if (window->getAcquire() && !(nIter%NSAMPLE)) {
-      double normIter=nIter/NSAMPLE;
-      window->setIterations(nIter/NSAMPLE);
-
-      uProf.addPoint(normIter, E);
-      tProf.addPoint(normIter, T);
-      uVsTProf.addPoint(T, E); 
-
-      mProf.addPoint(normIter,M);
-      mVsTProf.addPoint(T, M); 
-      
-    }
- }
-}
 
 int main (int argc, char * * argv) {
 
@@ -125,30 +85,49 @@ int main (int argc, char * * argv) {
   
   unsigned int N = (unsigned int) (0.5+input.getByName("N"));
   QApplication     app(argc,argv);
-  IsingModel       model(N,N,1.0);
+  IsingModel       model(N,N,3.0);
   IsingModelWidget window(&model);
 
+  QThread thread;
   Threader threader(&model,&window);
+  threader.moveToThread(&thread);
+
+  SignalCatcher signalCatcher(&threader);
   
+  QObject::connect(&window,&IsingModelWidget::signalReset,  &signalCatcher, &SignalCatcher::reset);
+  QObject::connect(&window,&IsingModelWidget::signalAcquire,&signalCatcher, &SignalCatcher::acquire);
+  QObject::connect(&window,&IsingModelWidget::signalRecord,&signalCatcher, &SignalCatcher::record);
+  QObject::connect(&window,&IsingModelWidget::signalMkCorr,&signalCatcher, &SignalCatcher::mkCorr);
 
 
-
-  std::thread evolveThread (&Threader::evolve,&threader); 
-
- 
-
+  
   QTimer *timer=new QTimer;
-  timer->setInterval(100); // milliseconds
-  
-  
-  QObject::connect(timer, SIGNAL(timeout()), &window, SLOT(updatePixmap()));
+  timer->setSingleShot(true);
+  QObject::connect(timer,&QTimer::timeout, &threader,&Threader::evolve);
+  thread.start();
   timer->start();
 
+  QTimer *twoTimer=new QTimer;
+  twoTimer->setInterval(100); // milliseconds
+
+  QTimer *threeTimer=new QTimer;
+  threeTimer->setInterval(2000); // milliseconds
+
+  
+  QObject::connect(twoTimer, SIGNAL(timeout()), &window, SLOT(updatePixmap()));
+  QObject::connect(threeTimer, SIGNAL(timeout()), &signalCatcher, SLOT(updateHistogramPlots()));
+  twoTimer->start();
+  threeTimer->start();
+  
   window.show();
   app.exec();
   
-  threader.terminate();
-  evolveThread.join();
+  thread.requestInterruption();
+  thread.quit();
+  thread.wait();
+  
   return 0;
 }
+#include "ising2D.moc"
+
 

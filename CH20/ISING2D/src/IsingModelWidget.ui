@@ -15,7 +15,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0" colspan="7">
+    <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="enabled">
        <bool>true</bool>
@@ -34,7 +34,7 @@
         <item>
          <spacer name="horizontalSpacer">
           <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+           <enum>Qt::Orientation::Horizontal</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
@@ -54,7 +54,7 @@
         <item>
          <spacer name="horizontalSpacer_2">
           <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+           <enum>Qt::Orientation::Horizontal</enum>
           </property>
           <property name="sizeHint" stdset="0">
            <size>
@@ -76,6 +76,16 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="uHistTab">
+       <attribute name="title">
+        <string>U</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <widget class="PlotView" name="uHistView" native="true"/>
+        </item>
+       </layout>
+      </widget>
       <widget class="QWidget" name="uVsTTab">
        <attribute name="title">
         <string>U vs T</string>
@@ -83,6 +93,16 @@
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
          <widget class="PlotView" name="uVsTView" native="true"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="cVsTTab">
+       <attribute name="title">
+        <string>CvVsT</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_6">
+        <item row="0" column="0">
+         <widget class="PlotView" name="cVsTView" native="true"/>
         </item>
        </layout>
       </widget>
@@ -96,6 +116,16 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="mHistTab">
+       <attribute name="title">
+        <string>M</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="0">
+         <widget class="PlotView" name="mHistView" native="true"/>
+        </item>
+       </layout>
+      </widget>
       <widget class="QWidget" name="mVsTTab">
        <attribute name="title">
         <string>M vs T </string>
@@ -106,82 +136,107 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="xVsTTab">
+       <attribute name="title">
+        <string>ChiVsT</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_5">
+        <item row="0" column="0">
+         <widget class="PlotView" name="xVsTView" native="true"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="correlationTab">
+       <attribute name="title">
+        <string>Correlation</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="0" column="0">
+         <widget class="PlotView" name="correlationView" native="true"/>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </item>
     <item row="1" column="0">
-     <spacer name="horizontalSpacer_3">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>164</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="1" column="1">
-     <widget class="QLabel" name="label_2">
-      <property name="text">
-       <string>M Iterations</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="2">
-     <widget class="QLCDNumber" name="iterationNumber">
-      <property name="font">
-       <font>
-        <family>Abyssinica SIL</family>
-       </font>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="3">
-     <widget class="QPushButton" name="acquireButton">
-      <property name="text">
-       <string>Acquire</string>
-      </property>
-      <property name="checkable">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="4">
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>Temperature</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="5">
-     <widget class="QDoubleSpinBox" name="temperatureSpinBox">
-      <property name="decimals">
-       <number>2</number>
-      </property>
-      <property name="maximum">
-       <double>5.000000000000000</double>
-      </property>
-      <property name="singleStep">
-       <double>0.010000000000000</double>
-      </property>
-      <property name="value">
-       <double>0.500000000000000</double>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="6">
-     <spacer name="horizontalSpacer_4">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>164</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
+     <layout class="QHBoxLayout" name="horizontalLayout_4">
+      <item>
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>samples</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLCDNumber" name="iterationNumber">
+        <property name="font">
+         <font>
+          <family>Abyssinica SIL</family>
+         </font>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="acquireButton">
+        <property name="text">
+         <string>Acquire</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="recordButton">
+        <property name="text">
+         <string>Record</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="mkCorrButton">
+        <property name="text">
+         <string>mkCorr</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Temp</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QDoubleSpinBox" name="temperatureSpinBox">
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="maximum">
+         <double>5.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.010000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.500000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_4">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>164</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
@@ -191,7 +246,7 @@
      <x>0</x>
      <y>0</y>
      <width>555</width>
-     <height>25</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

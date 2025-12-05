@@ -29,7 +29,7 @@
 #include "Eigen/Dense"
 #include "ArgonLennardJones.h"
 #include "HardSpheres.h"
-
+#include <mutex>
 
 using namespace Eigen;
 
@@ -48,7 +48,7 @@ HardSpheres   *hardSpheresModel{nullptr};
 ArgonLennardJones *lennardJonesModel{nullptr};
 std::vector<Autocorr> autocorrs;
 
-
+std::mutex mtx;
 //=======================================================
 //
 // The signal catcher is here in case one would like
@@ -66,7 +66,10 @@ public:
 public slots:
 
  
-  void setValue(double s) {stepSize=s;}
+  void setValue(double s) {
+    std::unique_lock<std::mutex> lock(mtx);
+    if (s!=0) stepSize=s;
+  }
 
 private:
 
@@ -96,9 +99,12 @@ void timeSensorCallback(void * , SoSensor * )
   //
   static unsigned int k{0};
   static unsigned int successes{0},totals{0};
-  bool accept=model->takeStep(stepSize);
-  if (accept) successes++;
-  totals++;
+  {
+    std::unique_lock<std::mutex> lock(mtx);
+    bool accept=model->takeStep(stepSize);
+    if (accept) successes++;
+    totals++;
+  }
   for (Autocorr & a: autocorrs) a.addDataPoint(k);
 
   

@@ -8,7 +8,6 @@ class IsingModelWidget::Clockwork{
 public:
   QImage  *image   =NULL;
   IsingModel *model=NULL;
-  bool       acquire=false;
 };
 IsingModelWidget::IsingModelWidget(IsingModel *model,QWidget *parent):
   QMainWindow(parent),c(new Clockwork())
@@ -19,10 +18,12 @@ IsingModelWidget::IsingModelWidget(IsingModel *model,QWidget *parent):
   ui.temperatureSpinBox->setValue(model->tau());
   
   ui.actionQuit->setShortcut(QKeySequence("q"));
-  QObject::connect(ui.actionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
-  QObject::connect(ui.temperatureSpinBox, SIGNAL(valueChanged(double)),
-		   this, SLOT(setTemperature(double)));
-  QObject::connect(ui.acquireButton, SIGNAL(toggled(bool)), this, SLOT(setAcquire(bool)));
+  QObject::connect(ui.actionQuit, &QAction::triggered, qApp, &QApplication::quit);
+  QObject::connect(ui.temperatureSpinBox, &QDoubleSpinBox::valueChanged, this,  &IsingModelWidget::setTemperature);
+  QObject::connect(ui.acquireButton, &QPushButton::toggled, this,  &IsingModelWidget::setAcquire);
+  QObject::connect(ui.recordButton, &QPushButton::pressed, this, &IsingModelWidget::signalRecord);
+  QObject::connect(ui.mkCorrButton, &QPushButton::pressed, this, &IsingModelWidget::signalMkCorr);
+  
   c->model=model;
 
   for (unsigned int i=0;i<model->NX();i++) {
@@ -37,12 +38,19 @@ IsingModelWidget::IsingModelWidget(IsingModel *model,QWidget *parent):
     PlotView *view;
     std::string title;
     std::string xLabel;
+    std::string yLabel{"fundamental units"};
   };
   std::vector<ViewStruct> view={
     {ui.uSeriesView,"Internal Energy", "iteration"},
     {ui.uVsTView, "Internal Energy vs Temperature", "T"},
     {ui.mSeriesView, "Magnetization","iteration"},
-    {ui.mVsTView, "Magnetization vs. Temperature","T"}};
+    {ui.mVsTView, "Magnetization vs. Temperature","T"},
+    {ui.uHistView, "Internal Energy", "U", "#states"},
+    {ui.mHistView, "Magnetization", "M","#states"},
+    {ui.correlationView, "Correlation Fcn", "r","#states"},
+    {ui.cVsTView, "Heat Capacity", "C", "#states"},
+    {ui.xVsTView, "Susceptibility", "χ","#states"}
+  };
 				       
   for (unsigned int i=0;i<view.size();i++) {
     PlotStream titleStream(view[i].view->titleTextEdit());
@@ -64,13 +72,20 @@ IsingModelWidget::IsingModelWidget(IsingModel *model,QWidget *parent):
 		<< PlotStream::Center() 
 		<< PlotStream::Family("Arial") 
 		<< PlotStream::Size(16)
-		<< "fundamental units"
+		<< view[i].yLabel
 		<< PlotStream::EndP();
   }
   ui.uSeriesView->setRect(PRectF{0.0,1000.0,-4.0,4.0});
-  ui.uVsTView->setRect(PRectF{0.0,4.0,-4.0,0.0});
+  ui.uVsTView->setRect(PRectF{0.0,4.0,-4.0,4.0});
   ui.mSeriesView->setRect(PRectF{0.0,1000.0,-4.0,4.0});
-  ui.mVsTView->setRect(PRectF{0.0,4.0,-4.0,0.0});
+  ui.mVsTView->setRect(PRectF{0.0,4.0,-4.0,4.0});
+  ui.cVsTView->setRect(PRectF{0.0,4.0,-4,4});
+  ui.xVsTView->setRect(PRectF{0.0,4.0,-4,4});
+
+  ui.uHistView->setRect(PRectF{-4.0, 4.0, 0.0, 100.0});
+  ui.mHistView->setRect(PRectF{-4.0,4.0, 0.0, 100.0});
+  ui.correlationView->setRect(PRectF{0.0,200,-2.0, 2.0});
+
 }
 IsingModelWidget::~IsingModelWidget() {
   delete c;
@@ -78,6 +93,9 @@ IsingModelWidget::~IsingModelWidget() {
 
 PlotView        *IsingModelWidget::getUSeriesView() {
   return ui.uSeriesView;
+}
+PlotView        *IsingModelWidget::getUHistView() {
+  return ui.uHistView;
 }
 
 PlotView        *IsingModelWidget::getUVsTView(){
@@ -88,8 +106,24 @@ PlotView        *IsingModelWidget::getMSeriesView() {
   return ui.mSeriesView;
 }
 
+PlotView        *IsingModelWidget::getMHistView() {
+  return ui.mHistView;
+}
+
+PlotView        *IsingModelWidget::getCorrelationFcnView() {
+  return ui.correlationView;
+}
+
 PlotView        *IsingModelWidget::getMVsTView(){
   return ui.mVsTView;
+}
+
+PlotView        *IsingModelWidget::getXVsTView(){
+  return ui.xVsTView;
+}
+
+PlotView        *IsingModelWidget::getCVsTView(){
+  return ui.cVsTView;
 }
 
 
@@ -97,11 +131,15 @@ void IsingModelWidget::updatePixmap() {
 
   ui.displayLabel->setPixmap(QPixmap::fromImage(*c->image));
 
-  ui.uSeriesView->recreate();
-  ui.uVsTView->recreate();
-
   ui.mSeriesView->recreate();
-  ui.mVsTView->recreate();
+  ui.uSeriesView->recreate();
+  ui.uHistView->recreate();
+  ui.mHistView->recreate();
+  ui.uVsTView->recreate();
+  ui.cVsTView->recreate();
+  ui.xVsTView->recreate();
+  ui.xVsTView->recreate();
+  ui.correlationView->recreate();
 }
 
 void IsingModelWidget::updateImage (unsigned int i, unsigned int j, bool on){
@@ -118,10 +156,8 @@ void IsingModelWidget::setIterations(int iter) {
 }
 
 void IsingModelWidget::setAcquire(bool flag) {
-  c->acquire=flag;
-}
 
-bool IsingModelWidget::getAcquire() const{
-  return c->acquire;
+  if (flag) emit signalAcquire();
+  else emit signalReset();
 }
 
