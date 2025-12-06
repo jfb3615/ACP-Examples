@@ -9,11 +9,11 @@ mac {
 }
 
 
-CONFIG += qt debug c++17
+CONFIG += qt release c++20
 QT += widgets
 
 # Input
-SOURCES += *.cpp
+SOURCES += IsingModel.cpp IsingModelWidget.cpp Threader.cpp ising2D.cpp
 HEADERS += *.h
 FORMS   += *.ui
 

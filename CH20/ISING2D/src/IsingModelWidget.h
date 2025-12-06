@@ -15,11 +15,16 @@ public:
 
   PlotView        *getUSeriesView();
   PlotView        *getUVsTView();
-
+  PlotView        *getCVsTView();
+  PlotView        *getXVsTView();
+  
   PlotView        *getMSeriesView();
   PlotView        *getMVsTView();
 
-  bool getAcquire() const;
+  PlotView        *getUHistView();
+  PlotView        *getMHistView();
+  PlotView        *getCorrelationFcnView();
+			     
 
 public slots:
 
@@ -29,8 +34,14 @@ public slots:
   void setIterations (int);
 
   void setAcquire(bool);
+ 
+signals:
 
-
+  void signalAcquire();
+  void signalReset();
+  void signalRecord();
+  void signalMkCorr();
+  
 private:
 
   class Clockwork;

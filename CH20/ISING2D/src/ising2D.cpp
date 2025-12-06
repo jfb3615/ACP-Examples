@@ -8,6 +8,7 @@
 #include "QatDataAnalysis/OptParse.h"
 #include <QApplication>
 #include <QMainWindow>
+#include <QThread>
 #include <QToolBar>
 #include <QTimer>
 #include <QAction>
@@ -15,50 +16,52 @@
 #include <iostream>
 #include <string>
 #include <thread>
-struct Threader {
-  IsingModel       *model;
-  IsingModelWidget *window;
-  PlotProfile      *uProf;
-  PlotProfile      *tProf;
-  PlotProfile      *uVsTProf;
+#include <memory>
+#include "Threader.h"
 
-  PlotProfile      *mProf;
-  PlotProfile      *mVsTProf;
+class SignalCatcher:public QObject {
 
+  Q_OBJECT
+
+public:
+
+  SignalCatcher(Threader * t):t(t){}
+
+public slots:
+
+  void acquire() {
+    t->acquire();
+  }
+  
+  void reset() {
+    t->reset();
+  }
+
+  void updateHistogramPlots(){
+    IsingModelWidget *window=t->getWindow();
+    PlotView *u=window->getUHistView();
+    PlotView *m=window->getMHistView();
+    PlotStream uStream(u->titleTextEdit());
+    PlotStream mStream(m->titleTextEdit());
+    uStream << PlotStream::Clear() << "Mean " << t->getMeanHistE() << " variance " << t->getVarianceHistE() << PlotStream::EndP();
+    mStream << PlotStream::Clear() << "Mean " << t->getMeanHistM() << " variance " << t->getVarianceHistM() << PlotStream::EndP();
+    u->recreate();
+    m->recreate();
+  }
+
+  void record() {
+    t->record();
+  }
+
+  void mkCorr() {
+    t->mkCorr();
+  }
+  
+private:
+
+  Threader *t;
 };
-bool finish=false;
-void evolve(Threader *threader) {
-	       
-  const double norm=threader->model->NX()*threader->model->NY();
-  unsigned long int nIter=0;
-  while (!finish) {
-    threader->model->next();
-    unsigned int i=0, j=0;
-    int delta=0;
-    
-    threader->model->lastStep(i,j,delta);
-    bool on=threader->model->isUp(i,j);
-    threader->window->updateImage(i,j,on);
-    nIter++;
 
-    double E=threader->model->U()/norm;
-    double T=threader->model->tau();
-    double M=threader->model->M()/norm;
-    const unsigned int NSAMPLE=1000000;
-    if (threader->window->getAcquire() && !(nIter%NSAMPLE)) {
-      double normIter=nIter/NSAMPLE;
-      threader->window->setIterations(nIter/NSAMPLE);
-
-      threader->uProf->addPoint(normIter, E);
-      threader->tProf->addPoint(normIter, T);
-      threader->uVsTProf->addPoint(T, E); 
-
-      threader->mProf->addPoint(normIter,M);
-      threader->mVsTProf->addPoint(T, M); 
-      
-    }
- }
-}
 
 int main (int argc, char * * argv) {
 
@@ -82,102 +85,49 @@ int main (int argc, char * * argv) {
   
   unsigned int N = (unsigned int) (0.5+input.getByName("N"));
   QApplication     app(argc,argv);
-  IsingModel       model(N,N,1.0);
+  IsingModel       model(N,N,3.0);
   IsingModelWidget window(&model);
 
-  PlotProfile uProf,tProf,uVsTProf, mProf, mVsTProf;
+  QThread thread;
+  Threader threader(&model,&window);
+  threader.moveToThread(&thread);
 
-  {
-    PlotProfile::Properties prop;
-    prop.brush.setStyle(Qt::SolidPattern);
-    prop.brush.setColor("darkRed");
-    prop.pen.setColor("darkRed");
-    tProf.setProperties(prop);
-    prop.brush.setColor("darkBlue");
-    prop.pen.setColor("darkBlue");
-
-    uProf.setProperties(prop);
-    uVsTProf.setProperties(prop);
-
-    mProf.setProperties(prop);
-    mVsTProf.setProperties(prop);
+  SignalCatcher signalCatcher(&threader);
+  
+  QObject::connect(&window,&IsingModelWidget::signalReset,  &signalCatcher, &SignalCatcher::reset);
+  QObject::connect(&window,&IsingModelWidget::signalAcquire,&signalCatcher, &SignalCatcher::acquire);
+  QObject::connect(&window,&IsingModelWidget::signalRecord,&signalCatcher, &SignalCatcher::record);
+  QObject::connect(&window,&IsingModelWidget::signalMkCorr,&signalCatcher, &SignalCatcher::mkCorr);
 
 
-  }
-
-  // U and T time series
-  {
-    PRectF rect;
-    rect.setXmin(0);
-    rect.setXmax(1000);
-    rect.setYmin(-4.0);
-    rect.setYmax(+4.0);
-    PlotView *view = window.getUSeriesView();
-    view->add(&uProf);
-    view->add(&tProf);
-    view->setRect(rect);
-  }
-
-  // U vs T series
-  {
-    PRectF rect;
-    rect.setXmin(0);
-    rect.setXmax(4);
-    rect.setYmin(-4.0);
-    rect.setYmax(0.0);
-    PlotView *view = window.getUVsTView();
-    view->add(&uVsTProf);
-    view->setRect(rect);
-  }
-
-  // M time series
-  {
-    PRectF rect;
-    rect.setXmin(0);
-    rect.setXmax(1000);
-    rect.setYmin(-4.0);
-    rect.setYmax(+4.0);
-    PlotView *view = window.getMSeriesView();
-    view->add(&mProf);
-    view->setRect(rect);
-  }
-
-  // M vs T series
-  {
-    PRectF rect;
-    rect.setXmin(0);
-    rect.setXmax(4);
-    rect.setYmin(-4.0);
-    rect.setYmax(4.0);
-    PlotView *view = window.getMVsTView();
-    view->add(&mVsTProf);
-    view->setRect(rect);
-  }
-
-  Threader threader;
-  threader.window=&window;
-  threader.model= &model;
-  threader.uProf = &uProf;
-  threader.tProf = &tProf;
-  threader.uVsTProf=&uVsTProf;
-  threader.mProf = &mProf;
-  threader.mVsTProf=&mVsTProf;
-
-  std::thread evolveThread (evolve,&threader); 
-
- 
-
+  
   QTimer *timer=new QTimer;
-  timer->setInterval(100); // milliseconds
-  
-  
-  QObject::connect(timer, SIGNAL(timeout()), &window, SLOT(updatePixmap()));
+  timer->setSingleShot(true);
+  QObject::connect(timer,&QTimer::timeout, &threader,&Threader::evolve);
+  thread.start();
   timer->start();
 
+  QTimer *twoTimer=new QTimer;
+  twoTimer->setInterval(100); // milliseconds
+
+  QTimer *threeTimer=new QTimer;
+  threeTimer->setInterval(2000); // milliseconds
+
+  
+  QObject::connect(twoTimer, SIGNAL(timeout()), &window, SLOT(updatePixmap()));
+  QObject::connect(threeTimer, SIGNAL(timeout()), &signalCatcher, SLOT(updateHistogramPlots()));
+  twoTimer->start();
+  threeTimer->start();
+  
   window.show();
   app.exec();
-  finish=true;
-  evolveThread.join();
-  return 1;
+  
+  thread.requestInterruption();
+  thread.quit();
+  thread.wait();
+  
+  return 0;
 }
+#include "ising2D.moc"
+
 
