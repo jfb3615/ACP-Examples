@@ -106,8 +106,8 @@ style2->style =  SoDrawStyle::LINES;
   SoTexture2 *texture_earth2 = new SoTexture2;
 
   // Name of texture file
-  texture_earth1->filename = "world32k.jpg";
-  texture_earth2->filename = "world32k.jpg";
+  texture_earth1->filename = "../src/world32k.jpg";
+  texture_earth2->filename = "../src/world32k.jpg";
 
   // Add texture to both groups
   earth1->addChild(texture_earth1);

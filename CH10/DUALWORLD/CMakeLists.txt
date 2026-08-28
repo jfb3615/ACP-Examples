@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(cuby LANGUAGES CXX)
+project(dualWorld LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -10,6 +10,6 @@ find_package(SoQt CONFIG REQUIRED)
 
 file(GLOB SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 
-add_executable(cuby ${SOURCES})
-target_link_libraries(cuby PRIVATE SoQt::SoQt)
+add_executable(dualWorld ${SOURCES})
+target_link_libraries(dualWorld PRIVATE SoQt::SoQt)
 
