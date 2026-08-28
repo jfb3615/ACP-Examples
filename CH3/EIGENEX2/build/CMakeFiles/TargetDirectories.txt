@@ -1,3 +1,0 @@
-/home/atlas/ACP-Examples/CH3/EIGENEX2/build/CMakeFiles/eigenEx2.dir
-/home/atlas/ACP-Examples/CH3/EIGENEX2/build/CMakeFiles/edit_cache.dir
-/home/atlas/ACP-Examples/CH3/EIGENEX2/build/CMakeFiles/rebuild_cache.dir
