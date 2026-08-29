@@ -37,11 +37,11 @@ int main (int argc, char * * argv) {
   
   QMainWindow window;
   QToolBar *toolBar=window.addToolBar("Tools");
-  QAction  *nextAction=toolBar->addAction("Next");
+  QAction  *quitAction=toolBar->addAction("Quit");
   
-  nextAction->setShortcut(QKeySequence("n"));
+  quitAction->setShortcut(QKeySequence("q"));
   
-  QObject::connect(nextAction, SIGNAL(triggered()), &app, SLOT(quit()));
+  QObject::connect(quitAction, SIGNAL(triggered()), &app, SLOT(quit()));
   
   PRectF rect;
   rect.setXmin(0.5);
