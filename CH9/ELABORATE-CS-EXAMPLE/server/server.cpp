@@ -231,4 +231,4 @@ int main(int argc, char ** argv ) {
 
   
 
-//#include "server.moc"
+#include "server.moc"
