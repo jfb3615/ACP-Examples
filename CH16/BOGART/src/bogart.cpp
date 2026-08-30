@@ -60,8 +60,9 @@ void sampleDistribution (Genfun::GENFUNCTION function,
 int main (int argc, char * * argv) {
 
   // To run on Wayland sessions:
+#ifndef __APPLE__
   setenv("QT_QPA_PLATFORM","xcb",0);
-
+#endif
   
   // Automatically generated:-------------------------:
 
@@ -76,7 +77,7 @@ int main (int argc, char * * argv) {
   NPOINTS = (unsigned int) (0.5 + input.getByName("NPOINTS"));
   NMAX = (unsigned int) (0.5 + input.getByName("NMAX"));
   
-  std::string filename="bogart.jpg";
+  std::string filename="../src/bogart.jpg";
   for (int i=1; i<argc;i++) {
     if (std::string(argv[i])=="-f") {
       i++;
