@@ -59,6 +59,7 @@ void sampleDistribution (Genfun::GENFUNCTION function,
 
 int main (int argc, char * * argv) {
 
+  
   // To run on Wayland sessions:
 #ifndef __APPLE__
   setenv("QT_QPA_PLATFORM","xcb",0);

@@ -247,6 +247,7 @@ void F2DViewerWidget::Clockwork::init(F2DViewerWidget *This) {
   // Make an examiner viewer:
   //
   SoQtPlaneViewer * eviewer = new SoQtPlaneViewer();
+  eviewer->setDoubleBuffer(false);
   QVBoxLayout *layout=new QVBoxLayout();
   layout->addWidget(eviewer->getWidget());
   This->setLayout(layout);

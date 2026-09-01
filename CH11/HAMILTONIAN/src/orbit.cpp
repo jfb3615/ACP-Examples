@@ -34,8 +34,10 @@ void orbit(QApplication &app,
     view.setFixedHeight(view.width());
     view.setGrid(false);
     view.setBox(false);
-    PlotOrbit orbit(x0,x1,0,10);
+    PlotOrbit orbit(x0,x1,0,25);
+    PlotOrbit orbit2(x0,x1,25,50);
     view.add(&orbit);
+    view.add(&orbit2);
     view.setRect(orbit.rectHint());
     window.setCentralWidget(&view);
     
