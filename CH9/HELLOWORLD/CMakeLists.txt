@@ -19,5 +19,5 @@ file(GLOB SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 
 add_executable(${target} ${SOURCES})
 target_include_directories (${target} PRIVATE "${MPI_CXX_INCLUDE_DIRS}")
-target_link_libraries(${target} PRIVATE QatPlotWidgets QatPlotting QatGenericFunctions Qt6::Widgets Qt6::Core ${MPI_CXX_LIBRARIES})
+target_link_libraries(${target} PRIVATE Qat::QatPlotWidgets Qat::QatPlotting Qat::QatGenericFunctions Qt6::Widgets Qt6::Core ${MPI_CXX_LIBRARIES})
 

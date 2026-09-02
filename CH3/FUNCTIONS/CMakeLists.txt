@@ -13,5 +13,5 @@ set(CMAKE_BUILD_RPATH "${QatGenericFunctions_DIR}/../..")
 file(GLOB SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 
 add_executable(functions ${SOURCES})
-target_link_libraries(functions PRIVATE QatGenericFunctions)
+target_link_libraries(functions PRIVATE Qat::QatGenericFunctions)
 

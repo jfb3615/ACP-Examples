@@ -17,5 +17,5 @@ set(CMAKE_BUILD_RPATH "${QatPlotWidgets_DIR}/../..")
 file(GLOB SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 
 add_executable(tcheby ${SOURCES})
-target_link_libraries(tcheby PRIVATE QatPlotWidgets QatPlotting QatDataAnalysis QatGenericFunctions Qt6::Widgets Qt6::Core Eigen3::Eigen)
+target_link_libraries(tcheby PRIVATE Qat::QatPlotWidgets Qat::QatPlotting Qat::QatDataAnalysis Qat::QatGenericFunctions Qt6::Widgets Qt6::Core Eigen3::Eigen)
 

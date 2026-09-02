@@ -18,8 +18,8 @@ file(GLOB CLIENTSOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/client/*.
 file(GLOB SERVERSOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/server/*.cpp")
 
 add_executable(server ${SERVERSOURCES})
-target_link_libraries(server PRIVATE QatPlotWidgets QatPlotting QatDataAnalysis QatGenericFunctions Qt6::Widgets Qt6::Core Eigen3::Eigen)
+target_link_libraries(server PRIVATE Qat::QatPlotWidgets Qat::QatPlotting Qat::QatDataAnalysis Qat::QatGenericFunctions Qt6::Widgets Qt6::Core Eigen3::Eigen)
 
 add_executable(client ${CLIENTSOURCES})
-target_link_libraries(client PRIVATE QatDataAnalysis QatGenericFunctions)
+target_link_libraries(client PRIVATE Qat::QatDataAnalysis Qat::QatGenericFunctions)
 

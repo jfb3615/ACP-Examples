@@ -19,5 +19,5 @@ file(GLOB SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 
 add_executable(${target} ${SOURCES})
 target_include_directories (${target} PRIVATE ../include)
-target_link_libraries(${target} PRIVATE QatPlotWidgets QatPlotting QatDataAnalysis QatGenericFunctions Qt6::Widgets Qt6::Core SoQt::SoQt Eigen3::Eigen GSL::gsl)
+target_link_libraries(${target} PRIVATE Qat::QatPlotWidgets Qat::QatPlotting Qat::QatDataAnalysis Qat::QatGenericFunctions Qt6::Widgets Qt6::Core SoQt::SoQt Eigen3::Eigen GSL::gsl)
 

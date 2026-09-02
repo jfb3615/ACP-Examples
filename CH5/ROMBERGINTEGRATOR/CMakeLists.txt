@@ -14,5 +14,5 @@ set(CMAKE_BUILD_RPATH "${QatPlotWidgets_DIR}/../..")
 file(GLOB SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 
 add_executable(rombergIntegrator ${SOURCES})
-target_link_libraries(rombergIntegrator PRIVATE QatGenericFunctions )
+target_link_libraries(rombergIntegrator PRIVATE Qat::QatGenericFunctions )
 

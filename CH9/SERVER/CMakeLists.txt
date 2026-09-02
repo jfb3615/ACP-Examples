@@ -15,5 +15,5 @@ set(CMAKE_BUILD_RPATH "${QatDataAnalysis_DIR}/../..")
 file(GLOB SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 
 add_executable(${target} ${SOURCES})
-target_link_libraries(${target} PRIVATE QatDataAnalysis QatGenericFunctions)
+target_link_libraries(${target} PRIVATE Qat::QatDataAnalysis Qat::QatGenericFunctions)
 

@@ -16,5 +16,5 @@ set(CMAKE_BUILD_RPATH "${QatPlotWidgets_DIR}/../..")
 file(GLOB SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 
 add_executable(functionVis2 ${SOURCES})
-target_link_libraries(functionVis2 PRIVATE QatPlotWidgets QatPlotting QatGenericFunctions Qt6::Widgets Qt6::Core)
+target_link_libraries(functionVis2 PRIVATE Qat::QatPlotWidgets Qat::QatPlotting Qat::QatGenericFunctions Qt6::Widgets Qt6::Core)
 
