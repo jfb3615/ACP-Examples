@@ -43,7 +43,7 @@ int main(int argc, char ** argv)
   SoTexture2 *texture_earth = new SoTexture2;
   
   // Name of texture file
-  texture_earth->filename = "world32k.jpg";
+  texture_earth->filename = "../src/world32k.jpg";
   
   // Add texture to group node
   earth->addChild(texture_earth);

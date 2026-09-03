@@ -10,7 +10,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <string>
-#include <Interpolator.h>
+#include "Interpolator.h"
 
 int main (int argc, char * * argv) {
 

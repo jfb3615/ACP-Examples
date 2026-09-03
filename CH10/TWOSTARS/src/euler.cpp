@@ -27,7 +27,6 @@
 #include <Inventor/nodes/SoFont.h>
 #include <Inventor/SoInput.h>
 #include <Inventor/SoDB.h>
-#include "SoTubs.h"
 #include <QApplication>
 #include <QWidget>
 #include <QMainWindow>
@@ -435,7 +434,7 @@ int main(int argc, char ** argv)
     sep->addChild(crystalSphereSwitch);
 
 
-    std::string dir=dirname(argv[0])+std::string("/../../src/");
+    std::string dir=dirname(argv[0])+std::string("/../src/");
     
     SoTexture2 *leopard = new SoTexture2;
     sep->addChild(leopard);

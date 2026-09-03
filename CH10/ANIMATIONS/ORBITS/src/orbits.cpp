@@ -81,7 +81,7 @@ int main(int argc, char ** argv)
 
   {
     SoTexture2 *txt=new SoTexture2;
-    txt->filename="photo.jpg";
+    txt->filename="../src/photo.jpg";
     root->addChild(txt);
   }
 
@@ -91,7 +91,7 @@ int main(int argc, char ** argv)
 
   {
     SoTexture2 *txt=new SoTexture2;
-    txt->filename="photo2.jpg";
+    txt->filename="../src/photo2.jpg";
     root->addChild(txt);
   }
   

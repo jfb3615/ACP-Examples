@@ -1,4 +1,3 @@
-#include "SignalCatcher.h"
 #include <Inventor/Qt/SoQt.h>
 #include <Inventor/Qt/viewers/SoQtExaminerViewer.h>
 #include <Inventor/nodes/SoSeparator.h>
@@ -26,6 +25,36 @@
 #include <iostream>
 #include <string>
 #include <cmath>
+
+#include <QObject>
+#include <iostream>
+#include "QatGenericFunctions/Parameter.h"
+class SignalCatcher : public QObject
+{
+  Q_OBJECT
+    
+ public:
+  SignalCatcher():
+    go(1),mu(NULL)
+    {;}
+  
+  int go;
+  int reset;
+  
+  Genfun::Parameter * mu;
+			
+ public slots:
+  void toggleStopGo(){
+    go = !go;
+  }
+  void restart() {
+    reset=1;
+  }
+  void setMu(double x) {
+    if (mu) mu->setValue(x);
+    reset=1;
+  }
+ };
 
 double                timeUnit=1.0;
 int                   step=0;
@@ -228,4 +257,6 @@ int main (int argc, char * * argv) {
 
   return 1;
 }
+
+#include "vanderpol.moc"
 
