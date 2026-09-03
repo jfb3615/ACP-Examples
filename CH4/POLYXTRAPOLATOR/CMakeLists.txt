@@ -18,5 +18,5 @@ file(GLOB SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 
 
 add_executable(polyXtrapolator ${SOURCES})
-target_link_libraries(polyXtrapolator PRIVATE QatPlotWidgets QatPlotting QatGenericFunctions Qt6::Widgets Qt6::Core)
+target_link_libraries(polyXtrapolator PRIVATE Qat::QatPlotWidgets Qat::QatPlotting Qat::QatGenericFunctions Qt6::Widgets Qt6::Core)
 
