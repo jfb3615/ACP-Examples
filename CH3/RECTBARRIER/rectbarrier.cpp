@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
 
   // default values
    double v=0.5;
-   double k=0.2;
+   double k=2.0;
  
   try {
     // overwritten by command line:
