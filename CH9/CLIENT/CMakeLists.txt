@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 
-find_package(QatDataAnalysis      REQUIRED)
+find_package(Qat      REQUIRED)
 
 set(CMAKE_MACOSX_RPATH 1)
 set(CMAKE_BUILD_RPATH "${QatDataAnalysis_DIR}/../..")

@@ -9,7 +9,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 
 
-find_package(QatPlotWidgets      REQUIRED)
+find_package(Qat      REQUIRED)
 find_package(SoQt                REQUIRED)
 find_package(GSL                 REQUIRED)
 set(CMAKE_MACOSX_RPATH 1)

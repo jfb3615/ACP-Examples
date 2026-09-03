@@ -16,7 +16,7 @@ set(CMAKE_BUILD_RPATH "${QatPlotWidgets_DIR}/../..")
 
 find_package(Eigen3 REQUIRED)
 find_package(SoQt REQUIRED)
-find_package(QatPlotWidgets REQUIRED)
+find_package(Qat REQUIRED)
 find_package(Qt6 COMPONENTS Core Widgets Gui PrintSupport Svg OpenGL REQUIRED)
 
 

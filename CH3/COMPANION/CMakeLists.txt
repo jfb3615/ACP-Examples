@@ -8,7 +8,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 
 
-find_package(QatPlotWidgets      REQUIRED)
+find_package(Qat      REQUIRED)
 find_package(Eigen3               REQUIRED)
 set(CMAKE_MACOSX_RPATH 1)
 set(CMAKE_BUILD_RPATH "${QatPlotWidgets_DIR}/../..")

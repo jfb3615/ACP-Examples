@@ -8,7 +8,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 
-find_package(QatPlotWidgets CONFIG REQUIRED)
+find_package(Qat CONFIG REQUIRED)
 
 
 set(CMAKE_MACOSX_RPATH 1)

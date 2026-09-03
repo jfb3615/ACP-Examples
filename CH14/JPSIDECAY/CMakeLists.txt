@@ -9,7 +9,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 
 
-find_package(QatPlotWidgets      REQUIRED)
+find_package(Qat      REQUIRED)
 find_package(Spacetime           REQUIRED)
 find_package(Eigen3              REQUIRED)
 
