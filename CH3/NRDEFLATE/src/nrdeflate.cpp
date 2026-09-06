@@ -122,7 +122,7 @@ void SignalCatcher::deflate() {
   // Deflate
   Genfun::Variable X;
   Genfun::GENFUNCTION F1 = (*deflatedF)/(X-x);
-  deflatedF=std::move(std::unique_ptr<Genfun::AbsFunction>(F1.clone()));
+  deflatedF.reset(F1.clone());
 
   // Create or refresh the plot of the updated deflated function:
   P1.reset(new PlotFunction1D(*deflatedF));
