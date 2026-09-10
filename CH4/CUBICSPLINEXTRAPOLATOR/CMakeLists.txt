@@ -2,13 +2,13 @@ cmake_minimum_required(VERSION 3.16)
 
 project(cubicSplineExtrapolator LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 
-find_package(QatPlotWidgets CONFIG REQUIRED)
+find_package(Qat CONFIG REQUIRED)
 
 
 set(CMAKE_MACOSX_RPATH 1)

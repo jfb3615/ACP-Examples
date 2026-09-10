@@ -2,6 +2,7 @@
 #include "ZOO/Fish.h"
 #include "ZOO/Rabbit.h"
 #include <vector>
+
 void htd(const std::vector<Animal *> aVect) {
   for (int i=0;i<aVect.size();i++) {
     aVect[i]->haveTypicalDay();
@@ -11,7 +12,8 @@ void htd(const std::vector<Animal *> aVect) {
 
 int main() {
 
-
+  Rabbit a1("peter");
+  Whale   a2("sarko");
   Rabbit a3("jacqueline");
   Whale  a4("nathan");
   

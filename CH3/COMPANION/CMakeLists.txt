@@ -1,14 +1,14 @@
 cmake_minimum_required(VERSION 3.16)
 project(companion LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 
 
-find_package(QatPlotWidgets      REQUIRED)
+find_package(Qat      REQUIRED)
 find_package(Eigen3               REQUIRED)
 set(CMAKE_MACOSX_RPATH 1)
 set(CMAKE_BUILD_RPATH "${QatPlotWidgets_DIR}/../..")
