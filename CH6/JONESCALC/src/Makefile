@@ -1,4 +1,4 @@
-CPPFLAGS=-I.. -g -O0
+CPPFLAGS=-I.. -g -O0 -std=c++20
 INCLUDES=../JONESCALC/JonesVector.h ../JONESCALC/JonesVector.icc \
          ../JONESCALC/JonesMatrix.h ../JONESCALC/JonesMatrix.icc
 

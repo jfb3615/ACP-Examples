@@ -1,39 +1,38 @@
 #include <stdexcept>
-inline JonesMatrix::JonesMatrix():a00(1.0),a01(0.0),a10(0.0),a11(1.1) {}
 
 inline JonesMatrix::JonesMatrix(JonesMatrix::Type type) {
 
   const static Complex I(0,1);
 
-  if (type==Horizontal)          {a00=1.0 ;a01=0.0;  a10=0.0;  a11=0.0;}
-  else if (type==Vertical)       {a00=0.0 ;a01=0.0;  a10=0.0;  a11=1.0;}
-  else if (type==Diagonal)       {a00=0.5 ;a01=0.5;  a10=0.5;  a11=0.5;}
-  else if (type==Antidiagonal)   {a00=0.5 ;a01=-0.5; a10=-0.5; a11=0.5;}
-  else if (type==Right)          {a00=0.5 ;a01=0.5*I; a10=-0.5*I; a11=0.5;}
-  else if (type==Left)           {a00=0.5 ;a01=-0.5*I; a10=0.5*I; a11=0.5;}
+  if (type==Horizontal)          {m_a00=1.0 ;m_a01=0.0;  m_a10=0.0;  m_a11=0.0;}
+  else if (type==Vertical)       {m_a00=0.0 ;m_a01=0.0;  m_a10=0.0;  m_a11=1.0;}
+  else if (type==Diagonal)       {m_a00=0.5 ;m_a01=0.5;  m_a10=0.5;  m_a11=0.5;}
+  else if (type==Antidiagonal)   {m_a00=0.5 ;m_a01=-0.5; m_a10=-0.5; m_a11=0.5;}
+  else if (type==Right)          {m_a00=0.5 ;m_a01=0.5*I; m_a10=-0.5*I; m_a11=0.5;}
+  else if (type==Left)           {m_a00=0.5 ;m_a01=-0.5*I; m_a10=0.5*I; m_a11=0.5;}
   else if (type==Identity)       {JonesMatrix();}
-  else if (type==FastHorizontal) {a00=1.0 ;a01=0.0; a10=0.0; a11=I;}
-  else if (type==FastVertical)   {a00=1.0 ;a01=0.0; a10=0.0; a11=-I;}
+  else if (type==FastHorizontal) {m_a00=1.0 ;m_a01=0.0; m_a10=0.0; m_a11=I;}
+  else if (type==FastVertical)   {m_a00=1.0 ;m_a01=0.0; m_a10=0.0; m_a11=-I;}
   
 }
 
 inline JonesMatrix::JonesMatrix(const Complex & a00, 
 			 const Complex & a01,
 			 const Complex & a10,
-			 const Complex & a11):a00(a00),a01(a01),a10(a10),a11(a11) {}
+			 const Complex & a11):m_a00(a00),m_a01(a01),m_a10(a10),m_a11(a11) {}
 
 inline Complex & JonesMatrix::operator () (unsigned int i, unsigned int j) {
   if (!((i==0) || (i==1))) throw std::range_error("Index out of range");
   if (!((j==0) || (j==1))) throw std::range_error("Index out of range");
   return i==0 ? 
-    (j==0 ? a00: a01) : ( j==0 ? a10: a11);
+    (j==0 ? m_a00: m_a01) : ( j==0 ? m_a10: m_a11);
 } 
 
 inline const Complex & JonesMatrix::operator () (unsigned int i, unsigned int j) const {
   if (!((i==0) || (i==1))) throw std::range_error("Index out of range");
   if (!((j==0) || (j==1))) throw std::range_error("Index out of range");
   return i==0 ? 
-    (j==0 ? a00: a01) : ( j==0 ? a10: a11);
+    (j==0 ? m_a00: m_a01) : ( j==0 ? m_a10: m_a11);
 } 
 
 inline std::ostream & operator << (std::ostream & o, const JonesMatrix & m) {

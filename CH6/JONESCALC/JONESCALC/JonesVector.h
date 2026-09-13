@@ -2,7 +2,7 @@
 #define _JONESVECTOR_H_
 #include <complex>
 #include <iostream>
-typedef std::complex<double> Complex;
+using Complex=std::complex<double>;
 class JonesVector {
 
  public:
@@ -10,7 +10,7 @@ class JonesVector {
   enum Type {Horizontal,Vertical,Diagonal,Antidiagonal,Right,Left};
 
   // Construct a zero vector:
-  inline JonesVector();
+  inline JonesVector()=default;
 
   // Construct a type from a predefined type
   inline JonesVector(Type type);
@@ -27,7 +27,8 @@ class JonesVector {
 
  private:
 
-  Complex x0,x1;
+  Complex m_x0{0.0};
+  Complex m_x1{0.0};
 
 };
 

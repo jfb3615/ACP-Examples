@@ -1,7 +1,7 @@
 #ifndef _JONESMATRIX_H_
 #define _JONESMATRIX_H_
 #include <complex>
-typedef std::complex<double> Complex;
+using Complex=std::complex<double>;
 class JonesMatrix {
 
  public:
@@ -11,7 +11,7 @@ class JonesMatrix {
 	      Identity, FastHorizontal, FastVertical};
 
   // Construct the identity matrix:
-  inline JonesMatrix();
+  inline JonesMatrix()=default;
 
   // Construct a type from a predefined type
   inline JonesMatrix(Type type);
@@ -26,7 +26,9 @@ class JonesMatrix {
 
  private:
 
-  Complex a00,a01,a10,a11;
+  // Default value = Identity matrix (Complex, 2x2)
+  Complex m_a00{1.0}, m_a01{0.0};
+  Complex m_a10{0.0}, m_a11{1.0};
 
 };
 
