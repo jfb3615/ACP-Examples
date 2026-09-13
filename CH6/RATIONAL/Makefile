@@ -1,4 +1,4 @@
-CXXFLAGS=-std=c++17 -g -gdwarf-2 -O0
-client:
+CXXFLAGS=-std=c++20 -g  -O0
+client: Rational.h client.cpp
 clean:
 	rm -f client *~

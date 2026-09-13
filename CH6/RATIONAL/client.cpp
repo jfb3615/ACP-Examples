@@ -12,8 +12,8 @@ void print(Rational r) {
 }
 
 int main() {
-  Rational r=3.14159;
-  Rational a(1,2);
+  Rational r{3.14159};
+  Rational a{1,2};
   Rational b(1,6);
   Rational z;
   print(z);
