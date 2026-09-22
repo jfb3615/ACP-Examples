@@ -24,10 +24,11 @@ class Rational {
     m_den*=(1<<(digits-1));
   }
   
-  Rational (const Rational & source) {
-    m_num=source.m_num;
-    m_den =source.m_den;
-  }
+  Rational (const Rational & source): 
+    m_num{source.m_num},
+    m_den{source.m_den}
+  {}
+  
   // accessors:
   long int num() const { return m_num;}
   long int den() const { return m_den;}
