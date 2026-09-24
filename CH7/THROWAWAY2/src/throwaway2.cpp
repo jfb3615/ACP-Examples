@@ -16,7 +16,9 @@
 #include <string>
 #include <random>
 #include <stdexcept>
-typedef std::mt19937 EngineType;
+
+using EngineType=std::mt19937;
+
 int main (int argc, char * * argv) {
 
 
@@ -40,10 +42,10 @@ int main (int argc, char * * argv) {
 
   const double MAXTHROW=2.0;
   EngineType e;
-  std::uniform_real_distribution<double> 
-    rx(-1.0,1.0), 
-    rphi(0.0,2*M_PI), 
-    ry(0.0,MAXTHROW);
+  std::uniform_real_distribution
+    rand_x(-1.0,1.0), 
+    rand_phi(0.0,2*M_PI), 
+    rand_y(0.0,MAXTHROW);
 
   Hist2D hxy("X vs PHI", 
 	     25, -1.0, 1.0,
@@ -56,10 +58,10 @@ int main (int argc, char * * argv) {
   Genfun::GENFUNCTION f = 1/(2-X) + (2-X) - 2.0*(1-X*X)*Square(Cos(PHI));
 	    
   for (int i=0;i<1000000;i++) {
-    Genfun::Argument arg(2);
-    arg[0]=rx(e);
-    arg[1]=rphi(e);
-    double y = ry(e);
+    double r=rand_x(e);
+    double phi=rand_phi(e);
+    double y = rand_y(e);
+    Genfun::Argument arg={r,phi};
     if (y<f(arg)) {
       hxy.accumulate(arg[0],arg[1]);
     }
@@ -67,6 +69,7 @@ int main (int argc, char * * argv) {
       throw std::runtime_error ("Function value exceeds max random no");
     }
   }
+  
   PlotHist2D pxy=hxy;
   {
     PlotHist2D::Properties prop;
@@ -89,28 +92,13 @@ int main (int argc, char * * argv) {
   window.setCentralWidget(&view);
   
   PlotStream titleStream(view.titleTextEdit());
-  titleStream << PlotStream::Clear()
-	      << PlotStream::Center() 
-	      << PlotStream::Family("Sans Serif") 
-	      << PlotStream::Size(16)
-	      << PlotStream::EndP();
-  
+  titleStream << "Von Neumann rejection"  << PlotStream::EndP();
   
   PlotStream xLabelStream(view.xLabelTextEdit());
-  xLabelStream << PlotStream::Clear()
-	       << PlotStream::Center()
-	       << PlotStream::Family("Sans Serif")
-	       << PlotStream::Size(16)
-	       << "x=cos(θ)"
-	       << PlotStream::EndP();
+  xLabelStream << "x=cos(θ)" << PlotStream::EndP();
   
   PlotStream yLabelStream(view.yLabelTextEdit());
-  yLabelStream << PlotStream::Clear()
-	       << PlotStream::Center()
-	       << PlotStream::Family("Sans Serif")
-	       << PlotStream::Size(16)
-	       << "φ"
-	       << PlotStream::EndP();
+  yLabelStream << "φ" << PlotStream::EndP();
   
   
   view.show();

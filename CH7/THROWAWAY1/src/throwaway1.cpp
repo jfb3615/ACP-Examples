@@ -11,7 +11,7 @@
 #include <iostream>
 #include <string>
 #include <random>
-typedef std::mt19937 EngineType;
+using EngineType=std::mt19937;
 int main (int argc, char * * argv) {
 
 
@@ -34,7 +34,7 @@ int main (int argc, char * * argv) {
   QObject::connect(quitAction, SIGNAL(triggered()), &app, SLOT(quit()));
 
   EngineType e(100);
-  std::uniform_real_distribution<double> rx(-1, 1),ry(0,0.75);
+  std::uniform_real_distribution<double> rand_x(-1, 1),rand_y(0,0.75);
 
   Hist1D hx("X", 100, -2.0, 2.0);
 
@@ -43,12 +43,13 @@ int main (int argc, char * * argv) {
   Genfun::GENFUNCTION f=3/4.0*(1-X*X);
 	    
   for (int i=0;i<1000000;i++) {
-    double x = rx(e);
-    double y = ry(e);
+    double x = rand_x(e);
+    double y = rand_y(e);
     if (y<f(x)) {
       hx.accumulate(x);
     }
   }
+  
   PlotHist1D px=hx;
   PlotView view;
   view.add(&px);
@@ -62,28 +63,14 @@ int main (int argc, char * * argv) {
   window.setCentralWidget(&view);
   
   PlotStream titleStream(view.titleTextEdit());
-  titleStream << PlotStream::Clear()
-	      << PlotStream::Center() 
-	      << PlotStream::Family("Sans Serif") 
-	      << PlotStream::Size(16)
-	      << PlotStream::EndP();
+  titleStream << "Von Neumann rejection"  << PlotStream::EndP();
   
   
   PlotStream xLabelStream(view.xLabelTextEdit());
-  xLabelStream << PlotStream::Clear()
-	       << PlotStream::Center()
-	       << PlotStream::Family("Sans Serif")
-	       << PlotStream::Size(16)
-	       << "x"
-	       << PlotStream::EndP();
+  xLabelStream << "x" << PlotStream::EndP();
   
   PlotStream yLabelStream(view.yLabelTextEdit());
-  yLabelStream << PlotStream::Clear()
-	       << PlotStream::Center()
-	       << PlotStream::Family("Sans Serif")
-	       << PlotStream::Size(16)
-	       << "ρ(x)"
-	       << PlotStream::EndP();
+  yLabelStream << "ρ(x)" << PlotStream::EndP();
   
   
   view.show();

@@ -25,15 +25,16 @@ int main (int argc, char * * argv) {
   
   MultipleViewWindow window;
   QToolBar *toolBar=window.addToolBar("Tools");
-  QAction  *nextAction=toolBar->addAction("Next");
+  QAction  *quitAction=toolBar->addAction("Quit");
   
-  nextAction->setShortcut(QKeySequence("n"));
+  quitAction->setShortcut(QKeySequence("q"));
   
-  QObject::connect(nextAction, SIGNAL(triggered()), &app, SLOT(quit()));
+  QObject::connect(quitAction, &QAction::triggered, &app, &QApplication::quit);
   
+  // Declare four plot views:
+  std::vector<PlotView> plotView(4);
 
-  PlotView *pview[4]={new PlotView(), new PlotView(), new PlotView(), new PlotView()};
-
+  // Declare four histograms. 
   Hist1D h[]={
     Hist1D("One uniform variate", 1000, -10, 10),
     Hist1D("Two uniform variates", 1000, -10, 10),
@@ -41,8 +42,9 @@ int main (int argc, char * * argv) {
     Hist1D("Four uniform variates", 1000, -10, 10)};
   std::mt19937 engine;
 
-  
-  std::uniform_real_distribution<double> u(-1.0, 1.0);
+  // Fill the n^th histogram with the sum of
+  // n uniform variates.
+  std::uniform_real_distribution u(-1.0, 1.0);
   for ( int i=0;i<1000000;i++) {
     double x=0;
     for (int j=0;j<4;j++) {
@@ -50,50 +52,38 @@ int main (int argc, char * * argv) {
       h[j].accumulate(x);
     }
   }
-  PlotHist1D p[]={h[0],h[1],h[2],h[3]};
-  
 
+  // Create four plots, one per histogram.
+  std::vector<PlotHist1D> plot={h[0],h[1],h[2],h[3]};
+
+  // Add the plots to the plot views and label them:
   unsigned int c=0;
-  for (PlotView *view : pview) {
-    PRectF rect=p[c].rectHint();
+  for (PlotView & view : plotView) {
+    PRectF rect=plot[c].rectHint();
     rect.setYmax(12000);
-    view->setRect(rect);
-    view->setXZero(false);
-    view->setYZero(false);
-    view->setBox(false);
-    view->setGrid(false);
-    view->yAxisFont().setPointSize(12);
-    view->add(&p[c]);
-    window.add(view, p[c].histogram()->name());
+    view.setRect(rect);
+    view.setXZero(false);
+    view.setYZero(false);
+    view.setBox(false);
+    view.setGrid(false);
+    view.yAxisFont().setPointSize(12);
+    view.add(&plot[c]);
+    window.add(&view, plot[c].histogram()->name());
     
-    PlotStream titleStream(view->titleTextEdit());
-    titleStream << PlotStream::Clear()
-		<< PlotStream::Center() 
-		<< PlotStream::Family("Sans Serif") 
-		<< PlotStream::Size(16)
-		<< p[c].histogram()->name()
-		<< PlotStream::EndP();
+    PlotStream titleStream(view.titleTextEdit());
+    titleStream << plot[c].histogram()->name() << PlotStream::EndP();
     
     
-    PlotStream xLabelStream(view->xLabelTextEdit());
-    xLabelStream << PlotStream::Clear()
-		 << PlotStream::Center()
-		 << PlotStream::Family("Sans Serif")
-		 << PlotStream::Size(16)
-		 << "x"
-		 << PlotStream::EndP();
+    PlotStream xLabelStream(view.xLabelTextEdit());
+    xLabelStream << "x" << PlotStream::EndP();
     
-    PlotStream yLabelStream(view->yLabelTextEdit());
-    yLabelStream << PlotStream::Clear()
-		 << PlotStream::Center()
-		 << PlotStream::Family("Sans Serif")
-		 << PlotStream::Size(16)
-		 << "counts"
-		 << PlotStream::EndP();
+    PlotStream yLabelStream(view.yLabelTextEdit());
+    yLabelStream << "counts" << PlotStream::EndP();
     
     c++;
   }
 
+  // Interact:
   window.show();
   app.exec();    
   return 1;
