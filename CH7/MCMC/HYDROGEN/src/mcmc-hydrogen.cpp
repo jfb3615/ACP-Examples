@@ -82,6 +82,10 @@ private:
 
 int main (int argc, char ** argv) {
 
+#ifndef __APPLE__
+  setenv("QT_QPA_PLATFORM","xcb",0);
+#endif  
+  
   std::string usage = std::string("usage: ") + argv[0] + "[NPOINTS=val{def=10000}] [N=val{def=0}] [L=val{def=0}] [M=val{def=0}] [fSigma=val{def=1.0}";
   NumericInput numeric;
   numeric.declare("NPOINTS", "Number of points in the Markov Chain", 10000);
@@ -178,6 +182,7 @@ int main (int argc, char ** argv) {
   eviewer->setSceneGraph(root);
   eviewer->setBackgroundColor(SbColor(1.0,1.0,1.0));
   eviewer->getCamera()->position.setValue(0,0,115);
+  eviewer->setDoubleBuffer(false);
   eviewer->show();
   
   // Pop up the main window.

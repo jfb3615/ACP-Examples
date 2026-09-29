@@ -95,7 +95,10 @@ timeSensorCallback(void *, SoSensor *)
 
 int main (int , char **) {
   
-
+#ifndef __APPLE__
+  setenv ("QT_QPA_PLATFORM", "xcb",0);
+#endif
+  
   //---------------------------------------------------------
   // Now that we have reboundCollection, start visualizing!
 
@@ -152,6 +155,7 @@ int main (int , char **) {
   SoQtExaminerViewer * eviewer = new SoQtExaminerViewer(mainwin);
   eviewer->setTransparencyType(SoGLRenderAction::SCREEN_DOOR);
   eviewer->setSceneGraph(root);
+  eviewer->setDoubleBuffer(false);
   eviewer->show();
   
   // Pop up the main window.
