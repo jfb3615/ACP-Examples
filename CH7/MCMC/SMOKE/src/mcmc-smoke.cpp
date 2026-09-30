@@ -22,7 +22,7 @@
 
 using namespace std;
 
-#define RBD_EPSILON 1E-4
+using SetType=SoLineSet;
 
 // The following is a class that carries out Markov Chain Monte Carlo according
 // to probability density functions 
@@ -48,10 +48,11 @@ public:
       vProp[d]+=gauss(engine);
     }
     
-    double newProb=1;
-    if (fabs(vProp[0])>15) return 0;
-    if (fabs(vProp[1])>15) return 0;
-    if (fabs(vProp[2])>15) return 0;
+    //double newProb=exp(-vProp[2]/4);
+    double newProb=1.0;
+    if (fabs(vProp[0])>15) newProb=0;
+    if (fabs(vProp[1])>15) newProb=0;
+    if (fabs(vProp[2])>15) newProb=0;
     if (newProb>=prob) {
       v=vProp;
       return newProb;
@@ -88,8 +89,9 @@ timeSensorCallback(void *, SoSensor *)
   static unsigned int count=0;
   for(unsigned int i=0;i<NTOT;i++) 
   {
-    chain.move(v);
-    property->vertex.set1Value(count++,v[0],v[1],v[2]);
+    static double prob{0};
+    prob=chain.move(v,prob);
+    property->vertex.set1Value(count++,v[0],v[2],v[1]);
   }  
 }
 
@@ -147,7 +149,7 @@ int main (int , char **) {
 
 
 
-  SoLineSet *set = new SoLineSet;
+  SetType *set = new SetType;
   set->vertexProperty=property;
   root->addChild(set);
     
