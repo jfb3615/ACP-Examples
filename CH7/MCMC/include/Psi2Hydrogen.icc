@@ -46,7 +46,7 @@ _m(right._m)
 
 inline
 double Psi2Hydrogen::operator() (const Argument & a) const {
-  if (a.dimension()!=3) throw std::runtime_error("Psi2Hydrogen: dimension mismatch");
+  if (dimension(a)!=3) throw std::runtime_error("Psi2Hydrogen: dimension mismatch");
   return (*_function)(a);
 }
 
