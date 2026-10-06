@@ -2,6 +2,7 @@
 #include <Inventor/Qt/SoQt.h>
 #include <Inventor/Qt/viewers/SoQtExaminerViewer.h>
 #include <Inventor/nodes/SoSeparator.h>
+#include <Inventor/nodes/SoCone.h>
 #include <QApplication>
 #include <QWidget>
 int main(int argc, char **argv)
@@ -25,13 +26,15 @@ int main(int argc, char **argv)
   SoSeparator *root = new SoSeparator;
   root->ref();
 
-
-  // Initialize an examiner viewer:
-  SoQtExaminerViewer * eviewer = new SoQtExaminerViewer(&mainwin);
-  eviewer->setDoubleBuffer(false); // Needed for Wayland window manager.
+  SoCone *cone = new SoCone;
+  root->addChild(cone);
   
-  eviewer->setSceneGraph(root);
-  eviewer->show();
+  // Initialize an examiner viewer:
+  SoQtExaminerViewer eviewer(&mainwin);
+  eviewer.setDoubleBuffer(false); // Needed for Wayland window manager.
+  
+  eviewer.setSceneGraph(root);
+  eviewer.show();
   
   // Pop up the main window.
   SoQt::show(&mainwin);
@@ -40,6 +43,6 @@ int main(int argc, char **argv)
   SoQt::mainLoop();
 
   // Clean up resources.
-  delete eviewer;
+  //delete eviewer;
   root->unref();
 }

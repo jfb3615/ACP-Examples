@@ -1,6 +1,7 @@
 #include "QatDataAnalysis/OptParse.h"
 #include "QatDataAnalysis/Hist2D.h"
 #include "QatPlotWidgets/PlotView.h"
+#include "QatPlotWidgets/setLightPalette.h"
 #include "QatPlotting/PlotStream.h"
 #include "QatPlotting/PlotProfile.h"
 #include "QatPlotting/PlotKey.h"
@@ -171,6 +172,7 @@ int main (int argc, char * * argv) {
 
   // Qt Boilerplate
   QApplication     app(argc,argv);
+  setLightPalette();
   
   QMainWindow window;
   QToolBar *toolBar=window.addToolBar("Tools");
