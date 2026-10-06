@@ -1,4 +1,5 @@
 #include "QatPlotWidgets/PlotView.h"
+#include "QatPlotWidgets/setLightPalette.h"
 #include "QatPlotting/PlotStream.h"
 #include "QatPlotting/PlotHist1D.h"
 #include "QatDataAnalysis/OptParse.h"
@@ -53,6 +54,7 @@ int main (int argc, char * * argv) {
 
   // Qt Boilerplate
   QApplication     app(argc,argv);
+  setLightPalette();
   
   QMainWindow window;
   QToolBar *toolBar=window.addToolBar("Tools");
@@ -74,7 +76,7 @@ int main (int argc, char * * argv) {
   //
   bool started=0;
   unsigned int nc=0;
-  Hist1D ncHist("Cluster size", 100, 1, 100);
+  Hist1D ncHist("Cluster size", 20, 1, 20);
   for (unsigned int i=0;i<L;i++) {
     bool occupied = B(engine);
     if (started) {

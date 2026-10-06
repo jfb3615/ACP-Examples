@@ -1,5 +1,6 @@
 #include "PercolatorWidget.h"
 #include "Percolator.h"
+#include "QatPlotWidgets/setLightPalette.h"
 #include "QatPlotWidgets/PlotView.h"
 #include "QatPlotting/PlotStream.h"
 #include "QatPlotting/PlotProfile.h"
@@ -109,6 +110,7 @@ int main (int argc, char * * argv) {
   
   unsigned int N = (unsigned int) (0.5+input.getByName("N"));
   QApplication     app(argc,argv);
+  setLightPalette();
   
   // Most of the work is done in the percolator object:
   Percolator       percolator(N,N,0.5);
