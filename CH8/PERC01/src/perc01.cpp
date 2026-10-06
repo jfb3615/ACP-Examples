@@ -1,6 +1,7 @@
 #include "QatDataAnalysis/OptParse.h"
 #include "QatDataAnalysis/Hist2D.h"
 #include "QatPlotWidgets/PlotView.h"
+#include "QatPlotWidgets/setLightPalette.h"
 #include "QatPlotting/PlotStream.h"
 #include "QatPlotting/PlotHist2D.h"
 #include <QApplication>
@@ -83,35 +84,35 @@ class ClusterSet {
 public:
   
   void add(const Cluster & cluster) {
-    _cluster.push_back(cluster);
+    m_cluster.push_back(cluster);
   }
   
   const Cluster & operator()(unsigned int i) const {
-    return _cluster[i];
+    return m_cluster[i];
   }
   
   Cluster & operator()(unsigned int i) {
-    return _cluster[i];
+    return m_cluster[i];
   }
   
   unsigned int clusterIndex (Index index) const {
-    for (unsigned int i=0;i<_cluster.size();i++) {
-      if (_cluster[i].contains(index)) return i;
+    for (unsigned int i=0;i<m_cluster.size();i++) {
+      if (m_cluster[i].contains(index)) return i;
     }
-    return _cluster.size();
+    return m_cluster.size();
   }
   
   unsigned int size() const {
-    return _cluster.size();
+    return m_cluster.size();
   }
   
   void erase(unsigned int i) {
-    _cluster.erase(_cluster.begin()+i);
+    m_cluster.erase(m_cluster.begin()+i);
   }
   
 private:
   
-  std::vector<Cluster> _cluster;
+  std::vector<Cluster> m_cluster;
   
 };
 
@@ -145,7 +146,8 @@ ostream & operator << (ostream & o, const ClusterSet & cs) {
 // Main routine
 int main (int argc, char * * argv) {
 
-
+  setLightPalette();
+  
   string usage= string("usage: ") + argv[0] + " [N=val/def=10] [P=val/def=0.5]"; 
   if (argc>3) {
     cout << usage << endl;
@@ -227,12 +229,12 @@ int main (int argc, char * * argv) {
     //
     random_device dev;
     mt19937 engine(dev());
-    binomial_distribution<int> flip(1,p);
+    binomial_distribution flip(1,p);
 
     //
     // Generate the configuration
     //
-    Hist2D h2("Anonymous", N, 0, n, N, 0, n);
+    Hist2D h2(N, 0, n, N, 0, n);
     for (unsigned int i=0;i<N;i++) {
       for (unsigned int j=0;j<N;j++) {
 	int y=flip(engine);
