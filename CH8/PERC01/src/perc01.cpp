@@ -146,7 +146,6 @@ ostream & operator << (ostream & o, const ClusterSet & cs) {
 // Main routine
 int main (int argc, char * * argv) {
 
-  setLightPalette();
   
   string usage= string("usage: ") + argv[0] + " [N=val/def=10] [P=val/def=0.5]"; 
   if (argc>3) {
@@ -172,7 +171,8 @@ int main (int argc, char * * argv) {
 
   // QT Boilerplate
   QApplication     app(argc,argv);
-  
+  setLightPalette();
+
   QMainWindow window;
   QToolBar *toolBar=window.addToolBar("Tools");
   QAction  *nextAction=toolBar->addAction("Next");
