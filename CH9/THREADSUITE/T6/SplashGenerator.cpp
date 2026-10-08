@@ -1,7 +1,7 @@
 #include "SplashGenerator.h"
 
 SplashGenerator::SplashGenerator(int slow_Down_Length):
-  slowDownLength(slowDownLength)
+  slowDownLength(slow_Down_Length)
 {
 }
 

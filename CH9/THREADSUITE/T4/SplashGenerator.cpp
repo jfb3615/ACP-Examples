@@ -6,6 +6,6 @@ SplashGenerator::SplashGenerator() {
 void SplashGenerator::compute() {
 }
 
-const PixelArray *harvest() {
+const PixelArray *SplashGenerator::harvest() const {
   return nullptr;
 }
