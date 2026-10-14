@@ -17,7 +17,7 @@ int main(int argc, char **argv) {
 
 
   // Get the slowdown number from the command line: 
-  int slowDownNumber{0};
+  int slowDownNumber{1000};
   if (argc==2) {
     std::istringstream stream(argv[1]);
     if (!(stream >> slowDownNumber)) {
@@ -27,14 +27,14 @@ int main(int argc, char **argv) {
   }
 
   using SplashGenPtr = std::unique_ptr<SplashGenerator>;
-  std::vector<std::thread> threadVector;
   std::vector<SplashGenPtr> splashGenerator;
-  for (int i=0;i<NPROCESSORS;i++) {
-    splashGenerator.emplace_back(std::make_unique<SplashGenerator>(slowDownNumber));
-    threadVector.emplace_back(std::thread(&SplashGenerator::compute,splashGenerator.back().get()));
+  {
+    std::vector<std::jthread> threadVector;
+    for (int i=0;i<NPROCESSORS;i++) {
+      splashGenerator.emplace_back(std::make_unique<SplashGenerator>(slowDownNumber));
+      threadVector.emplace_back(&SplashGenerator::compute,splashGenerator.back().get());
+    }
   }
-  
-  for (std::thread & t: threadVector) t.join();
   
   PixelArray pixels;
   
