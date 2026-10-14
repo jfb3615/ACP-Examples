@@ -1,12 +1,13 @@
 #pragma once
 #include <array>
-#include <cstdint>
-#include <QColor>
-constexpr int kImageWidth = 800;
-constexpr int kImageHeight = 800;
+#include <tuple>
 
+constexpr int kImageWidth{800};
+constexpr int kImageHeight{800};
 
-using PixelArray = std::array<std::uint32_t, kImageWidth * kImageHeight>;
+using Triplet    = std::tuple<int,int,int>;
+using PixelArray = std::array<Triplet, kImageWidth * kImageHeight>;
 
+void createImage(PixelArray *);
 void render (const PixelArray & );
 
