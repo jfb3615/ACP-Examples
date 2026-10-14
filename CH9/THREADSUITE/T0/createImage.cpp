@@ -14,7 +14,7 @@ std::uniform_real_distribution     flat;                 // pixel probability
 
 
 // This routine writes the splash onto the Canvas:
-void createImage(PixelArray &pixels)
+void createImage(PixelArray *pixels)
 {
 
   // Select the center;
@@ -32,7 +32,7 @@ void createImage(PixelArray &pixels)
       for (int i=0;i<1000;i++) flat(engine);// use CPU 
        if (flat(engine) < probability) {
          const int index = row * kImageWidth + column;
-         pixels[index] = color;
+         (*pixels)[index] = color;
       }
     }
   }

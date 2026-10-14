@@ -9,7 +9,7 @@ int main() {
 
     
   static PixelArray pixels{};
-  for (int i=0;i<16;i++) createImage(pixels);  
+  for (int i=0;i<16;i++) createImage(&pixels);  
   render(pixels);
   return 0;
 }
