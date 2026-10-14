@@ -8,19 +8,15 @@
 #include <QPixmap>
 #include <QVBoxLayout>
 #include <QWidget>
-
+#include <QColor>
 #include "render.h"
 
 void render(const PixelArray & pixels)
 {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wwrite-strings"
-
-    char *       Argv[]={{"splash"}};
+    char *       Argv[]={{(char *) "splash"}};
     int         Argc=1;
     QApplication application(Argc, Argv);
 
-#pragma GCC diagnostic pop
     
     auto *window = new QMainWindow;
     window->setWindowTitle("Splash!!");
@@ -29,11 +25,18 @@ void render(const PixelArray & pixels)
     auto *centralWidget = new QWidget(window);
     auto *layout = new QVBoxLayout(centralWidget);
 
-    //    const PixelArray pixels = createQuadrantImage();
-    QImage image(reinterpret_cast<const uchar *>(pixels.data()),
+    // Switch to array of QRGB:
+    std::array<uint32_t,kImageWidth*kImageHeight> pixelsAsQrgb;
+    for (int i=0;i<kImageWidth*kImageHeight;i++) {
+      int R,G,B;
+      std::tie(R, G, B) = pixels[i];
+      pixelsAsQrgb[i]=qRgb(R,G,B);
+    }
+    QImage image(reinterpret_cast<const uchar *>(pixelsAsQrgb.data()),
                  kImageWidth,
                  kImageHeight,
                  QImage::Format_ARGB32);
+    image.save("splash.png");
     const QPixmap pixmap = QPixmap::fromImage(image);
 
     auto *imageLabel = new QLabel;

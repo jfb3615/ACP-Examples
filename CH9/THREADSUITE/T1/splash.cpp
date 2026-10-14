@@ -17,9 +17,7 @@ int main() {
   
   {
     std::vector<std::jthread> threadVector;
-    for (int i=0;i<NCPU;i++) {
-      threadVector.emplace_back(std::jthread(createImage,&pixels));
-    }
+    for (int i=0;i<NCPU;i++) threadVector.emplace_back(createImage,&pixels);
   }
   
   render(pixels);
