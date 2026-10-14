@@ -5,7 +5,7 @@
 // Main Routine: 
 int main() {
   
-  std::cout << "Splash!! TM using thread_local for partial alleviation of race conditions [Return to continue]..." << std::endl;
+  std::cout << "Splash!! MT using thread_local for partial alleviation of race conditions [Return to continue]..." << std::endl;
   std::cin.get();
   std::cout << "Generating..." << std::endl;
 

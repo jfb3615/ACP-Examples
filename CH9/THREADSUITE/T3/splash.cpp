@@ -5,7 +5,7 @@
 // Main Routine: 
 int main() {
   
-  std::cout << "Splash!! TM using local storage for partial alleviation of race conditions [Return to continue]..." << std::endl;
+  std::cout << "Splash!! MT, using local storage for partial alleviation of race conditions [Return to continue]..." << std::endl;
   std::cin.get();
   std::cout << "Generating..." << std::endl;
 

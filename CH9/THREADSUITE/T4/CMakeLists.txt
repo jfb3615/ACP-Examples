@@ -9,5 +9,5 @@ set(CMAKE_BUILD_TYPE Release)
 
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
 
-add_executable(splash splash.cpp SplashGenerator.cpp render.cpp)
+add_executable(splash splash.cpp render.cpp createImage.cpp)
 target_link_libraries(splash PRIVATE Qt6::Widgets)
