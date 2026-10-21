@@ -4,7 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-
+#include "omp.h"
 int main(int argc, char **argv) {
 
   // Define here the usage statement. 
@@ -27,14 +27,25 @@ int main(int argc, char **argv) {
   }
 
   using SplashGenPtr = std::unique_ptr<SplashGenerator>;
-  std::vector<std::thread> threadVector;
   std::vector<SplashGenPtr> splashGenerator;
   for (int i=0;i<NPROCESSORS;i++) {
     splashGenerator.emplace_back(std::make_unique<SplashGenerator>(slowDownNumber));
-    threadVector.emplace_back(std::thread(&SplashGenerator::compute,splashGenerator.back().get()));
   }
   
-  for (std::thread & t: threadVector) t.join();
+#pragma omp parallel for
+  for (int i=0;i<NPROCESSORS;i++) {
+    splashGenerator[i]->compute();
+  }
+#pragma omp parallel
+#pragma omp critical
+  {
+    std::cout << "HELLO from thread number" << omp_get_thread_num() <<  "/" << omp_get_num_threads() << std::endl;
+  }
+#pragma omp barrier
+#pragma omp master
+  {
+      std::cout << "HELLO from me the master!!" << std::endl;
+  }
   
   PixelArray pixels;
   

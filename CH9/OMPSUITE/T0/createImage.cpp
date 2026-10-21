@@ -2,20 +2,23 @@
 #include <random>
 #include "omp.h"
 
-std::random_device dev;
-std::mt19937       engine(dev());
-
-// random distributions for choosing size, position, and color of the splash:
-std::uniform_int_distribution      xPos{0,kImageWidth};  // x-position of splash
-std::uniform_int_distribution      yPos{0,kImageHeight}; // y-position of splash
-std::uniform_int_distribution<int> colorChoice{0,255};   // color of splash (r,g,b
-std::gamma_distribution            width{30.0,6.0};      // width of splash;
-std::uniform_real_distribution     flat;                 // pixel probability
-
 // This routine writes the splash onto the Canvas:
 void createImage(PixelArray & pixels)
 {
   {
+
+    std::random_device dev;
+    std::mt19937       engine(dev());
+    
+    // random distributions for choosing size, position, and color of the splash:
+    std::uniform_int_distribution      xPos{0,kImageWidth};  // x-position of splash
+    std::uniform_int_distribution      yPos{0,kImageHeight}; // y-position of splash
+    std::uniform_int_distribution<int> colorChoice{0,255};   // color of splash (r,g,b
+    std::gamma_distribution            width{30.0,6.0};      // width of splash;
+    std::uniform_real_distribution     flat;                 // pixel probability
+
+    
+
     // Select the center;
     int x=xPos(engine);                  // choose the z position;
     int y=yPos(engine);                  // choose the y position

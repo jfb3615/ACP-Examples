@@ -8,6 +8,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_BUILD_TYPE Release)
 
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
+find_package(OpenMP REQUIRED)
 
 add_executable(splash splash.cpp SplashGenerator.cpp render.cpp)
-target_link_libraries(splash PRIVATE Qt6::Widgets)
+target_link_libraries(splash PRIVATE Qt6::Widgets OpenMP::OpenMP_CXX)
