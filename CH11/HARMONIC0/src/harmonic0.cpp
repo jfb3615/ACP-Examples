@@ -34,8 +34,7 @@ int main (int argc, char * * argv) {
   QAction  *quitAction=toolBar->addAction("Quit");
    
   quitAction->setShortcut(QKeySequence("q"));
-  
-  QObject::connect(quitAction, SIGNAL(triggered()), &app, SLOT(quit()));
+  QObject::connect(quitAction, &QAction::triggered, &app, &QApplication::quit);
   
   //
   // Harmonic oscillator:
@@ -43,21 +42,25 @@ int main (int argc, char * * argv) {
   double K=1.0; // Newtons/m
   double M=1.0; // Kg
   Variable X(0,2),P(1,2);
-
+  
+  // Differential equations:
   GENFUNCTION DXDT=P/M;
   GENFUNCTION DPDT=-K*X;
 
+  // Integrator:
   RKIntegrator integrator;
   integrator.addDiffEquation(&DXDT,"X0",0);
   integrator.addDiffEquation(&DPDT,"P0", 1);
 
+  // Solution:
   GENFUNCTION   x = *integrator.getFunction(X);
   GENFUNCTION   p = *integrator.getFunction(P);
   
-
+  // Open a view:
   PlotView view({0.0,10.0,-2.0,2.0});
   window.setCentralWidget(&view);
 
+  // Set plot properties:
   PlotFunction1D pX=x,pP=p;
   {
     PlotFunction1D::Properties prop;
@@ -68,41 +71,23 @@ int main (int argc, char * * argv) {
     pP.setProperties(prop);
   }
 
+  // Add two curves corresponding to maximium amplitude:
   PlotFunction1D PlusOne=Genfun::FixedConstant(1.0);
   PlotFunction1D MnusOne=Genfun::FixedConstant(-1.0);
 
+  // Add the plots to the view:
   view.add(&pX);
   view.add(&pP);
   view.add(&PlusOne);
   view.add(&MnusOne);
 
+  // Labelling
+  auto sz16=PlotStream::Size(16);
+  PlotStream (view.titleTextEdit())  << sz16 << "Harmonic Oscillator" << PlotStream::EndP();
+  PlotStream (view.xLabelTextEdit()) << sz16 << "t"                  << PlotStream::EndP();
+  PlotStream (view.yLabelTextEdit()) << sz16 << "q and p"            << PlotStream::EndP();
 
-  PlotStream titleStream(view.titleTextEdit());
-  titleStream << PlotStream::Clear()
-	      << PlotStream::Center() 
-	      << PlotStream::Family("Sans Serif") 
-	      << PlotStream::Size(16)
-	      << "Harmonic Oscillator"
-	      << PlotStream::EndP();
-  
-  
-  PlotStream xLabelStream(view.xLabelTextEdit());
-  xLabelStream << PlotStream::Clear()
-	       << PlotStream::Center()
-	       << PlotStream::Family("Sans Serif")
-	       << PlotStream::Size(16)
-	       << "t"
-	       << PlotStream::EndP();
-  
-  PlotStream yLabelStream(view.yLabelTextEdit());
-  yLabelStream << PlotStream::Clear()
-	       << PlotStream::Center()
-	       << PlotStream::Family("Sans Serif")
-	       << PlotStream::Size(16)
-	       << "q and p"
-	       << PlotStream::EndP();
-  
-  
+  // Interact:
   view.show();
   window.show();
   app.exec();
