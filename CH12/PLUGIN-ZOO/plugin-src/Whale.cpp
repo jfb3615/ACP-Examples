@@ -13,7 +13,7 @@ void Whale::eat() {
 
 
 
-void Whale::haveTypicalDay() {
+void Whale::executeDailySequence() {
   wakeUp();
   eat();
   lactate();

@@ -20,7 +20,7 @@ void Animal::eat() {
 void Animal::sleep() {
   std::cout << "Animal " << _name << " sleeping" << std::endl;
 }
-void Animal::haveTypicalDay() {
+void Animal::executeDailySequence() {
   eat();
   sleep();
 }

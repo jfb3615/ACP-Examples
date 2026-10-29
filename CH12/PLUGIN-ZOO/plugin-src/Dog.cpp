@@ -13,7 +13,7 @@ void Dog::eat() {
 
 
 
-void Dog::haveTypicalDay() {
+void Dog::executeDailySequence() {
   wakeUp();
   eat();
   lactate();

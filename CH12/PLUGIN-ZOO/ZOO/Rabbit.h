@@ -6,7 +6,7 @@ class Rabbit: public Mammal {
  public:
 
   Rabbit(const std::string & name);
-  void procreate();
+  void hopAbout();
 
 };
 #endif

@@ -48,7 +48,7 @@ namespace Genfun {
 
     // Function call operator, argument form. Should fail if dimension > 1. 
     double operator() (const Argument & a) const {
-      if (a.dimension()!=1) throw std::runtime_error("WaveFunction:  dimensionality mismatch");
+      if (a.size()!=1) throw std::runtime_error("WaveFunction:  dimensionality mismatch");
       return operator()(a[0]);
     }
 

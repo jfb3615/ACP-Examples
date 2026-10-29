@@ -10,7 +10,7 @@ class Whale: public Mammal {
 
   virtual void eat();
   
-  virtual void haveTypicalDay();
+  virtual void executeDailySequence();
 
 };
 #endif

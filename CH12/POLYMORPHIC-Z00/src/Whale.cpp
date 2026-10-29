@@ -14,7 +14,7 @@ void Whale::spout() {
 
 
 
-void Whale::haveTypicalDay() {
+void Whale::executeDailySequence() {
   wakeUp();
   eat();
   spout();

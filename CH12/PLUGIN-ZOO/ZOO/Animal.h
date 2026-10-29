@@ -16,7 +16,7 @@ class Animal {
   virtual void wakeUp();
   virtual void eat();
   virtual void sleep();
-  virtual void haveTypicalDay();
+  virtual void executeDailySequence();
   
 private:
 	std::string  _name;

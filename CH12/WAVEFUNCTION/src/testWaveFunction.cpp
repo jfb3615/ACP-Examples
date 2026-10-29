@@ -17,7 +17,6 @@
 // WaveFunction.                                             //
 // ----------------------------------------------------------// 
 
-
 #include "QatDataAnalysis/OptParse.h"
 #include "QatPlotWidgets/PlotView.h"
 #include "QatPlotting/PlotStream.h"
@@ -33,14 +32,12 @@
 #include <complex>
 #include "WaveFunction.h"
 //
-typedef std::complex<double> Complex;
-Complex I(0.0,1.0);
+using Complex=std::complex<double>;
 
 
 int main (int argc, char * * argv) {
   
-  // Automatically generated:-------------------------:
-  
+  // Usage:
   std::string usage= std::string("usage: ") + argv[0] + " [v=val/def=0.25] [a=val/def=1.0]"; 
   
   NumericInput input;
@@ -53,80 +50,48 @@ int main (int argc, char * * argv) {
     std::cerr << usage << std::endl;
     exit(0);
   }
-
+  
+  // Check for unknown arguments after option parsing complete:
   if (argc!=1) {
     std::cout << usage << std::endl;
     exit(0);
   }
 
-
+  // Get the values of parameters a and v
   double a=input.getByName("a");
   double v=input.getByName("v");
 
+  // Set up the interactive application, make a quit command and shorcut:
   QApplication     app(argc,argv);
-  
   QMainWindow window;
   QToolBar *toolBar=window.addToolBar("Tools");
-  QAction  *nextAction=toolBar->addAction("Next");
-  
-  nextAction->setShortcut(QKeySequence("n"));
-  
-  QObject::connect(nextAction, SIGNAL(triggered()), &app, SLOT(quit()));
-  
-  PRectF rect;
-  rect.setXmin(-10.0);
-  rect.setXmax(10.0);
-  rect.setYmin(0.0);
-  rect.setYmax(5.0);
-  
+  QAction  *quitAction=toolBar->addAction("Quit");
+  quitAction->setShortcut(QKeySequence("q"));
+  QObject::connect(quitAction, &QAction::triggered, &app, &QApplication::quit);
 
-    
-
-  PlotView view(rect);
+  // Make the plot view:
+  PlotView view({-10.0, 10.0, 0.0, 5.0});
   window.setCentralWidget(&view);
 
-
+  // Set th the steps:  start point + "index of refraction" n=sqrt( (E-V)/E).
   std::vector<Genfun::WaveFunction::Step> step={{-2*a,sqrt(Complex(1.0-v))},
 						{-1*a,sqrt(Complex(1.0-2.0*v))},
 						{+1*a,sqrt(Complex(1.0-v))},
 						{+2*a,Complex(1.0)}};
   
+  // Make the new function & the new plot.  Add it to the viewer:
   PlotFunction1D   p=Genfun::WaveFunction(step);
   view.add(&p);
 
+  // Do the labeling:
+  auto sz16=PlotStream::Size(16);
+  PlotStream (view.titleTextEdit())  << sz16 << "Barrier Potential (zero, up, more, less, zero)" << PlotStream::EndP();
+  PlotStream (view.xLabelTextEdit()) << sz16 << "x [units of reduced wavelength]" << PlotStream::EndP();
+  PlotStream (view.yLabelTextEdit()) << sz16 << "|ψ|²"<< PlotStream::EndP();
   
-  PlotStream titleStream(view.titleTextEdit());
-  titleStream << PlotStream::Clear()
-	      << PlotStream::Center() 
-	      << PlotStream::Family("Arial") 
-	      << PlotStream::Size(16)
-	      << "Barrier Potential (zero, up, more, less, zero)"
-	      << PlotStream::EndP();
-  
-  
-  PlotStream xLabelStream(view.xLabelTextEdit());
-  xLabelStream << PlotStream::Clear()
-	       << PlotStream::Center()
-	       << PlotStream::Family("Arial")
-	       << PlotStream::Size(16)
-	       << "x [units of reduced wavelength]"
-	       << PlotStream::EndP();
-  
-  PlotStream yLabelStream(view.yLabelTextEdit());
-  yLabelStream << PlotStream::Clear()
-	       << PlotStream::Center()
-	       << PlotStream::Size(16)
-	       << PlotStream::Family("Arial")
-	       << "|ψ|"
-	       << PlotStream::Super()
-	       << "2"
-	       << PlotStream::Normal()
-	       << PlotStream::EndP();
-  
-  
+  // Interact
   view.show();
   window.show();
-  app.exec();
-  return 1;
+  return app.exec();
 }
 
