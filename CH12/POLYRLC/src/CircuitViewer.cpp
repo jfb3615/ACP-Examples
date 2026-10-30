@@ -5,6 +5,8 @@
 #include "Circuit/Inductor.h"
 #include "Circuit/Resistor.h"
 
+#include <QToolBar>
+#include <QAction>
 #include <QGraphicsEllipseItem>
 #include <QGraphicsItem>
 #include <QGraphicsLineItem>
@@ -17,7 +19,7 @@
 #include <QRectF>
 #include <QBrush>
 #include <QLineF>
-
+#include <QApplication>
 #include <cmath>
 #include <stdexcept>
 #include <string>
@@ -167,14 +169,19 @@ void populateScene(const Circuit& circuit, QGraphicsScene& scene) {
 
 CircuitView::CircuitView(const Circuit& circuit)
     : QGraphicsView() {
-    auto* circuitScene = new QGraphicsScene(this);
-    setScene(circuitScene);
-    populateScene(circuit, *circuitScene);
-    setWindowTitle(QStringLiteral("Circuit Viewer"));
-    setRenderHint(QPainter::Antialiasing);
-    setDragMode(QGraphicsView::ScrollHandDrag);
-    fitInView(circuitScene->sceneRect(), Qt::KeepAspectRatio);
-    resize(800, 600);
-}
 
+  QAction  *quitAction=addAction("Quit");
+  quitAction->setShortcut(QKeySequence("q"));
+  QObject::connect(quitAction, &QAction::triggered, qApp, &QApplication::quit);
+
+  auto* circuitScene = new QGraphicsScene(this);
+  setScene(circuitScene);
+  populateScene(circuit, *circuitScene);
+  setWindowTitle(QStringLiteral("Circuit Viewer"));
+  setRenderHint(QPainter::Antialiasing);
+  setDragMode(QGraphicsView::ScrollHandDrag);
+  fitInView(circuitScene->sceneRect(), Qt::KeepAspectRatio);
+  resize(800, 600);
+}
+  
 } // namespace circuit::visualization
