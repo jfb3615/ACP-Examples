@@ -25,13 +25,13 @@
 #include <string>
 #include <unordered_map>
 #include <utility>
+#include <numbers>
 
 namespace circuit::visualization {
 namespace {
 
 constexpr qreal symbolHalfLength = 25.0;
 constexpr qreal nodeRadius = 4.0;
-constexpr qreal pi = 3.14159265358979323846;
 
   class CircuitSymbolItem final : public QGraphicsItem {
   public:
@@ -53,15 +53,15 @@ constexpr qreal pi = 3.14159265358979323846;
       const std::vector<std::pair<double,double>> & symbol=element_->symbol();
       std::unique_ptr<QPolygonF> zz=std::make_unique<QPolygonF>();
       for (auto & [x,y] : symbol) {
-	if (x==100.0 && y==100.0) {
+	if (x==100.0 && y==100.0) {  // 100 is special, indicating:  end of line:
 	  painter->drawPolyline(*zz);
 	  zz.reset(new QPolygonF);
 	}
-	else if (x==200.0 && y==200.0) {
+	else if (x==200.0 && y==200.0) { // 200 is special, indicating: end of ellipse
 	  painter->drawEllipse(QPointF((*zz)[0].x(),(*zz)[0].y()),(*zz)[1].x(),(*zz)[1].y());
 	  zz.reset(new QPolygonF);
 	}
-	else if (x==300.0 && y==300.0) {
+	else if (x==300.0 && y==300.0) { // 300 is special, indicating: end of cubic poly
 	  QPainterPath path;
 	  path.moveTo((*zz)[0].x(),(*zz)[0].y());
 	  int i=1;
@@ -150,7 +150,7 @@ void populateScene(const Circuit& circuit, QGraphicsScene& scene) {
         auto* symbol = new CircuitSymbolItem(element.get(), label);
         symbol->setData(0, label);
         symbol->setPos(center);
-        symbol->setRotation(std::atan2(delta.y(), delta.x()) * 180.0 / pi);
+        symbol->setRotation(std::atan2(delta.y(), delta.x()) * 180.0 / std::numbers::pi);
         symbol->setZValue(1.0);
         scene.addItem(symbol);
     }
