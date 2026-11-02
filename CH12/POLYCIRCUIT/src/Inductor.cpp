@@ -49,10 +49,8 @@ std::unique_ptr<Genfun::AbsFunction> Inductor::voltageFromCurrent(
   const std::vector<std::pair<double,double>> &Inductor::symbol() const {
     static std::vector<std::pair<double,double>> mySymbol{{-25.0, 0.0},
 							  {-17.0, 0.0},
-							  {100.0,100.0},
 							  {15.0, 0.0},
 							  {25.0, 0.0},
-							  {100.0,100.0},
 							  {-17.0, 0.0},
 							  {-17.0, -18.0},
 							  {-9.0, -18.0},
@@ -65,9 +63,18 @@ std::unique_ptr<Genfun::AbsFunction> Inductor::voltageFromCurrent(
 							  {7.0, 0.0},
 							  {7.0, -18.0},
 							  {15.0, -18.0},
-							  {15.0, 0.0},
-							  {300.0,300.0}};
+							  {15.0, 0.0}};
     return mySymbol;
   }
+
+  const std::vector<std::pair<CircuitElement::SymbolSegmentType, size_t>> & Inductor::symbolTypeAndNumber() const {
+    static std::vector<std::pair<SymbolSegmentType, size_t>> typeAndNumber{{CircuitElement::POLYLINE,2},
+									   {CircuitElement::POLYLINE,2},
+									   {CircuitElement::CUBIC,4} // 4 Segment cubic, 13 pairs for this. 
+
+    };
+    return typeAndNumber;
+  }
+  
   
 } // namespace circuit

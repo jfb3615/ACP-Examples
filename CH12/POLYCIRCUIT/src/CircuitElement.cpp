@@ -52,6 +52,10 @@ namespace circuit {
 							  {-25.0, -10.0}};
     return mySymbol;
   }
-
+  
+  const std::vector<std::pair<CircuitElement::SymbolSegmentType, size_t>> & CircuitElement::symbolTypeAndNumber() const {
+    static std::vector<std::pair<SymbolSegmentType, size_t>> typeAndNumber{{CircuitElement::POLYLINE,5}};
+    return typeAndNumber;
+  }
   
 } // namespace circuit

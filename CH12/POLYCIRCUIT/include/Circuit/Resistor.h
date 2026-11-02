@@ -22,8 +22,9 @@ public:
   std::unique_ptr<Genfun::AbsFunction> currentFromVoltage(Genfun::GENFUNCTION V, double I0 = 0.0) const override;
   std::unique_ptr<Genfun::AbsFunction> voltageFromCurrent(Genfun::GENFUNCTION I, double V0 = 0.0) const override;
 
- // Symbol
+  // Symbol
   virtual const std::vector<std::pair<double,double>> & symbol() const override;
+  virtual const std::vector<std::pair<SymbolSegmentType, size_t>> & symbolTypeAndNumber() const;
   
   
 private:

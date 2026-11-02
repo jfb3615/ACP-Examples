@@ -11,7 +11,7 @@ include(CMakePackageConfigHelpers)
 file( GLOB HEADERS include/Circuit/*.h include/Circuit/*.icc )
 file( GLOB SOURCES src/*.cpp)
 
-add_library(Circuit ${SOURCES})
+add_library(Circuit SHARED ${SOURCES})
 
 
 add_library(Circuit::Circuit ALIAS Circuit)

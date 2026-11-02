@@ -49,18 +49,23 @@ std::unique_ptr<Genfun::AbsFunction> Capacitor::voltageFromCurrent(
   const std::vector<std::pair<double,double>> &  Capacitor::symbol() const {
     static std::vector<std::pair<double,double>> mySymbol{{-25.0, 0.0},
 							  {-5.0, 0.0},
-							  {100.0,100.0},
 							  {-5.0, -12.0},
 							  {-5.0, 12.0},
-							  {100.0,100.0},
 							  {5.0, -12.0},
 							  {5.0, 12.0},
-							  {100.0,100.0},
 							  {5.0, 0.0},
 							  {25.0,0.0}};
 
     return mySymbol;
   }
   
+  const std::vector<std::pair<CircuitElement::SymbolSegmentType, size_t>> & Capacitor::symbolTypeAndNumber() const {
+    static std::vector<std::pair<SymbolSegmentType, size_t>> typeAndNumber{{CircuitElement::POLYLINE,2},
+									   {CircuitElement::POLYLINE,2},
+									   {CircuitElement::POLYLINE,2},
+									   {CircuitElement::POLYLINE,2}
+    };
+    return typeAndNumber;
+  }
   
 } // namespace circuit

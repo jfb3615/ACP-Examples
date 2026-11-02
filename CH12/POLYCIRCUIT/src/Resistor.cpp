@@ -54,5 +54,10 @@ namespace circuit {
     return mySymbol;
   }
   
+  const std::vector<std::pair<CircuitElement::SymbolSegmentType, size_t>> & Resistor::symbolTypeAndNumber() const {
+    static std::vector<std::pair<SymbolSegmentType, size_t>> typeAndNumber{{CircuitElement::POLYLINE,9}};
+    return typeAndNumber;
+  }
+  
   
 } // namespace circuit

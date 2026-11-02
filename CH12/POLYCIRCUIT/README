@@ -1,0 +1,16 @@
+This directory contains code which illustrates polymorphic design using
+circuit elements (AC Voltage Source, Capacitor, Resistor, Inductor, Wire)
+as examples. These all inherit from CircuitElement. 
+
+With virtual methods in CircuitElement, one can construct circuits out
+of these elements.
+
+The CircuitSimulator in this directory is work-in-progress, it is not
+ready to be used yet.  It is intended to allow simulation of a
+simple multiple-branch circuits built from bipolar devices.
+For that, come back later.
+
+A program to build and visualize a circuit can be found in the
+CH12/POLYRLC directory.  The visualization code depend on Qt and so
+is not part of this library, designed to have no dependencies.
+

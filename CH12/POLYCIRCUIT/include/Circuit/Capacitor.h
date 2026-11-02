@@ -24,6 +24,8 @@ public:
 
   // Symbol
   virtual const std::vector<std::pair<double,double>> &  symbol() const;
+  virtual const std::vector<std::pair<SymbolSegmentType, size_t>> & symbolTypeAndNumber() const;
+
 private:
 
     double capacitanceFarads_;

@@ -60,7 +60,8 @@ int main(int argc, char* argv[]) {
   char* qtArgv[] = {argv[0], nullptr};
   QApplication application(qtArgc, qtArgv);
   circuit::visualization::CircuitView viewer(model);
-  viewer.setWindowTitle(QStringLiteral("Complex Circuit Topology"));
+  countLoops(model);
+  viewer.setWindowTitle(QStringLiteral("RLC Circuit"));
   viewer.show();
   return application.exec();
 

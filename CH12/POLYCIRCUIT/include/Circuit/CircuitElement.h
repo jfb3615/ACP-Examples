@@ -10,53 +10,64 @@
 #include <vector>
 
 namespace circuit {
-
-class CircuitElement {
-public:
-
-  //  Constructor: 
-  CircuitElement(std::string name, std::size_t terminalCount);
-
-  //  Virtual Destructor
-  virtual ~CircuitElement() = default;
-
-  // Name:
-  const std::string& name() const ;
-
-  // Number Of terminals
-  std::size_t terminalCount() const ;
-
-  // Read/write access to the terminal:
-  CircuitNode* terminal(std::size_t index);
-
-  // Readonly access to the terminal for const objects
-  const CircuitNode* terminal(std::size_t index) const;
-
-  // Make a connection:
-  void connectTerminal(std::size_t index, CircuitNode& node);
-
-  // Brack a connection:
-  void disconnectTerminal(std::size_t index);
-
-  // Gives the current to voltage characteristics
-  virtual std::unique_ptr<Genfun::AbsFunction> currentFromVoltage(Genfun::GENFUNCTION V, double V0 = 0.0) const = 0;
-
-  // Gives the voltage to current characteristics
-  virtual std::unique_ptr<Genfun::AbsFunction> voltageFromCurrent(Genfun::GENFUNCTION I, double I0 = 0.0) const = 0;
-
-  // Type identification
-  virtual std::string type() const  = 0;
-
-  // Symbol
-  virtual const std::vector<std::pair<double,double>> & symbol() const;
   
-private:
+  class CircuitElement {
+  public:
+    
+    //  Constructor: 
+    CircuitElement(std::string name, std::size_t terminalCount);
+    
+    //  Virtual Destructor
+    virtual ~CircuitElement() = default;
+    
+    // Name:
+    const std::string& name() const ;
+    
+    // Number Of terminals
+    std::size_t terminalCount() const ;
+    
+    // Read/write access to the terminal:
+    CircuitNode* terminal(std::size_t index);
+    
+    // Readonly access to the terminal for const objects
+    const CircuitNode* terminal(std::size_t index) const;
+    
+    // Make a connection:
+    void connectTerminal(std::size_t index, CircuitNode& node);
+    
+    // Brack a connection:
+    void disconnectTerminal(std::size_t index);
+    
+    // Gives the current to voltage characteristics
+    virtual std::unique_ptr<Genfun::AbsFunction> currentFromVoltage(Genfun::GENFUNCTION V, double V0 = 0.0) const = 0;
+    
+    // Gives the voltage to current characteristics
+    virtual std::unique_ptr<Genfun::AbsFunction> voltageFromCurrent(Genfun::GENFUNCTION I, double I0 = 0.0) const = 0;
+    
+    // Type identification
+    virtual std::string type() const  = 0;
 
-  CircuitElement(const CircuitElement&) = delete;
-  CircuitElement& operator=(const CircuitElement&) = delete;
+    //------------------------------------------------------------------------------
+    // The following is for decoding the way in which the circuit symbol is rendered:
+    //------------------------------------------------------------------------------
+    
+    // Symbol
+    virtual const std::vector<std::pair<double,double>> & symbol() const;
+    
+    // Code for symbol drawing
+    enum SymbolSegmentType { POLYLINE, ELLIPSE, CUBIC};
+    
+    // Code for symbol drawing.  Type, and number of coords.  Polylines have arbitrary length.
+    // Ellipses require two pairs of numbers.  Cubics required three pairs. 
+    virtual const std::vector<std::pair<SymbolSegmentType, size_t>> & symbolTypeAndNumber() const;
+    
+  private:
+    
+    CircuitElement(const CircuitElement&) = delete;
+    CircuitElement& operator=(const CircuitElement&) = delete;
+    
+    std::string name_;
+    std::vector<CircuitNode*> terminals_;
+  };
   
-  std::string name_;
-  std::vector<CircuitNode*> terminals_;
-};
-
 } // namespace circuit
