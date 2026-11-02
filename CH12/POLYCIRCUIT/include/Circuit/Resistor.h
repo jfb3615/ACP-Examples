@@ -24,7 +24,7 @@ public:
 
   // Symbol
   virtual const std::vector<std::pair<double,double>> & symbol() const override;
-  virtual const std::vector<std::pair<SymbolSegmentType, size_t>> & symbolTypeAndNumber() const;
+  virtual const std::vector<std::pair<SymbolSegmentType, size_t>> & symbolTypeAndNumber() const override;
   
   
 private:
