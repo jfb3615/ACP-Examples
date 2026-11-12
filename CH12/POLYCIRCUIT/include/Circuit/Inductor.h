@@ -23,8 +23,10 @@ public:
   std::unique_ptr<Genfun::AbsFunction> voltageFromCurrent(Genfun::GENFUNCTION I, double V0 = 0.0) const override;
 
   // Symbol
-  virtual const std::vector<std::pair<double,double>> &  symbol() const;
+  virtual const std::vector<std::pair<double,double>> &  symbol() const override;
+  virtual const std::vector<std::pair<SymbolSegmentType, size_t>> & symbolTypeAndNumber() const override;
 
+  
 private:
   
     double inductanceHenrys_;
