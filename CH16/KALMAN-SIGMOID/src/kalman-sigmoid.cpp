@@ -7,6 +7,7 @@
 #include "QatGenericFunctions/Variable.h"
 #include "QatGenericFunctions/Parameter.h"
 #include <QApplication> 
+#include <QEventLoop> 
 #include <QMainWindow>
 #include <QToolBar>
 #include <QAction>
@@ -25,8 +26,9 @@ int main(int argc, char ** argv ) {
   QAction  *nextAction=toolBar->addAction("Next");
   
   nextAction->setShortcut(QKeySequence("n"));
-  
-  QObject::connect(nextAction, SIGNAL(triggered()), &app, SLOT(quit()));
+
+  QEventLoop loop;
+  QObject::connect(nextAction, &QAction::triggered, &loop, &QEventLoop::quit);
   
 
 
@@ -116,7 +118,7 @@ int main(int argc, char ** argv ) {
 	view.show();
 	window.show();
 	view.setBox(false);
-	app.exec();
+	loop.exec();
 	view.clear();
       }
 
@@ -152,7 +154,7 @@ int main(int argc, char ** argv ) {
       view.add(&v);
       view.show();
       window.show();
-      app.exec();
+      loop.exec();
       view.clear();
       
 
