@@ -13,7 +13,7 @@ namespace Genfun {
   
   // This form of the function call operator cannot be used:
   double DualFourierExpansion::operator() (const Genfun::Argument & a) const {
-    if (a.dimension()!=2) throw std::runtime_error("DualFourierExpansion:  dimension mismatch error");
+    if (a.size()!=2) throw std::runtime_error("DualFourierExpansion:  dimension mismatch error");
     double value=0.0;
     const double &x=a[0], &y=a[1];
     double scale = sqrt(1.0/scaleX/scaleY);

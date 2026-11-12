@@ -25,7 +25,7 @@ namespace Genfun {
 
     // Function call operator, requires two dimensions
     double operator() (const Argument & a) const {
-      if (a.dimension()!=1) throw std::runtime_error("FourierExpansion:  dimension mismatch");
+      if (a.size()!=1) throw std::runtime_error("FourierExpansion:  dimension mismatch");
       return operator()(a[0]);
     }
 
