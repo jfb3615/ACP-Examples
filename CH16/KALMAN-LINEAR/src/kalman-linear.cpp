@@ -7,6 +7,7 @@
 #include "QatGenericFunctions/Parameter.h"
 #include <QApplication>
 #include <QMainWindow>
+#include <QEventLoop>
 #include <QToolBar>
 #include <QAction>
 #include "Eigen/Dense"
@@ -24,7 +25,6 @@ int main(int argc, char ** argv ) {
   
   nextAction->setShortcut(QKeySequence("n"));
   
-  QObject::connect(nextAction, SIGNAL(triggered()), &app, SLOT(quit()));
   
 
 
@@ -90,7 +90,10 @@ int main(int argc, char ** argv ) {
     prop.pen.setColor(QColor("darkRed"));
     v.setProperties(prop);
   }
-  
+
+  QEventLoop loop;
+  QObject::connect(nextAction, &QAction::triggered, &loop, &QEventLoop::quit);
+
   // PLOT THE EXPERIMENT:
   {
     view.add(&profilePlot);
@@ -103,7 +106,7 @@ int main(int argc, char ** argv ) {
     view.show();
     window.show();
     view.setBox(false);
-    app.exec();
+    loop.exec();
     view.clear();
   }
 
@@ -149,7 +152,7 @@ int main(int argc, char ** argv ) {
       view.add(&v);
       view.show();
       window.show();
-      app.exec();
+      loop.exec();
       view.clear();
 
     }
