@@ -57,5 +57,29 @@ namespace circuit {
     static std::vector<std::pair<SymbolSegmentType, size_t>> typeAndNumber{{CircuitElement::POLYLINE,5}};
     return typeAndNumber;
   }
+
+    
+  // Gives the current to voltage characteristics
+  std::unique_ptr<Genfun::AbsFunction> CircuitElement::currentFromVoltage(Genfun::GENFUNCTION, double) const {
+    return {};
+  }
+    
+  // Gives the voltage to current characteristics
+  std::unique_ptr<Genfun::AbsFunction> CircuitElement::voltageFromCurrent(Genfun::GENFUNCTION, double) const {
+    return {};
+  }
+
+  
+  // Explicit dependence on time (e.g. current sources)
+  const Genfun::AbsFunction  *CircuitElement::currentVsTime() const {
+    return nullptr;
+  }
+
+  // Explicit dependence on time (e.g. voltage sources)
+  const Genfun::AbsFunction  *CircuitElement::voltageVsTime() const {
+    return nullptr;
+  }
+
+
   
 } // namespace circuit

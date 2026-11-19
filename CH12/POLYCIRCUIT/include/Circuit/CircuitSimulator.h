@@ -13,10 +13,7 @@ class CircuitSimulator {
 public:
 
   // Constructor I
-  CircuitSimulator(const Circuit& circuit, double initialCapacitorVoltage = 0.0, double initialInductorCurrent = 0.0);
-
-  // Constructor II
-  CircuitSimulator(const Circuit& circuit,std::vector<double> initialCapacitorVoltages, std::vector<double> initialInductorCurrents);
+  CircuitSimulator(const Circuit& circuit);
 
   // Destructor;
   ~CircuitSimulator();
@@ -33,14 +30,15 @@ public:
   // Default Move Assignment:
   CircuitSimulator& operator=(CircuitSimulator&&)=default;
 
-  // Number of independent variables:
-  std::size_t numStateVariables() const ;
+  // For a given element in the circuit, obtain the current into the element:
+  const Genfun::AbsFunction * currentInto( const CircuitElement *, size_t terminal=0) const;
 
-  // Names of independent variables:
-  const std::vector<std::string>& independentVariables() const ;
+  // For a given element in the circuit, obtain the voltage between terminals (0 and 1 by default).
+  const Genfun::AbsFunction * voltageAt ( const CircuitNode * node) const;
 
-  // Get the State function
-  Genfun::GENFUNCTION stateFunction(std::size_t index) const;
+  const size_t getNumCurrents() const;
+  const Genfun::AbsFunction *getCurrent(size_t i) const;
+  
 
 private:
     class Clockwork;

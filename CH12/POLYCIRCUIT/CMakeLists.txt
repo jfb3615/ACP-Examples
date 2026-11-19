@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 project(Circuit VERSION 1.0.0 LANGUAGES CXX)
 include(GNUInstallDirs)
-set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_CXX_STANDARD 20)
 find_package(QatGenericFunctions REQUIRED)
 find_package(Eigen3 REQUIRED)

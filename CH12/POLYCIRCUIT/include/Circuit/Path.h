@@ -3,6 +3,7 @@
 // devices.  Those needing more than that should get a professional
 // package. 
 #pragma once
+#include "Circuit/Circuit.h"
 #include <algorithm>
 namespace circuit {
 
@@ -30,7 +31,7 @@ namespace circuit {
 
     // Determine whether the path contains an element:
     bool contains(const CircuitElement *element) const {
-      return std::find_if(_elementList.begin(),_elementList.end(), [element] (const Terminal  &t) {return t.element==element;}) !=_elementList.end();
+      return std::find_if(_elementList.begin(),_elementList.end(), [ & element] (const Terminal  &t) {return t.element==element;}) !=_elementList.end();
     }
 
     // Get the tail:
@@ -48,10 +49,17 @@ namespace circuit {
     // Random access:
     const Terminal & operator[] (int i) const { return _elementList[i];}
 
+    // Get by element:
+    const Terminal * get(const CircuitElement *element) const {
+      auto t=std::find_if(_elementList.begin(),_elementList.end(), [& element] (const Terminal & T) {return T.element==element;});
+      if (t!=_elementList.end()) return &*t;
+      return nullptr;
+    }
+    
     // Iteration:
     using ConstIterator=std::vector<Terminal>::const_iterator;
     ConstIterator begin() const {return _elementList.begin();}
-    ConstIterator end()   const {return _elementList.begin();}
+    ConstIterator end()   const {return _elementList.end();}
 
     
   private:

@@ -52,12 +52,13 @@ namespace circuit {
   
   } // namespace
 
-  ACVoltageSource::ACVoltageSource(std::string name, double peakVoltageVolts,
+  ACVoltageSource::ACVoltageSource(const std::string & name, double peakVoltageVolts,
 				   double frequencyHertz, double phaseRadians)
-    : CircuitElement(std::move(name), 2),
+    : CircuitElement(name, 2),
       peakVoltageVolts_(peakVoltageVolts),
       frequencyHertz_(frequencyHertz),
-      phaseRadians_(phaseRadians) {
+      phaseRadians_(phaseRadians),
+      function_(std::make_unique<const SourceWaveformFunction>(peakVoltageVolts,frequencyHertz, phaseRadians)){
     if (!std::isfinite(peakVoltageVolts_) || peakVoltageVolts_ < 0.0) {
       throw std::invalid_argument("AC source peak voltage must be finite and non-negative");
     }
@@ -89,16 +90,11 @@ namespace circuit {
     return SourceWaveformFunction::waveformAt(timeSeconds, peakVoltageVolts_, frequencyHertz_, phaseRadians_);
   }
 
-
-  std::unique_ptr<Genfun::AbsFunction> ACVoltageSource::currentFromVoltage(Genfun::GENFUNCTION, double) const {
-    return {};
+ // voltage for an ideal voltage source is independent of current:
+  const Genfun::AbsFunction *ACVoltageSource::voltageVsTime() const {
+    return function_.get();
   }
 
-  std::unique_ptr<Genfun::AbsFunction> ACVoltageSource::voltageFromCurrent(
-									   Genfun::GENFUNCTION, double) const {
-    return std::make_unique<SourceWaveformFunction>(
-						    peakVoltageVolts_, frequencyHertz_, phaseRadians_);
-  }
 
 
   const std::vector<std::pair<double,double>> &ACVoltageSource::symbol() const {

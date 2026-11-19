@@ -39,10 +39,18 @@ namespace circuit {
     void disconnectTerminal(std::size_t index);
     
     // Gives the current to voltage characteristics
-    virtual std::unique_ptr<Genfun::AbsFunction> currentFromVoltage(Genfun::GENFUNCTION V, double V0 = 0.0) const = 0;
+    virtual std::unique_ptr<Genfun::AbsFunction> currentFromVoltage(Genfun::GENFUNCTION V, double V0 = 0.0) const;
     
     // Gives the voltage to current characteristics
-    virtual std::unique_ptr<Genfun::AbsFunction> voltageFromCurrent(Genfun::GENFUNCTION I, double I0 = 0.0) const = 0;
+    virtual std::unique_ptr<Genfun::AbsFunction> voltageFromCurrent(Genfun::GENFUNCTION I, double I0 = 0.0) const;
+
+    // Explicit dependence on time (e.g. current sources)
+    virtual const Genfun::AbsFunction *currentVsTime() const;
+    
+    // Explicit dependence on time (e.g. voltage sources)
+    virtual const Genfun::AbsFunction *voltageVsTime() const;
+
+
     
     // Type identification
     virtual std::string type() const  = 0;
