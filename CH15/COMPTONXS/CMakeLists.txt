@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
-
+set(CMAKE_BUILD_TYPE Release)
 
 find_package(Qat      REQUIRED)
 find_package(Eigen3              REQUIRED)
